@@ -11,24 +11,34 @@ import {
   finishTask,
   blockTask,
   unblockTask,
-  addNote,
 } from '../../lib/taskFlow';
 import Modal from '../shared/Modal';
 import Button from '../shared/Button';
 import TaskTimer from './TaskTimer';
 import TaskActionBar from './TaskActionBar';
 import TextEntryModal from './TextEntryModal';
+import PhotoCaptureButton from '../media/PhotoCaptureButton';
+import NoteModal from '../media/NoteModal';
+import TaskTimeline from '../media/TaskTimeline';
 
 const w = he.worker;
 
-// גוף הכרטיס הפתוח: יעד בולט, טיימר, דרישות, צוות, ופעולות לפי מצב.
+// גוף הכרטיס הפתוח: יעד בולט, טיימר, דרישות, צוות, מדיה, יומן, ופעולות לפי מצב.
 export default function MyTaskCard({ task, onUpdated }) {
   const { member } = useOrg();
   const [modal, setModal] = useState(null); // 'finish' | 'note' | 'delay' | 'reqs'
+  const [showTimeline, setShowTimeline] = useState(false);
+  const [tlKey, setTlKey] = useState(0);
   const locked = isLocked(task);
+  const activeForMedia = ['in_progress', 'paused'].includes(task.status);
   const showTimer = ['in_progress', 'paused', 'blocked', 'done'].includes(
     task.status
   );
+
+  const refreshTimeline = () => {
+    setTlKey((k) => k + 1);
+    setModal(null);
+  };
 
   const run = (fn) => async () => onUpdated(await fn(task, member.id));
 
@@ -44,10 +54,6 @@ export default function MyTaskCard({ task, onUpdated }) {
 
   async function confirmFinish() {
     onUpdated(await finishTask(task, member.id));
-    setModal(null);
-  }
-  async function saveNote(text) {
-    await addNote(task, member.id, text);
     setModal(null);
   }
   async function sendDelay(text) {
@@ -98,6 +104,21 @@ export default function MyTaskCard({ task, onUpdated }) {
         <TaskActionBar task={task} locked={locked} actions={actions} />
       )}
 
+      {activeForMedia && !locked && (
+        <PhotoCaptureButton task={task} onDone={refreshTimeline} />
+      )}
+
+      <div>
+        <Button variant="outline" onClick={() => setShowTimeline((v) => !v)}>
+          {he.media.openTimeline}
+        </Button>
+        {showTimeline && (
+          <div className="mt-3">
+            <TaskTimeline key={tlKey} taskId={task.id} />
+          </div>
+        )}
+      </div>
+
       {modal === 'reqs' && (
         <Modal title={w.requirementsTitle} onClose={() => setModal(null)}>
           <ul className="space-y-2">
@@ -130,11 +151,9 @@ export default function MyTaskCard({ task, onUpdated }) {
       )}
 
       {modal === 'note' && (
-        <TextEntryModal
-          title={w.noteTitle}
-          placeholder={w.notePlaceholder}
-          submitLabel={w.saveNote}
-          onSubmit={saveNote}
+        <NoteModal
+          task={task}
+          onDone={refreshTimeline}
           onClose={() => setModal(null)}
         />
       )}

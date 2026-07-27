@@ -5,6 +5,7 @@ import { isOverrun } from '../../lib/dashboardModel';
 import { formatDateTime } from '../../lib/time';
 import LiveNet from './LiveNet';
 import TextEntryModal from '../worker/TextEntryModal';
+import TaskTimeline from '../media/TaskTimeline';
 
 const d = he.dashboard;
 
@@ -17,6 +18,7 @@ export default function TaskCardManager({
   onManagerUpdate,
 }) {
   const [showUpdate, setShowUpdate] = useState(false);
+  const [showTimeline, setShowTimeline] = useState(false);
   const overrun = isOverrun(task);
   const active = ['in_progress', 'paused'].includes(task.status);
 
@@ -95,6 +97,19 @@ export default function TaskCardManager({
       >
         {d.managerUpdate}
       </button>
+
+      <button
+        type="button"
+        onClick={() => setShowTimeline((v) => !v)}
+        className="mt-2 min-h-[44px] w-full rounded-lg px-3 text-sm font-bold text-brand hover:bg-brand/5"
+      >
+        {he.media.openTimeline}
+      </button>
+      {showTimeline && (
+        <div className="mt-2">
+          <TaskTimeline taskId={task.id} />
+        </div>
+      )}
 
       {showUpdate && (
         <TextEntryModal

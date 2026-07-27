@@ -133,3 +133,12 @@ export async function markOverrun(task, actorId) {
 export async function addManagerUpdate(task, actorId, text) {
   await logEvent(task, actorId, 'manager_attachment', { text });
 }
+
+// תמונה / הקלטה קולית — נשמרות ב-Storage, כאן נרשם האירוע עם הנתיב
+export async function addPhotoEvent(task, actorId, path) {
+  await logEvent(task, actorId, 'photo', { path });
+}
+
+export async function addVoiceNote(task, actorId, path) {
+  await logEvent(task, actorId, 'voice_note', { path });
+}
