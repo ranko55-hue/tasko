@@ -9,7 +9,17 @@ export const he = {
     loading: 'טוען…',
     logout: 'התנתקות',
     save: 'שמירה',
+    cancel: 'ביטול',
+    add: 'הוספה',
+    back: 'חזרה',
     required: 'שדה חובה',
+    optional: '(רשות)',
+    none: '—',
+    saveError: 'השמירה נכשלה. נסה שוב.',
+  },
+
+  nav: {
+    clients: 'לקוחות',
   },
 
   auth: {
@@ -55,8 +65,74 @@ export const he = {
   },
 
   welcome: {
-    // תבניות — {name} מוחלף בקוד
     greetingMale: 'ברוך הבא, {name}',
     greetingFemale: 'ברוכה הבאה, {name}',
+  },
+
+  clients: {
+    title: 'לקוחות',
+    add: 'הוספת לקוח',
+    addTitle: 'לקוח חדש',
+    empty: 'עדיין אין לקוחות. הוסף את הראשון.',
+    name: 'שם הלקוח',
+    contactName: 'איש קשר',
+    phone: 'טלפון',
+    email: 'אימייל',
+    businessId: 'ח.פ / עוסק',
+    address: 'כתובת',
+    paymentTerms: 'תנאי תשלום',
+    paymentTermsPlaceholder: 'למשל: שוטף+60',
+    nameRequired: 'יש להזין שם לקוח',
+    openProjects: 'פרויקטים',
+  },
+
+  projects: {
+    title: 'פרויקטים',
+    add: 'הוספת פרויקט',
+    addTitle: 'פרויקט חדש',
+    empty: 'אין עדיין פרויקטים ללקוח זה.',
+    name: 'שם הפרויקט',
+    address: 'כתובת',
+    nameRequired: 'יש להזין שם פרויקט',
+    status: {
+      open: 'פתוח',
+      closed: 'סגור',
+    },
+  },
+
+  tasks: {
+    title: 'משימות',
+    add: 'משימה חדשה',
+    addTitle: 'משימה חדשה',
+    empty: 'אין עדיין משימות בפרויקט זה.',
+    fieldTitle: 'כותרת',
+    description: 'תיאור',
+    address: 'כתובת',
+    assignee: 'משויך לעובד',
+    unassigned: 'לא משויך',
+    priority: 'עדיפות',
+    dueAt: 'יעד לסיום',
+    scheduledStart: 'תחילת ביצוע (עתידי)',
+    estMinutes: 'מסגרת זמן (דקות)',
+    requirements: 'דרישות',
+    addRequirement: 'הוספת דרישה',
+    requirementPlaceholder: 'למשל: רכב מנוף',
+    requiredWorkers: 'מספר עובדים נדרש',
+    teamLead: 'ראש צוות',
+    titleRequired: 'יש להזין כותרת',
+    noDueDate: 'ללא יעד',
+    status: {
+      scheduled: 'מתוזמנת',
+      pending: 'ממתינה',
+      in_progress: 'בטיפול',
+      paused: 'מושהית',
+      blocked: 'חסומה',
+      done: 'הושלמה',
+      cancelled: 'בוטלה',
+    },
+    priorityOpt: {
+      normal: 'רגילה',
+      urgent: 'דחוף',
+    },
   },
 };
