@@ -10,6 +10,7 @@ import ClientsPage from './pages/ClientsPage';
 import ClientDetailPage from './pages/ClientDetailPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import MyTasksPage from './pages/MyTasksPage';
+import DashboardPage from './pages/DashboardPage';
 
 // שער כניסה: מחליט לאן לנווט לפי מצב ההתחברות והחברות בארגון.
 export default function App() {
@@ -44,6 +45,8 @@ export default function App() {
 
         {/* אזור מחובר — דורש session + חברות בארגון */}
         <Route element={<Protected session={session} member={member} />}>
+          {/* לוח הבקרה — chrome כהה משלו, מחוץ ל-AppLayout הבהיר */}
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<Navigate to="/clients" replace />} />
             <Route path="/my" element={<MyTasksPage />} />

@@ -12,6 +12,7 @@ export const he = {
     cancel: 'ביטול',
     add: 'הוספה',
     back: 'חזרה',
+    retry: 'נסו שוב',
     required: 'שדה חובה',
     optional: '(רשות)',
     none: '—',
@@ -21,6 +22,39 @@ export const he = {
   nav: {
     clients: 'לקוחות',
     myTasks: 'המשימות שלי',
+    dashboard: 'לוח בקרה',
+  },
+
+  dashboard: {
+    title: 'מגדל הפיקוח',
+    live: 'חי',
+    polling: 'עדכון כל 15ש׳',
+    loading: 'טוען את הלוח…',
+    error: 'טעינת הלוח נכשלה. נסו שוב.',
+    empty: 'אין עדיין משימות. פִּתחו משימה מתוך פרויקט 🗂️',
+    columnEmpty: 'אין כאן משימות',
+    kpi: {
+      open: 'משימות פתוחות',
+      inField: 'עובדים בשטח',
+      alerts: 'חריגות ומעוכב',
+      doneToday: 'הושלמו היום',
+    },
+    columns: {
+      waiting: 'ממתין / מתוזמן',
+      working: 'בעבודה',
+      alert: 'מעוכב / חריגה',
+      doneToday: 'הושלם היום',
+    },
+    overrun: 'חריגה מזמן',
+    pausedMark: 'מושהה',
+    noAssignee: 'לא משויך',
+    noDue: 'ללא יעד',
+    returnToWork: 'החזר לעבודה',
+    workerReport: 'דיווח העובד',
+    managerUpdate: 'עדכון לעובד',
+    updateTitle: 'עדכון לעובד',
+    updatePlaceholder: 'הודעה שתופיע לעובד בציר הזמן של המשימה',
+    sendUpdate: 'שליחת עדכון',
   },
 
   auth: {

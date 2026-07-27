@@ -4,7 +4,7 @@ import { supabase } from './supabase';
 const COLS =
   'id, org_id, title, description, address, status, priority, due_at, ' +
   'scheduled_start_at, est_minutes, requirements, required_workers, ' +
-  'team_lead_id, assignee_id, net_seconds, work_started_at';
+  'team_lead_id, assignee_id, net_seconds, work_started_at, overrun_alerted';
 
 // שניות שרצו במקטע העבודה הנוכחי (מאז work_started_at)
 function runningSeg(task) {
@@ -118,4 +118,18 @@ export async function unblockTask(task, actorId) {
 // הערה מוקלדת — אירוע בלבד, בלי שינוי סטטוס
 export async function addNote(task, actorId, text) {
   await logEvent(task, actorId, 'text_note', { text });
+}
+
+// חריגה ממסגרת זמן — נרשם פעם אחת בלבד (overrun_alerted)
+export async function markOverrun(task, actorId) {
+  await logEvent(task, actorId, 'overrun', {
+    est_minutes: task.est_minutes,
+    net_seconds: elapsedSeconds(task),
+  });
+  return patch(task.id, { overrun_alerted: true });
+}
+
+// עדכון מהמנהל לעובד — מופיע בציר הזמן של שני הצדדים
+export async function addManagerUpdate(task, actorId, text) {
+  await logEvent(task, actorId, 'manager_attachment', { text });
 }

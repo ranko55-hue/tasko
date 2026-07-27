@@ -29,6 +29,9 @@ export default function AppLayout() {
               />
             </Link>
             <nav className="flex items-center gap-1">
+              <NavLink to="/dashboard" className={navClass}>
+                {he.nav.dashboard}
+              </NavLink>
               <NavLink to="/my" className={navClass}>
                 {he.nav.myTasks}
               </NavLink>
