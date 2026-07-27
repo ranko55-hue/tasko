@@ -1,0 +1,131 @@
+import { useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { he } from '../locales/he';
+import Card from '../components/shared/Card';
+import Button from '../components/shared/Button';
+import TextField from '../components/shared/TextField';
+
+const t = he.auth;
+
+// מסך התחברות + הרשמה מול Supabase Auth
+export default function LoginPage() {
+  const [mode, setMode] = useState('login'); // 'login' | 'signup'
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+
+  const isSignup = mode === 'signup';
+
+  function validate() {
+    if (!email.trim()) return t.errors.emailRequired;
+    if (!password) return t.errors.passwordRequired;
+    if (isSignup && password.length < 6) return t.errors.passwordShort;
+    return '';
+  }
+
+  function mapAuthError(message) {
+    const m = (message || '').toLowerCase();
+    if (m.includes('invalid login')) return t.errors.invalid_credentials;
+    if (m.includes('already registered') || m.includes('already exists'))
+      return t.errors.email_exists;
+    return t.errors.generic;
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError('');
+    setNotice('');
+    const v = validate();
+    if (v) return setError(v);
+
+    setBusy(true);
+    try {
+      if (isSignup) {
+        const { error: err } = await supabase.auth.signUp({ email, password });
+        if (err) throw err;
+        setNotice(t.signupSuccess);
+      } else {
+        const { error: err } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (err) throw err;
+        // הצלחה — useAuth יזהה את ה-session וינווט הלאה
+      }
+    } catch (err) {
+      setError(mapAuthError(err.message));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function toggleMode() {
+    setMode(isSignup ? 'login' : 'signup');
+    setError('');
+    setNotice('');
+  }
+
+  return (
+    <div className="flex min-h-full items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="mb-6 text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight text-brand">
+            {he.app.name}
+          </h1>
+          <p className="mt-1 text-slate-500">{he.app.tagline}</p>
+        </div>
+
+        <Card title={isSignup ? t.signupTitle : t.loginTitle}>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <TextField
+              label={t.email}
+              type="email"
+              value={email}
+              onChange={setEmail}
+              autoComplete="email"
+              inputMode="email"
+            />
+            <TextField
+              label={t.password}
+              type="password"
+              value={password}
+              onChange={setPassword}
+              autoComplete={isSignup ? 'new-password' : 'current-password'}
+            />
+
+            {error && (
+              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+                {error}
+              </p>
+            )}
+            {notice && (
+              <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700">
+                {notice}
+              </p>
+            )}
+
+            <Button type="submit" disabled={busy}>
+              {busy
+                ? he.common.loading
+                : isSignup
+                  ? t.signupButton
+                  : t.loginButton}
+            </Button>
+          </form>
+
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="text-base font-medium text-brand hover:underline"
+            >
+              {isSignup ? t.switchToLogin : t.switchToSignup}
+            </button>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
