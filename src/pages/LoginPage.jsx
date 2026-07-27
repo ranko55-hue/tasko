@@ -71,10 +71,12 @@ export default function LoginPage() {
     <div className="flex min-h-full items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-6 text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-brand">
-            {he.app.name}
-          </h1>
-          <p className="mt-1 text-slate-500">{he.app.tagline}</p>
+          <img
+            src="/brand/tasko-header-light.png"
+            alt={he.app.name}
+            className="mx-auto h-10 w-auto"
+          />
+          <p className="mt-3 text-slate-500">{he.app.tagline}</p>
         </div>
 
         <Card title={isSignup ? t.signupTitle : t.loginTitle}>

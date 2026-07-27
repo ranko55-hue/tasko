@@ -21,11 +21,12 @@ export default function AppLayout() {
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-1 sm:gap-3">
-            <Link
-              to="/clients"
-              className="text-2xl font-extrabold tracking-tight text-brand"
-            >
-              {he.app.name}
+            <Link to="/clients" className="flex items-center">
+              <img
+                src="/brand/tasko-header-light.png"
+                alt={he.app.name}
+                className="h-7 w-auto"
+              />
             </Link>
             <nav className="flex items-center gap-1">
               <NavLink to="/my" className={navClass}>
