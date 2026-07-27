@@ -25,6 +25,24 @@ export const he = {
     dashboard: '🗼 מגדל הפיקוח',
   },
 
+  shell: {
+    menu: 'תפריט',
+    close: 'סגירה',
+    search: 'חיפוש',
+    searchPlaceholder: 'חיפוש משימות, לקוחות, פרויקטים…',
+    searchEmpty: 'לא נמצאו תוצאות',
+    groupTasks: 'משימות',
+    groupClients: 'לקוחות',
+    groupProjects: 'פרויקטים',
+    quickActions: 'פעולות מהירות',
+    newTask: '＋ משימה חדשה',
+    newClient: '＋ לקוח חדש',
+    newTaskTitle: 'משימה חדשה',
+    pickProject: 'פרויקט',
+    noProjects: 'אין פרויקטים. צרו קודם לקוח ופרויקט.',
+    filterAll: 'הכול',
+  },
+
   dashboard: {
     title: 'מגדל הפיקוח',
     live: 'חי',

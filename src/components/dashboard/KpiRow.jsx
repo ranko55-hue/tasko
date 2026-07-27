@@ -23,7 +23,7 @@ function Tile({ label, value, valueClass = 'text-white', dot }) {
 export default function KpiRow({ kpis }) {
   const k = he.dashboard.kpi;
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       <Tile label={k.open} value={kpis.open} valueClass="text-brandYellow" />
       <Tile label={k.inField} value={kpis.inField} dot />
       <Tile

@@ -5,7 +5,6 @@ import { useClient } from '../hooks/useClients';
 import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useClientDetail } from '../hooks/useClientDetail';
 import { he } from '../locales/he';
-import PageShell from '../components/ui/PageShell';
 import Card from '../components/ui/Card';
 import Tabs from '../components/ui/Tabs';
 import ClientHeaderCard from '../components/clients/ClientHeaderCard';
@@ -62,7 +61,7 @@ export default function ClientDetailPage() {
   }
 
   return (
-    <PageShell>
+    <>
       <Link
         to="/clients"
         className="text-base font-medium text-brand hover:underline"
@@ -79,6 +78,6 @@ export default function ClientDetailPage() {
         <Tabs tabs={tabItems} active={tab} onChange={setTab} />
         <div className="p-4">{renderTab()}</div>
       </Card>
-    </PageShell>
+    </>
   );
 }

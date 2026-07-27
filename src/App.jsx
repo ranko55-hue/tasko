@@ -5,7 +5,7 @@ import { OrgContext } from './lib/orgContext';
 import { he } from './locales/he';
 import LoginPage from './pages/LoginPage';
 import OrgSetupPage from './pages/OrgSetupPage';
-import AppLayout from './components/AppLayout';
+import AppShell from './components/AppShell';
 import ClientsPage from './pages/ClientsPage';
 import ClientDetailPage from './pages/ClientDetailPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
@@ -43,12 +43,11 @@ export default function App() {
           }
         />
 
-        {/* אזור מחובר — דורש session + חברות בארגון */}
+        {/* אזור מחובר — דורש session + חברות בארגון. AppShell אחיד לכל המסכים. */}
         <Route element={<Protected session={session} member={member} />}>
-          {/* לוח הבקרה — chrome כהה משלו, מחוץ ל-AppLayout הבהיר */}
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route element={<AppLayout />}>
+          <Route element={<AppShell />}>
             <Route path="/" element={<Navigate to="/clients" replace />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/my" element={<MyTasksPage />} />
             <Route path="/clients" element={<ClientsPage />} />
             <Route path="/clients/:clientId" element={<ClientDetailPage />} />

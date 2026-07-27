@@ -1,7 +1,6 @@
 import { useOrg } from '../lib/orgContext';
 import { useMyTasks } from '../hooks/useMyTasks';
 import { he } from '../locales/he';
-import PageShell from '../components/ui/PageShell';
 import PageHeader from '../components/ui/PageHeader';
 import MyTaskList from '../components/worker/MyTaskList';
 
@@ -11,7 +10,7 @@ export default function MyTasksPage() {
   const { tasks, loading, applyLocal } = useMyTasks(member.id);
 
   return (
-    <PageShell>
+    <>
       <PageHeader title={he.worker.title} />
 
       {loading ? (
@@ -19,6 +18,6 @@ export default function MyTasksPage() {
       ) : (
         <MyTaskList tasks={tasks} onUpdated={applyLocal} />
       )}
-    </PageShell>
+    </>
   );
 }

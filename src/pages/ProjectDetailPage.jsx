@@ -9,7 +9,6 @@ import { unblockTask } from '../lib/taskFlow';
 import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Modal from '../components/shared/Modal';
-import PageShell from '../components/ui/PageShell';
 import PageHeader from '../components/ui/PageHeader';
 import TaskList from '../components/tasks/TaskList';
 import TaskForm from '../components/tasks/TaskForm';
@@ -40,7 +39,7 @@ export default function ProjectDetailPage() {
   const client = project?.client;
 
   return (
-    <PageShell>
+    <>
       {client && (
         <Link
           to={`/clients/${client.id}`}
@@ -80,6 +79,6 @@ export default function ProjectDetailPage() {
           />
         </Modal>
       )}
-    </PageShell>
+    </>
   );
 }
