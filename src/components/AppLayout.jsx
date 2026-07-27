@@ -1,17 +1,10 @@
-import { Outlet, Link, NavLink } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { useOrg } from '../lib/orgContext';
 import { he } from '../locales/he';
-
-const navClass = ({ isActive }) =>
-  `rounded-lg px-3 py-2 text-base font-medium ${
-    isActive ? 'bg-brand/10 text-brand' : 'text-slate-600 hover:bg-slate-100'
-  }`;
+import NavLinks from './shared/NavLinks';
 
 // מעטפת האפליקציה למשתמש מחובר: כותרת עליונה קבועה + תוכן המסך.
 export default function AppLayout() {
-  const { member } = useOrg();
-
   async function handleLogout() {
     await supabase.auth.signOut();
   }
@@ -28,17 +21,7 @@ export default function AppLayout() {
                 className="h-7 w-auto"
               />
             </Link>
-            <nav className="flex items-center gap-1">
-              <NavLink to="/dashboard" className={navClass}>
-                {he.nav.dashboard}
-              </NavLink>
-              <NavLink to="/my" className={navClass}>
-                {he.nav.myTasks}
-              </NavLink>
-              <NavLink to="/clients" className={navClass}>
-                {he.nav.clients}
-              </NavLink>
-            </nav>
+            <NavLinks />
           </div>
           <button
             type="button"

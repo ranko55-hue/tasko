@@ -20,9 +20,9 @@ export const he = {
   },
 
   nav: {
-    clients: 'לקוחות',
-    myTasks: 'המשימות שלי',
-    dashboard: 'לוח בקרה',
+    clients: '👥 לקוחות',
+    myTasks: '📱 המשימות שלי',
+    dashboard: '🗼 מגדל הפיקוח',
   },
 
   dashboard: {

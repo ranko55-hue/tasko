@@ -1,11 +1,7 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { he } from '../../locales/he';
-
-const navClass = ({ isActive }) =>
-  `rounded-lg px-3 py-2 text-sm font-medium ${
-    isActive ? 'bg-white/15 text-white' : 'text-slate-300 hover:bg-white/10'
-  }`;
+import NavLinks from '../shared/NavLinks';
 
 // כותרת מגדל הפיקוח — כהה (navy), לוגו לבן, אינדיקטור חיות.
 export default function DashboardHeader({ connection }) {
@@ -20,14 +16,7 @@ export default function DashboardHeader({ connection }) {
             className="h-7 w-auto"
           />
         </Link>
-        <nav className="flex items-center gap-1">
-          <NavLink to="/dashboard" className={navClass}>
-            {he.nav.dashboard}
-          </NavLink>
-          <NavLink to="/clients" className={navClass}>
-            {he.nav.clients}
-          </NavLink>
-        </nav>
+        <NavLinks dark />
       </div>
 
       <div className="flex items-center gap-3">
