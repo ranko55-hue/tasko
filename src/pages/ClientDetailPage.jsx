@@ -1,57 +1,75 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
 import { useClient } from '../hooks/useClients';
-import { useProjects } from '../hooks/useProjects';
+import { useOrgMembers } from '../hooks/useOrgMembers';
+import { useClientDetail } from '../hooks/useClientDetail';
 import { he } from '../locales/he';
-import Button from '../components/shared/Button';
-import Modal from '../components/shared/Modal';
-import ProjectList from '../components/projects/ProjectList';
-import ProjectForm from '../components/projects/ProjectForm';
+import ClientHeaderCard from '../components/clients/ClientHeaderCard';
+import ClientTabs from '../components/clients/ClientTabs';
+import GeneralTab from '../components/clients/GeneralTab';
+import TasksTab from '../components/clients/TasksTab';
+import ProjectsTab from '../components/clients/ProjectsTab';
+import FinancesTab from '../components/clients/FinancesTab';
 
-// מסך לקוח — פרטיו + רשימת פרויקטים + הוספת פרויקט
+// מסך לקוח — כרטיס אחד עם 4 לשוניות פנימיות שמחליפות תוכן במקום.
 export default function ClientDetailPage() {
   const { clientId } = useParams();
+  const navigate = useNavigate();
   const { member } = useOrg();
   const { client } = useClient(clientId);
-  const { projects, loading, addProject } = useProjects(clientId, member.org_id);
-  const [open, setOpen] = useState(false);
+  const { members } = useOrgMembers(member.org_id);
+  const d = useClientDetail(clientId, member.org_id);
+  const [tab, setTab] = useState('general');
 
-  async function handleSubmit(fields) {
-    await addProject(fields);
-    setOpen(false);
+  function renderTab() {
+    if (tab === 'general') return <GeneralTab client={client} />;
+    if (d.error)
+      return (
+        <p className="py-8 text-center text-red-600">
+          {he.clientDetail.loadError}
+        </p>
+      );
+    if (d.loading)
+      return <p className="py-8 text-center text-slate-500">{he.common.loading}</p>;
+    if (tab === 'tasks')
+      return (
+        <TasksTab
+          tasks={d.tasks}
+          members={members}
+          onOpenTask={(t) => navigate(`/projects/${t.project_id}`)}
+        />
+      );
+    if (tab === 'projects')
+      return (
+        <ProjectsTab
+          projects={d.projects}
+          openTaskCountByProject={d.openTaskCountByProject}
+          onAddProject={d.addProject}
+          onOpenProject={(p) => navigate(`/projects/${p.id}`)}
+        />
+      );
+    return <FinancesTab documents={d.documents} onAddDocument={d.addDocument} />;
   }
 
   return (
     <div>
-      <Link to="/clients" className="text-base font-medium text-brand hover:underline">
-        › {he.clients.title}
+      <Link
+        to="/clients"
+        className="text-base font-medium text-brand hover:underline"
+      >
+        ‹ {he.clients.title}
       </Link>
 
-      <div className="mb-5 mt-2 flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold text-slate-900">
-          {client?.name ?? he.common.loading}
-        </h1>
-        <div className="w-44">
-          <Button onClick={() => setOpen(true)}>{he.projects.add}</Button>
-        </div>
+      <div className="mt-2 overflow-hidden rounded-2xl bg-white shadow-sm">
+        <ClientHeaderCard
+          client={client}
+          openProjects={d.openProjectCount}
+          openTasks={d.openTaskCount}
+        />
+        <ClientTabs active={tab} onChange={setTab} />
+        <div className="p-4">{renderTab()}</div>
       </div>
-
-      <h2 className="mb-3 text-xl font-bold text-slate-700">
-        {he.projects.title}
-      </h2>
-
-      {loading ? (
-        <p className="text-lg text-slate-500">{he.common.loading}</p>
-      ) : (
-        <ProjectList projects={projects} />
-      )}
-
-      {open && (
-        <Modal title={he.projects.addTitle} onClose={() => setOpen(false)}>
-          <ProjectForm onSubmit={handleSubmit} onCancel={() => setOpen(false)} />
-        </Modal>
-      )}
     </div>
   );
 }

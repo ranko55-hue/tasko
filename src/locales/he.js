@@ -158,6 +158,65 @@ export const he = {
     openProjects: 'פרויקטים',
   },
 
+  clientDetail: {
+    active: 'לקוח פעיל',
+    inactive: 'לקוח לא פעיל',
+    loadError: 'הטעינה נכשלה. נסו שוב.',
+    // {status} · {projects} פרויקטים פתוחים · {tasks} משימות פתוחות
+    statusLine: '{status} · {projects} פרויקטים פתוחים · {tasks} משימות פתוחות',
+    tabs: {
+      general: 'כללי',
+      tasks: 'משימות',
+      projects: 'פרויקטים',
+      finance: 'כספים',
+    },
+    general: {
+      contactName: 'איש קשר',
+      phone: 'טלפון',
+      email: 'אימייל',
+      businessId: 'ח.פ / עוסק',
+      address: 'כתובת',
+      paymentTerms: 'תנאי תשלום',
+      serviceLink: 'קישור טופס קריאות של הלקוח',
+      copy: 'העתקה',
+      copied: 'הועתק!',
+    },
+    tasksTab: {
+      open: 'משימות פתוחות ({n})',
+      closed: 'משימות סגורות ({n})',
+      empty: 'אין עדיין משימות ללקוח זה.',
+    },
+    projectsTab: {
+      open: 'פרויקטים פתוחים ({n})',
+      closed: 'פרויקטים סגורים ({n})',
+      add: '＋ פרויקט חדש',
+      activeTag: 'פעיל · {n} משימות',
+      empty: 'אין עדיין פרויקטים ללקוח זה.',
+    },
+    finance: {
+      add: '＋ מסמך',
+      empty: 'אין עדיין מסמכים ללקוח זה 🧾',
+      addTitle: 'מסמך חדש',
+      kind: 'סוג המסמך',
+      title: 'כותרת',
+      amount: 'סכום (₪)',
+      kinds: {
+        quote: 'הצעת מחיר',
+        delivery_note: 'תעודת משלוח',
+        invoice: 'חשבונית',
+        receipt: 'קבלה',
+        other: 'אחר',
+      },
+      statuses: {
+        draft: 'טיוטה',
+        sent: 'נשלח',
+        approved: 'מאושר',
+        paid: 'שולם',
+        rejected: 'נדחה',
+      },
+    },
+  },
+
   projects: {
     title: 'פרויקטים',
     add: 'הוספת פרויקט',
