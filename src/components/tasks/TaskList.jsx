@@ -1,6 +1,7 @@
 import { he } from '../../locales/he';
 import { STATUS_STYLES, PRIORITY_STYLES } from '../../lib/taskMeta';
 import Badge from '../shared/Badge';
+import Button from '../shared/Button';
 
 function formatDue(due) {
   if (!due) return he.tasks.noDueDate;
@@ -13,8 +14,9 @@ function formatDue(due) {
   });
 }
 
-// רשימת משימות בפרויקט — כותרת, סטטוס, משויך, יעד
-export default function TaskList({ tasks, members }) {
+// רשימת משימות בפרויקט — כותרת, סטטוס, משויך, יעד.
+// למשימה חסומה: מציג סיבת עיכוב + כפתור החזרה לעבודה (למנהל).
+export default function TaskList({ tasks, members, reasons = {}, onReturnToWork }) {
   if (tasks.length === 0) {
     return (
       <p className="rounded-xl bg-white p-6 text-center text-lg text-slate-500 shadow-sm">
@@ -51,6 +53,22 @@ export default function TaskList({ tasks, members }) {
               />
             )}
           </div>
+
+          {task.status === 'blocked' && (
+            <div className="mt-3 rounded-xl bg-red-50 p-3">
+              <div className="text-sm font-bold text-red-700">
+                {he.tasks.blockReason}
+              </div>
+              <div className="mb-3 text-red-900">
+                {reasons[task.id] || he.common.none}
+              </div>
+              {onReturnToWork && (
+                <Button variant="outline" onClick={() => onReturnToWork(task)}>
+                  {he.tasks.returnToWork}
+                </Button>
+              )}
+            </div>
+          )}
         </li>
       ))}
     </ul>

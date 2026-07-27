@@ -15,7 +15,7 @@ export function useTasks(projectId, orgId, createdBy) {
     setLoading(true);
     const { data } = await supabase
       .from('tasks')
-      .select('id, title, status, priority, due_at, assignee_id')
+      .select('id, org_id, title, status, priority, due_at, assignee_id')
       .eq('project_id', projectId)
       .order('created_at', { ascending: false });
     setTasks(data ?? []);
@@ -35,12 +35,19 @@ export function useTasks(projectId, orgId, createdBy) {
         created_by: createdBy,
         ...fields,
       })
-      .select('id, title, status, priority, due_at, assignee_id')
+      .select('id, org_id, title, status, priority, due_at, assignee_id')
       .single();
     if (error) throw error;
     setTasks((prev) => [data, ...prev]);
     return data;
   }
 
-  return { tasks, loading, addTask, refetch: load };
+  // עדכון מקומי אחרי מעבר סטטוס (למשל החזרת משימה חסומה לעבודה)
+  function applyLocal(updated) {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === updated.id ? { ...t, ...updated } : t))
+    );
+  }
+
+  return { tasks, loading, addTask, applyLocal, refetch: load };
 }

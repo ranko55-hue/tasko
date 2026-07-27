@@ -2,18 +2,19 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 // בודק אם למשתמש המחובר יש כבר חברות בארגון.
-// member === null → צריך לעבור לאשף הקמת ארגון.
+// member === null (ו-loading=false) → צריך לעבור לאשף הקמת ארגון.
 export function useMembership(userId) {
   const [member, setMember] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [resolvedFor, setResolvedFor] = useState(null); // המשתמש ש-member משקף
+  const [fetching, setFetching] = useState(false);
 
   const fetchMember = useCallback(async () => {
     if (!userId) {
       setMember(null);
-      setLoading(false);
+      setResolvedFor(null);
       return;
     }
-    setLoading(true);
+    setFetching(true);
     const { data } = await supabase
       .from('org_members')
       .select('id, org_id, full_name, role, gender')
@@ -21,12 +22,20 @@ export function useMembership(userId) {
       .eq('is_active', true)
       .maybeSingle();
     setMember(data ?? null);
-    setLoading(false);
+    setResolvedFor(userId);
+    setFetching(false);
   }, [userId]);
 
   useEffect(() => {
     fetchMember();
   }, [fetchMember]);
 
-  return { member, loading, refetch: fetchMember };
+  // "טוען" = יש משתמש אך החברות עוד לא נפתרה עבורו (מונע רינדור עם member=null בטעות)
+  const loading = Boolean(userId) && (fetching || resolvedFor !== userId);
+
+  return {
+    member: resolvedFor === userId ? member : null,
+    loading,
+    refetch: fetchMember,
+  };
 }

@@ -4,6 +4,8 @@ import { useOrg } from '../lib/orgContext';
 import { useProject } from '../hooks/useProjects';
 import { useTasks } from '../hooks/useTasks';
 import { useOrgMembers } from '../hooks/useOrgMembers';
+import { useBlockReasons } from '../hooks/useBlockReasons';
+import { unblockTask } from '../lib/taskFlow';
 import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Modal from '../components/shared/Modal';
@@ -16,16 +18,21 @@ export default function ProjectDetailPage() {
   const { member } = useOrg();
   const { project } = useProject(projectId);
   const { members } = useOrgMembers(member.org_id);
-  const { tasks, loading, addTask } = useTasks(
+  const { tasks, loading, addTask, applyLocal } = useTasks(
     projectId,
     member.org_id,
     member.id
   );
+  const reasons = useBlockReasons(tasks);
   const [open, setOpen] = useState(false);
 
   async function handleSubmit(fields) {
     await addTask(fields);
     setOpen(false);
+  }
+
+  async function handleReturnToWork(task) {
+    applyLocal(await unblockTask(task, member.id));
   }
 
   const client = project?.client;
@@ -55,7 +62,12 @@ export default function ProjectDetailPage() {
       {loading ? (
         <p className="text-lg text-slate-500">{he.common.loading}</p>
       ) : (
-        <TaskList tasks={tasks} members={members} />
+        <TaskList
+          tasks={tasks}
+          members={members}
+          reasons={reasons}
+          onReturnToWork={handleReturnToWork}
+        />
       )}
 
       {open && (

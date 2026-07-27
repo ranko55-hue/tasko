@@ -9,6 +9,7 @@ import AppLayout from './components/AppLayout';
 import ClientsPage from './pages/ClientsPage';
 import ClientDetailPage from './pages/ClientDetailPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import MyTasksPage from './pages/MyTasksPage';
 
 // שער כניסה: מחליט לאן לנווט לפי מצב ההתחברות והחברות בארגון.
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
         <Route element={<Protected session={session} member={member} />}>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Navigate to="/clients" replace />} />
+            <Route path="/my" element={<MyTasksPage />} />
             <Route path="/clients" element={<ClientsPage />} />
             <Route path="/clients/:clientId" element={<ClientDetailPage />} />
             <Route path="/projects/:projectId" element={<ProjectDetailPage />} />

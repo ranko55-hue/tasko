@@ -20,6 +20,7 @@ export const he = {
 
   nav: {
     clients: 'לקוחות',
+    myTasks: 'המשימות שלי',
   },
 
   auth: {
@@ -134,5 +135,39 @@ export const he = {
       normal: 'רגילה',
       urgent: 'דחוף',
     },
+    // צד המנהל — טיפול במשימה חסומה
+    returnToWork: 'החזרה לעבודה',
+    blockReason: 'סיבת עיכוב',
+  },
+
+  worker: {
+    title: 'המשימות שלי',
+    empty: 'אין לך משימות פתוחות כרגע.',
+    due: 'יעד לסיום',
+    noDue: 'ללא יעד',
+    netTime: 'זמן עבודה נטו',
+    team: 'משימת צוות · {n} עובדים',
+    requirements: 'דרישות ({n})',
+    requirementsTitle: 'דרישות למשימה',
+    lockedUntil: 'ייפתח לביצוע ב-{date}',
+    doneLabel: 'המשימה הושלמה',
+    // חוקת הכפתורים — פעולות
+    start: 'התחל עבודה',
+    finish: 'סיים משימה',
+    pause: 'הפסקה',
+    resume: 'המשך עבודה',
+    unblock: 'חזרה לעבודה',
+    note: 'הוספת הערה',
+    reportDelay: 'דיווח עיכוב',
+    // מודאלים
+    noteTitle: 'הערה חדשה',
+    notePlaceholder: 'מה לרשום?',
+    delayTitle: 'דיווח עיכוב',
+    delayPlaceholder: 'מה קרה? (יירשם ויעצור את המשימה)',
+    finishTitle: 'סיום משימה',
+    finishBody: 'זמן העבודה נטו: {time}. לסיים את המשימה?',
+    confirmFinish: 'כן, סיים',
+    saveNote: 'שמירת הערה',
+    sendDelay: 'דיווח ועצירה',
   },
 };
