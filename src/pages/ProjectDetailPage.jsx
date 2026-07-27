@@ -9,6 +9,8 @@ import { unblockTask } from '../lib/taskFlow';
 import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Modal from '../components/shared/Modal';
+import PageShell from '../components/ui/PageShell';
+import PageHeader from '../components/ui/PageHeader';
 import TaskList from '../components/tasks/TaskList';
 import TaskForm from '../components/tasks/TaskForm';
 
@@ -38,26 +40,25 @@ export default function ProjectDetailPage() {
   const client = project?.client;
 
   return (
-    <div>
+    <PageShell>
       {client && (
         <Link
           to={`/clients/${client.id}`}
           className="text-base font-medium text-brand hover:underline"
         >
-          › {client.name}
+          ‹ {client.name}
         </Link>
       )}
 
-      <div className="mb-5 mt-2 flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold text-slate-900">
-          {project?.name ?? he.common.loading}
-        </h1>
-        <div className="w-44">
-          <Button onClick={() => setOpen(true)}>{he.tasks.add}</Button>
-        </div>
-      </div>
-
-      <h2 className="mb-3 text-xl font-bold text-slate-700">{he.tasks.title}</h2>
+      <PageHeader
+        title={project?.name ?? he.common.loading}
+        subtitle={he.tasks.title}
+        actions={
+          <div className="w-44">
+            <Button onClick={() => setOpen(true)}>{he.tasks.add}</Button>
+          </div>
+        }
+      />
 
       {loading ? (
         <p className="text-lg text-slate-500">{he.common.loading}</p>
@@ -79,6 +80,6 @@ export default function ProjectDetailPage() {
           />
         </Modal>
       )}
-    </div>
+    </PageShell>
   );
 }

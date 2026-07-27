@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import Button from '../shared/Button';
-import TextField from '../shared/TextField';
+import Field from '../ui/Field';
 
 const t = he.projects;
 
@@ -31,8 +31,8 @@ export default function ProjectForm({ onSubmit, onCancel }) {
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <TextField label={t.name} value={name} onChange={setName} />
-      <TextField
+      <Field label={t.name} value={name} onChange={setName} />
+      <Field
         label={`${t.address} ${he.common.optional}`}
         value={address}
         onChange={setAddress}

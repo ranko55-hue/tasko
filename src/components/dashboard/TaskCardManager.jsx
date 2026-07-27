@@ -6,6 +6,7 @@ import { formatDateTime } from '../../lib/time';
 import LiveNet from './LiveNet';
 import TextEntryModal from '../worker/TextEntryModal';
 import TaskTimeline from '../media/TaskTimeline';
+import StatusPill from '../ui/StatusPill';
 
 const d = he.dashboard;
 
@@ -39,9 +40,9 @@ export default function TaskCardManager({
           </div>
         </div>
         {task.priority === 'urgent' && (
-          <span className="shrink-0 rounded-full bg-red-100 px-2 py-0.5 text-xs font-bold text-red-700">
-            {he.tasks.priorityOpt.urgent}
-          </span>
+          <div className="shrink-0">
+            <StatusPill tone="red" label={he.tasks.priorityOpt.urgent} />
+          </div>
         )}
       </div>
 

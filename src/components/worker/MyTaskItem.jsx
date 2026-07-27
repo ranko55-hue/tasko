@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
-import { STATUS_STYLES } from '../../lib/taskMeta';
 import { formatDateTime } from '../../lib/time';
-import Badge from '../shared/Badge';
+import StatusPill, { STATUS_TONE } from '../ui/StatusPill';
 import MyTaskCard from './MyTaskCard';
 
 const ACTIVE = ['in_progress', 'paused', 'blocked'];
@@ -25,9 +24,9 @@ export default function MyTaskItem({ task, onUpdated }) {
             {task.project?.name ? ` · ${task.project.name}` : ''}
           </div>
         </div>
-        <Badge
+        <StatusPill
+          tone={STATUS_TONE[task.status]}
           label={he.tasks.status[task.status] ?? task.status}
-          className={STATUS_STYLES[task.status] ?? ''}
         />
       </button>
 

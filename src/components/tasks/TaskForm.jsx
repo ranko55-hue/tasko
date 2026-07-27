@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import Button from '../shared/Button';
-import TextField from '../shared/TextField';
+import Field from '../ui/Field';
 import Textarea from '../shared/Textarea';
 import Select from '../shared/Select';
 import RequirementsEditor from './RequirementsEditor';
@@ -60,13 +60,13 @@ export default function TaskForm({ members, onSubmit, onCancel }) {
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <TextField label={t.fieldTitle} value={title} onChange={setTitle} />
+      <Field label={t.fieldTitle} value={title} onChange={setTitle} />
       <Textarea
         label={`${t.description} ${he.common.optional}`}
         value={description}
         onChange={setDescription}
       />
-      <TextField
+      <Field
         label={`${t.address} ${he.common.optional}`}
         value={address}
         onChange={setAddress}
@@ -86,19 +86,19 @@ export default function TaskForm({ members, onSubmit, onCancel }) {
         <option value="urgent">{t.priorityOpt.urgent}</option>
       </Select>
 
-      <TextField
+      <Field
         label={t.dueAt}
         type="datetime-local"
         value={dueAt}
         onChange={setDueAt}
       />
-      <TextField
+      <Field
         label={`${t.scheduledStart} ${he.common.optional}`}
         type="datetime-local"
         value={scheduledStart}
         onChange={setScheduledStart}
       />
-      <TextField
+      <Field
         label={`${t.estMinutes} ${he.common.optional}`}
         type="number"
         inputMode="numeric"
@@ -108,7 +108,7 @@ export default function TaskForm({ members, onSubmit, onCancel }) {
 
       <RequirementsEditor items={requirements} onChange={setRequirements} />
 
-      <TextField
+      <Field
         label={t.requiredWorkers}
         type="number"
         inputMode="numeric"

@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { he } from '../../locales/he';
 import Button from '../shared/Button';
 import Modal from '../shared/Modal';
-import DetailRow from './DetailRow';
+import Row from '../ui/Row';
+import StatusPill from '../ui/StatusPill';
+import EmptyState from '../ui/EmptyState';
 import DocumentForm from './DocumentForm';
 
 const f = he.clientDetail.finance;
@@ -15,15 +17,16 @@ const KIND_ICON = {
   other: '📄',
 };
 
-const STATUS_STYLE = {
-  draft: 'bg-slate-100 text-slate-600',
-  sent: 'bg-blue-100 text-blue-700',
-  approved: 'bg-green-100 text-green-700',
-  paid: 'bg-green-100 text-green-800',
-  rejected: 'bg-red-100 text-red-700',
+// גווני סטטוס מסמך — רק צבעי DESIGN §4
+const DOC_TONE = {
+  draft: 'gray',
+  sent: 'blue',
+  approved: 'green',
+  paid: 'green',
+  rejected: 'red',
 };
 
-// לשונית כספים — מסמכי client_documents, אותה שורה משותפת. מצב ריק לפי DESIGN.
+// לשונית כספים — מסמכי client_documents, אותה Row משותפת. מצב ריק (DESIGN §5).
 export default function FinancesTab({ documents, onAddDocument }) {
   const [open, setOpen] = useState(false);
 
@@ -39,11 +42,11 @@ export default function FinancesTab({ documents, onAddDocument }) {
       </div>
 
       {!documents.length ? (
-        <p className="py-8 text-center text-lg text-slate-400">{f.empty}</p>
+        <EmptyState emoji="🧾" message={f.empty} />
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {documents.map((d) => (
-            <DetailRow
+            <Row
               key={d.id}
               icon={KIND_ICON[d.kind] ?? '📄'}
               title={d.title}
@@ -52,8 +55,12 @@ export default function FinancesTab({ documents, onAddDocument }) {
                   ? '₪' + Number(d.amount).toLocaleString('he-IL')
                   : f.kinds[d.kind]
               }
-              tagLabel={f.statuses[d.status] ?? d.status}
-              tagClass={STATUS_STYLE[d.status] ?? ''}
+              trailing={
+                <StatusPill
+                  tone={DOC_TONE[d.status] ?? 'gray'}
+                  label={f.statuses[d.status] ?? d.status}
+                />
+              }
             />
           ))}
         </div>

@@ -6,6 +6,7 @@ import { he } from '../locales/he';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import KpiRow from '../components/dashboard/KpiRow';
 import Kanban from '../components/dashboard/Kanban';
+import EmptyState from '../components/ui/EmptyState';
 
 // לוח הבקרה של המנהל — "מגדל הפיקוח"
 export default function DashboardPage() {
@@ -40,11 +41,11 @@ export default function DashboardPage() {
 
       <main className="p-4">
         {loading ? (
-          <p className="py-16 text-center text-lg text-slate-500">
+          <p className="py-8 text-center text-lg text-slate-500">
             {he.dashboard.loading}
           </p>
         ) : error ? (
-          <div className="py-16 text-center">
+          <div className="py-8 text-center">
             <p className="mb-4 text-lg text-slate-600">{he.dashboard.error}</p>
             <button
               type="button"
@@ -55,9 +56,7 @@ export default function DashboardPage() {
             </button>
           </div>
         ) : isEmpty ? (
-          <p className="py-16 text-center text-lg text-slate-500">
-            {he.dashboard.empty}
-          </p>
+          <EmptyState emoji="🗂️" message={he.dashboard.empty} />
         ) : (
           <Kanban
             cols={cols}

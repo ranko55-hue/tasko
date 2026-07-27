@@ -1,32 +1,30 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { he } from '../../locales/he';
+import Row from '../ui/Row';
+import EmptyState from '../ui/EmptyState';
 
-// רשימת לקוחות — כרטיס לכל לקוח, לחיצה נכנסת לפרויקטים שלו
+// רשימת לקוחות — Row משותפת, לחיצה נכנסת לכרטיס הלקוח.
 export default function ClientList({ clients }) {
+  const navigate = useNavigate();
+
   if (clients.length === 0) {
-    return (
-      <p className="rounded-xl bg-white p-6 text-center text-lg text-slate-500 shadow-sm">
-        {he.clients.empty}
-      </p>
-    );
+    return <EmptyState emoji="👥" message={he.clients.empty} />;
   }
 
   return (
-    <ul className="space-y-3">
+    <div className="space-y-3">
       {clients.map((c) => (
-        <li key={c.id}>
-          <Link
-            to={`/clients/${c.id}`}
-            className="block rounded-2xl bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div className="text-lg font-bold text-slate-900">{c.name}</div>
-            <div className="mt-1 text-slate-500">
-              {[c.contact_name, c.contact_phone].filter(Boolean).join(' · ') ||
-                he.common.none}
-            </div>
-          </Link>
-        </li>
+        <Row
+          key={c.id}
+          icon="🏢"
+          title={c.name}
+          subtitle={
+            [c.contact_name, c.contact_phone].filter(Boolean).join(' · ') ||
+            he.common.none
+          }
+          onClick={() => navigate(`/clients/${c.id}`)}
+        />
       ))}
-    </ul>
+    </div>
   );
 }

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { he } from '../locales/he';
-import Card from '../components/shared/Card';
 import Button from '../components/shared/Button';
-import TextField from '../components/shared/TextField';
+import Card from '../components/ui/Card';
+import Field from '../components/ui/Field';
 
 const t = he.setup;
 
@@ -56,22 +56,24 @@ export default function OrgSetupPage({ onCreated }) {
   }
 
   return (
-    <div className="flex min-h-full items-center justify-center p-4">
-      <Card title={t.title} subtitle={t.subtitle}>
+    <div className="mx-auto flex min-h-full max-w-md items-center justify-center p-4">
+      <Card className="w-full p-6 sm:p-8">
+        <h1 className="text-2xl font-extrabold text-slate-900">{t.title}</h1>
+        <p className="mb-6 mt-1 text-slate-500">{t.subtitle}</p>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <TextField
+          <Field
             label={t.orgName}
             value={orgName}
             onChange={setOrgName}
             placeholder={t.orgNamePlaceholder}
           />
-          <TextField
+          <Field
             label={t.fullName}
             value={fullName}
             onChange={setFullName}
             autoComplete="name"
           />
-          <TextField
+          <Field
             label={t.phone}
             type="tel"
             value={phone}
@@ -82,7 +84,7 @@ export default function OrgSetupPage({ onCreated }) {
           />
 
           <fieldset>
-            <legend className="mb-1.5 block text-base font-medium text-slate-700">
+            <legend className="mb-2 block text-base font-medium text-slate-700">
               {t.gender}
             </legend>
             <div className="grid grid-cols-2 gap-3">

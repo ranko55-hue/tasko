@@ -3,10 +3,12 @@ import { he } from '../../locales/he';
 import Button from '../shared/Button';
 import Modal from '../shared/Modal';
 import ProjectForm from '../projects/ProjectForm';
-import DetailRow from './DetailRow';
+import Row from '../ui/Row';
+import StatusPill from '../ui/StatusPill';
+import EmptyState from '../ui/EmptyState';
 import TabSection from './TabSection';
 
-// לשונית פרויקטים — פתוחים / סגורים, אותה שורה משותפת. תג "פעיל · N משימות".
+// לשונית פרויקטים — פתוחים / סגורים, אותה Row משותפת. תג "פעיל · N משימות".
 export default function ProjectsTab({
   projects,
   openTaskCountByProject,
@@ -25,20 +27,20 @@ export default function ProjectsTab({
   }
 
   const row = (x) => (
-    <DetailRow
+    <Row
       key={x.id}
       icon="🗂️"
       title={x.name}
       subtitle={x.address}
-      tagLabel={
-        x.status === 'open'
-          ? p.activeTag.replace('{n}', openTaskCountByProject[x.id] || 0)
-          : he.projects.status.closed
-      }
-      tagClass={
-        x.status === 'open'
-          ? 'bg-green-100 text-green-700'
-          : 'bg-slate-200 text-slate-500'
+      trailing={
+        x.status === 'open' ? (
+          <StatusPill
+            tone="green"
+            label={p.activeTag.replace('{n}', openTaskCountByProject[x.id] || 0)}
+          />
+        ) : (
+          <StatusPill tone="done" label={he.projects.status.closed} />
+        )
       }
       onClick={() => onOpenProject(x)}
     />
@@ -51,7 +53,7 @@ export default function ProjectsTab({
       </div>
 
       {!projects.length ? (
-        <p className="py-8 text-center text-slate-400">{p.empty}</p>
+        <EmptyState emoji="🗂️" message={p.empty} />
       ) : (
         <div className="space-y-6">
           <TabSection title={p.open.replace('{n}', openP.length)}>

@@ -4,6 +4,8 @@ import { useClients } from '../hooks/useClients';
 import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Modal from '../components/shared/Modal';
+import PageShell from '../components/ui/PageShell';
+import PageHeader from '../components/ui/PageHeader';
 import ClientList from '../components/clients/ClientList';
 import ClientForm from '../components/clients/ClientForm';
 
@@ -19,15 +21,15 @@ export default function ClientsPage() {
   }
 
   return (
-    <div>
-      <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold text-slate-900">
-          {he.clients.title}
-        </h1>
-        <div className="w-40">
-          <Button onClick={() => setOpen(true)}>{he.clients.add}</Button>
-        </div>
-      </div>
+    <PageShell>
+      <PageHeader
+        title={he.clients.title}
+        actions={
+          <div className="w-40">
+            <Button onClick={() => setOpen(true)}>{he.clients.add}</Button>
+          </div>
+        }
+      />
 
       {loading ? (
         <p className="text-lg text-slate-500">{he.common.loading}</p>
@@ -40,6 +42,6 @@ export default function ClientsPage() {
           <ClientForm onSubmit={handleSubmit} onCancel={() => setOpen(false)} />
         </Modal>
       )}
-    </div>
+    </PageShell>
   );
 }

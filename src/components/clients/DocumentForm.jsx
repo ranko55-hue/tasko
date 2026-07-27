@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import Button from '../shared/Button';
-import TextField from '../shared/TextField';
+import Field from '../ui/Field';
 import Select from '../shared/Select';
 
 const f = he.clientDetail.finance;
@@ -41,8 +41,8 @@ export default function DocumentForm({ onSubmit, onCancel }) {
           </option>
         ))}
       </Select>
-      <TextField label={f.title} value={title} onChange={setTitle} />
-      <TextField
+      <Field label={f.title} value={title} onChange={setTitle} />
+      <Field
         label={f.amount}
         type="number"
         inputMode="numeric"

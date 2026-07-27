@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import Button from '../shared/Button';
-import TextField from '../shared/TextField';
+import Field from '../ui/Field';
 
 const t = he.clients;
 
@@ -40,13 +40,13 @@ export default function ClientForm({ onSubmit, onCancel }) {
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <TextField label={t.name} value={f.name} onChange={set('name')} />
-      <TextField label={`${t.contactName} ${he.common.optional}`} value={f.contact_name} onChange={set('contact_name')} />
-      <TextField label={`${t.phone} ${he.common.optional}`} type="tel" inputMode="tel" value={f.contact_phone} onChange={set('contact_phone')} />
-      <TextField label={`${t.email} ${he.common.optional}`} type="email" inputMode="email" value={f.contact_email} onChange={set('contact_email')} />
-      <TextField label={`${t.businessId} ${he.common.optional}`} value={f.business_id} onChange={set('business_id')} />
-      <TextField label={`${t.address} ${he.common.optional}`} value={f.address} onChange={set('address')} />
-      <TextField label={`${t.paymentTerms} ${he.common.optional}`} value={f.payment_terms} onChange={set('payment_terms')} placeholder={t.paymentTermsPlaceholder} />
+      <Field label={t.name} value={f.name} onChange={set('name')} />
+      <Field label={`${t.contactName} ${he.common.optional}`} value={f.contact_name} onChange={set('contact_name')} />
+      <Field label={`${t.phone} ${he.common.optional}`} type="tel" inputMode="tel" value={f.contact_phone} onChange={set('contact_phone')} />
+      <Field label={`${t.email} ${he.common.optional}`} type="email" inputMode="email" value={f.contact_email} onChange={set('contact_email')} />
+      <Field label={`${t.businessId} ${he.common.optional}`} value={f.business_id} onChange={set('business_id')} />
+      <Field label={`${t.address} ${he.common.optional}`} value={f.address} onChange={set('address')} />
+      <Field label={`${t.paymentTerms} ${he.common.optional}`} value={f.payment_terms} onChange={set('payment_terms')} placeholder={t.paymentTermsPlaceholder} />
 
       {error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">

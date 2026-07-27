@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { he } from '../locales/he';
-import Card from '../components/shared/Card';
 import Button from '../components/shared/Button';
-import TextField from '../components/shared/TextField';
+import Card from '../components/ui/Card';
+import Field from '../components/ui/Field';
 
 const t = he.auth;
 
@@ -79,9 +79,12 @@ export default function LoginPage() {
           <p className="mt-3 text-slate-500">{he.app.tagline}</p>
         </div>
 
-        <Card title={isSignup ? t.signupTitle : t.loginTitle}>
+        <Card className="p-6 sm:p-8">
+          <h2 className="mb-6 text-2xl font-extrabold text-slate-900">
+            {isSignup ? t.signupTitle : t.loginTitle}
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <TextField
+            <Field
               label={t.email}
               type="email"
               value={email}
@@ -89,7 +92,7 @@ export default function LoginPage() {
               autoComplete="email"
               inputMode="email"
             />
-            <TextField
+            <Field
               label={t.password}
               type="password"
               value={password}

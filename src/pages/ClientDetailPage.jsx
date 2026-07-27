@@ -5,12 +5,16 @@ import { useClient } from '../hooks/useClients';
 import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useClientDetail } from '../hooks/useClientDetail';
 import { he } from '../locales/he';
+import PageShell from '../components/ui/PageShell';
+import Card from '../components/ui/Card';
+import Tabs from '../components/ui/Tabs';
 import ClientHeaderCard from '../components/clients/ClientHeaderCard';
-import ClientTabs from '../components/clients/ClientTabs';
 import GeneralTab from '../components/clients/GeneralTab';
 import TasksTab from '../components/clients/TasksTab';
 import ProjectsTab from '../components/clients/ProjectsTab';
 import FinancesTab from '../components/clients/FinancesTab';
+
+const TABS = ['general', 'tasks', 'projects', 'finance'];
 
 // מסך לקוח — כרטיס אחד עם 4 לשוניות פנימיות שמחליפות תוכן במקום.
 export default function ClientDetailPage() {
@@ -21,6 +25,11 @@ export default function ClientDetailPage() {
   const { members } = useOrgMembers(member.org_id);
   const d = useClientDetail(clientId, member.org_id);
   const [tab, setTab] = useState('general');
+
+  const tabItems = TABS.map((key) => ({
+    key,
+    label: he.clientDetail.tabs[key],
+  }));
 
   function renderTab() {
     if (tab === 'general') return <GeneralTab client={client} />;
@@ -53,7 +62,7 @@ export default function ClientDetailPage() {
   }
 
   return (
-    <div>
+    <PageShell>
       <Link
         to="/clients"
         className="text-base font-medium text-brand hover:underline"
@@ -61,15 +70,15 @@ export default function ClientDetailPage() {
         ‹ {he.clients.title}
       </Link>
 
-      <div className="mt-2 overflow-hidden rounded-2xl bg-white shadow-sm">
+      <Card className="mt-2 overflow-hidden">
         <ClientHeaderCard
           client={client}
           openProjects={d.openProjectCount}
           openTasks={d.openTaskCount}
         />
-        <ClientTabs active={tab} onChange={setTab} />
+        <Tabs tabs={tabItems} active={tab} onChange={setTab} />
         <div className="p-4">{renderTab()}</div>
-      </div>
-    </div>
+      </Card>
+    </PageShell>
   );
 }
