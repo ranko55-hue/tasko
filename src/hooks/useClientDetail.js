@@ -22,17 +22,14 @@ export function useClientDetail(clientId, orgId) {
         .order('created_at', { ascending: false });
       if (pe) throw pe;
 
-      const projIds = (pr ?? []).map((p) => p.id);
-      let tk = [];
-      if (projIds.length) {
-        const { data, error: te } = await supabase
-          .from('tasks')
-          .select('id, title, status, assignee_id, project_id')
-          .in('project_id', projIds)
-          .order('created_at', { ascending: false });
-        if (te) throw te;
-        tk = data ?? [];
-      }
+      // v8 §3.4: שליפה לפי client_id — כל משימות הלקוח, עם פרויקט או בלעדיו
+      const { data: tkData, error: te } = await supabase
+        .from('tasks')
+        .select('id, title, status, assignee_id, project_id')
+        .eq('client_id', clientId)
+        .order('created_at', { ascending: false });
+      if (te) throw te;
+      const tk = tkData ?? [];
 
       const { data: docs } = await supabase
         .from('client_documents')

@@ -5,6 +5,7 @@ import { useProject } from '../hooks/useProjects';
 import { useTasks } from '../hooks/useTasks';
 import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useBlockReasons } from '../hooks/useBlockReasons';
+import { useTaskTargets } from '../hooks/useTaskTargets';
 import { unblockTask } from '../lib/taskFlow';
 import { he } from '../locales/he';
 import Button from '../components/shared/Button';
@@ -25,6 +26,7 @@ export default function ProjectDetailPage() {
     member.id
   );
   const reasons = useBlockReasons(tasks);
+  const target = useTaskTargets(member.org_id);
   const [open, setOpen] = useState(false);
 
   async function handleSubmit(fields) {
@@ -74,6 +76,11 @@ export default function ProjectDetailPage() {
         <Modal title={he.tasks.addTitle} onClose={() => setOpen(false)}>
           <TaskForm
             members={members}
+            target={target}
+            initialClientId={client?.id ?? ''}
+            initialProjectId={projectId}
+            lockedClient
+            lockedProject
             onSubmit={handleSubmit}
             onCancel={() => setOpen(false)}
           />

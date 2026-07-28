@@ -80,9 +80,10 @@ export default function DashboardTaskCard({
 
       {/* Client · Project */}
       <div className="px-3 text-sm text-slate-500">
-        {task.project?.clients?.name
-          ? `${task.project.clients.name} · ${task.project.name}`
-          : task.project?.name || he.common.none}
+        {/* v8 §3.4: הלקוח הוא העוגן ותמיד מוצג; הפרויקט נוסף רק אם קיים */}
+        {task.project?.name
+          ? `${task.client?.name ?? he.common.none} · ${task.project.name}`
+          : task.client?.name ?? he.common.none}
       </div>
 
       {/* Data row: due | allocated | priority */}

@@ -5,6 +5,7 @@ import Field from '../ui/Field';
 import Textarea from '../shared/Textarea';
 import Select from '../shared/Select';
 import RequirementsEditor from './RequirementsEditor';
+import TaskTargetPicker from './TaskTargetPicker';
 
 const t = he.tasks;
 
@@ -13,8 +14,21 @@ function toIso(local) {
   return local ? new Date(local).toISOString() : null;
 }
 
-// טופס פתיחת משימה — נפתח תמיד בהקשר של פרויקט.
-export default function TaskForm({ members, onSubmit, onCancel }) {
+// טופס פתיחת משימה. הלקוח הוא העוגן (v8 §3.4): לקוח חובה, פרויקט רשות.
+// target — { clients, projects, requireProject, quickCreateClient } מ-useTaskTargets.
+// lockedClient/lockedProject — יצירה מתוך הקשר (כרטיס לקוח / פרויקט).
+export default function TaskForm({
+  members,
+  onSubmit,
+  onCancel,
+  target,
+  initialClientId = '',
+  initialProjectId = '',
+  lockedClient = false,
+  lockedProject = false,
+}) {
+  const [clientId, setClientId] = useState(initialClientId);
+  const [projectId, setProjectId] = useState(initialProjectId);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
@@ -32,14 +46,25 @@ export default function TaskForm({ members, onSubmit, onCancel }) {
   const workers = Math.max(1, parseInt(requiredWorkers, 10) || 1);
   const isTeam = workers > 1;
 
+  // בחירת לקוח אחר מאפסת פרויקט שכבר לא שייך לו
+  function changeClient(id) {
+    setClientId(id);
+    const stillValid = target?.projects?.some((p) => p.id === projectId && p.client_id === id);
+    if (!stillValid) setProjectId('');
+  }
+
   async function submit(e) {
     e.preventDefault();
     setError('');
+    if (!clientId) return setError(t.clientRequired);
+    if (target?.requireProject && !projectId) return setError(t.projectRequired);
     if (!title.trim()) return setError(t.titleRequired);
 
     setBusy(true);
     try {
       await onSubmit({
+        client_id: clientId,
+        project_id: projectId || null,
         title: title.trim(),
         description: description.trim() || null,
         address: address.trim() || null,
@@ -60,6 +85,24 @@ export default function TaskForm({ members, onSubmit, onCancel }) {
 
   return (
     <form onSubmit={submit} className="space-y-4">
+      {target && (
+        <TaskTargetPicker
+          clients={target.clients}
+          projects={target.projects}
+          clientId={clientId}
+          projectId={projectId}
+          onClientChange={changeClient}
+          onProjectChange={setProjectId}
+          onQuickClient={async (fields) => {
+            const created = await target.quickCreateClient(fields);
+            changeClient(created.id);
+          }}
+          requireProject={target.requireProject}
+          lockedClient={lockedClient}
+          lockedProject={lockedProject}
+        />
+      )}
+
       <Field label={t.fieldTitle} value={title} onChange={setTitle} />
       <Textarea
         label={`${t.description} ${he.common.optional}`}

@@ -5,7 +5,7 @@ const COLS =
   'id, org_id, title, description, address, status, priority, due_at, ' +
   'scheduled_start_at, est_minutes, requirements, required_workers, ' +
   'team_lead_id, assignee_id, net_seconds, work_started_at, ' +
-  'project:projects(name)';
+  'client:clients(name), project:projects(name)';
 
 // "המשימות שלי" — משימות שאני assignee או team_lead שלהן
 export function useMyTasks(memberId) {

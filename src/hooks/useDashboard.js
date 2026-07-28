@@ -10,7 +10,7 @@ import {
 const TASK_COLS =
   'id, org_id, title, status, priority, due_at, scheduled_start_at, ' +
   'est_minutes, net_seconds, work_started_at, overrun_alerted, assignee_id, ' +
-  'project:projects(name, client:clients(name))';
+  'client:clients(name), project:projects(name)';
 
 function startOfTodayISO() {
   const d = new Date();
