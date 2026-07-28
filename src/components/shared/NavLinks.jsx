@@ -1,14 +1,14 @@
 import { NavLink } from 'react-router-dom';
 import { useOrg } from '../../lib/orgContext';
+import { isManager } from '../../lib/roles';
 import { he } from '../../locales/he';
 
-const MANAGER_ROLES = ['project_manager', 'work_manager'];
 
 // סרגל ניווט משותף: לוח · לקוחות · פרויקטים · הגדרות (פעיל = קו תחתון צהוב)
 // vertical=מגירת מובייל. dark=פס navy. onNavigate נסגר את המגירה בלחיצה.
 export default function NavLinks({ dark = false, vertical = false, onNavigate }) {
   const { member } = useOrg();
-  const isManager = MANAGER_ROLES.includes(member?.role);
+  const manager = isManager(member);
 
   const base =
     'flex items-center min-h-touch px-3 text-base font-bold transition-colors ' +
@@ -35,7 +35,7 @@ export default function NavLinks({ dark = false, vertical = false, onNavigate })
     </NavLink>
   );
 
-  if (!isManager) return null;
+  if (!manager) return null;
 
   return (
     <nav className={vertical ? 'flex flex-col gap-1' : 'flex items-center gap-0'}>

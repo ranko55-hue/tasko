@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useOrg } from '../../lib/orgContext';
+import { isManager } from '../../lib/roles';
 import { supabase } from '../../lib/supabase';
 import { he } from '../../locales/he';
 import Modal from '../shared/Modal';
 import ClientForm from '../clients/ClientForm';
 import NewTaskModal from './NewTaskModal';
 
-const MANAGER = ['project_manager', 'work_manager'];
 
 // פעולות מהירות בפס — למנהלים בלבד (RLS ממילא חוסם כתיבה לעובד).
 export default function QuickActions({ vertical = false, onDone }) {
   const { member } = useOrg();
   const [modal, setModal] = useState(null); // 'task' | 'client'
 
-  if (!MANAGER.includes(member?.role)) return null;
+  if (!isManager(member)) return null;
 
   async function addClient(fields) {
     const { error } = await supabase

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useOrg } from '../lib/orgContext';
+import { isManager } from '../lib/roles';
 import { useDashboard } from '../hooks/useDashboard';
 import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useAlerts } from '../hooks/useAlerts';
@@ -46,7 +47,7 @@ export default function DashboardPage() {
   const { cols } = buildDashboard(tasks, doneTodayIds);
   const isEmpty = !loading && !error && tasks.length === 0;
   const live = connection === 'live';
-  const isManager = ['project_manager', 'work_manager'].includes(member.role);
+  const manager = isManager(member);
 
   // צ'יפים מוצמדים — נשמרים כמערך מחרוזות ונקראים תמיד עם ‎.includes()
   useEffect(() => {
@@ -227,7 +228,7 @@ export default function DashboardPage() {
         isOpen={!!selectedTaskId}
         onClose={() => setSelectedTaskId(null)}
         orgId={member.org_id}
-        isManager={isManager}
+        isManager={manager}
       />
     </>
   );

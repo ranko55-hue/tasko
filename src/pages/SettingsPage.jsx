@@ -1,22 +1,22 @@
 import { useOrg } from '../lib/orgContext';
+import { isManager } from '../lib/roles';
 import { useOrgSettings } from '../hooks/useOrgSettings';
 import { he } from '../locales/he';
 import PageHeader from '../components/ui/PageHeader';
 import SettingRow from '../components/settings/SettingRow';
 
-const MANAGER_ROLES = ['project_manager', 'work_manager'];
 const t = he.settings;
 
 // הגדרות הארגון (אפיון v8 §3.9) — מנהלים בלבד.
 // המבנה מחולק לסעיפים כדי שהגדרות נוספות ייכנסו בלי שינוי מבנה.
 export default function SettingsPage() {
   const { member } = useOrg();
-  const isManager = MANAGER_ROLES.includes(member?.role);
+  const manager = isManager(member);
   const { settings, loading, saving, error, update } = useOrgSettings(
-    isManager ? member?.org_id : null
+    manager ? member?.org_id : null
   );
 
-  if (!isManager) {
+  if (!manager) {
     return (
       <>
         <PageHeader title={t.title} />

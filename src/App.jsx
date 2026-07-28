@@ -2,6 +2,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { useMembership } from './hooks/useMembership';
 import { OrgContext } from './lib/orgContext';
+import { isManager, homePathFor } from './lib/roles';
 import { he } from './locales/he';
 import LoginPage from './pages/LoginPage';
 import OrgSetupPage from './pages/OrgSetupPage';
@@ -47,13 +48,18 @@ export default function App() {
         {/* אזור מחובר — דורש session + חברות בארגון. AppShell אחיד לכל המסכים. */}
         <Route element={<Protected session={session} member={member} />}>
           <Route element={<AppShell />}>
-            <Route path="/" element={<Navigate to="/clients" replace />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+            {/* נחיתה לפי תפקיד: מנהל ללוח, עובד/ראש צוות למשימות שלו */}
+            <Route path="/" element={<Navigate to={homePathFor(member)} replace />} />
             <Route path="/my" element={<MyTasksPage />} />
-            <Route path="/clients" element={<ClientsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/clients/:clientId" element={<ClientDetailPage />} />
-            <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
+
+            {/* מסכי ניהול — עובד/ראש צוות מנותבים ל-/my */}
+            <Route element={<ManagerOnly member={member} />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/clients/:clientId" element={<ClientDetailPage />} />
+              <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
+            </Route>
           </Route>
         </Route>
 
@@ -67,6 +73,12 @@ export default function App() {
 function Protected({ session, member }) {
   if (!session) return <Navigate to="/login" replace />;
   if (!member) return <Navigate to="/setup" replace />;
+  return <Outlet />;
+}
+
+// שומר סף למסכי ניהול. זו הגנת UX בלבד — האבטחה עצמה ב-RLS.
+function ManagerOnly({ member }) {
+  if (!isManager(member)) return <Navigate to="/my" replace />;
   return <Outlet />;
 }
 

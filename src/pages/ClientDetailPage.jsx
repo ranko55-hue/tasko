@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
+import { isManager } from '../lib/roles';
 import { useClient } from '../hooks/useClients';
 import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useClientDetail } from '../hooks/useClientDetail';
@@ -33,7 +34,7 @@ export default function ClientDetailPage() {
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [newTaskOpen, setNewTaskOpen] = useState(false);
 
-  const isManager = ['project_manager', 'work_manager'].includes(member.role);
+  const manager = isManager(member);
 
   // יצירה מתוך הקשר הלקוח — הלקוח נעול, הפרויקט נבחר מבין פרויקטי הלקוח
   async function createTask(fields) {
@@ -124,7 +125,7 @@ export default function ClientDetailPage() {
         isOpen={!!selectedTaskId}
         onClose={() => setSelectedTaskId(null)}
         orgId={member.org_id}
-        isManager={isManager}
+        isManager={manager}
       />
     </>
   );
