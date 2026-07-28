@@ -28,6 +28,8 @@
 | לוגיקת שרת | **Supabase Edge Functions** (service role) |
 | אירוח | **Vercel** (פריסה אוטומטית מ-main) |
 
+**Production URL:** https://tasko-gamma.vercel.app (שמור כאן, לא tasko.vercel.app שהוא פרויקט אחר)
+
 **סודות:** רק `.env.local` / Environment Variables. בקוד — אך ורק `VITE_SUPABASE_URL` ו-`VITE_SUPABASE_ANON_KEY` (ה-anon key מותר בלקוח; כל ההגנה על RLS). service_role לעולם לא בקוד לקוח.
 
 ## 3. מבנה תיקיות

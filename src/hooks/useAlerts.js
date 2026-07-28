@@ -22,34 +22,37 @@ export function useAlerts(orgId) {
     setLoading(true);
     try {
       // קריאות חדשות
-      const { data: srData } = await supabase
+      const { data: srData, error: srErr } = await supabase
         .from('service_requests')
         .select('id, client_id, requester_name, requester_phone, description, created_at, clients(name)')
         .eq('org_id', orgId)
         .eq('status', 'new')
         .order('created_at', { ascending: true });
+      if (srErr) throw srErr;
       setServiceRequests(srData || []);
 
       // משימות עם בעיכוב (blocked)
-      const { data: blockedData } = await supabase
+      const { data: blockedData, error: blockedErr } = await supabase
         .from('tasks')
         .select('id, title, status, assignee_id, org_members(full_name), created_at')
         .eq('org_id', orgId)
         .eq('status', 'blocked')
         .order('created_at', { ascending: true });
+      if (blockedErr) throw blockedErr;
       setBlockedTasks(blockedData || []);
 
       // משימות עם חריגה
-      const { data: overrunData } = await supabase
+      const { data: overrunData, error: overrunErr } = await supabase
         .from('tasks')
         .select('id, title, status, assignee_id, org_members(full_name), created_at')
         .eq('org_id', orgId)
         .eq('overrun_alerted', true);
+      if (overrunErr) throw overrunErr;
       setOverrunTasks(overrunData || []);
 
       // משימות לא סגורות שעבר להן due_at
       const now = new Date().toISOString();
-      const { data: unclosedData } = await supabase
+      const { data: unclosedData, error: unclosedErr } = await supabase
         .from('tasks')
         .select('id, title, status, assignee_id, due_at, org_members(full_name), created_at')
         .eq('org_id', orgId)
@@ -57,15 +60,21 @@ export function useAlerts(orgId) {
         .neq('status', 'cancelled')
         .lt('due_at', now)
         .order('created_at', { ascending: true });
+      if (unclosedErr) throw unclosedErr;
 
       setAlerts({
-        new_calls: srData?.length || 0,
-        delayed: blockedData?.length || 0,
-        overrun: overrunData?.length || 0,
-        unclosed: unclosedData?.length || 0,
+        new_calls: (srData || []).length,
+        delayed: (blockedData || []).length,
+        overrun: (overrunData || []).length,
+        unclosed: (unclosedData || []).length,
       });
     } catch (err) {
       console.error('Alert fetch error:', err);
+      // Reset to safe defaults on error
+      setServiceRequests([]);
+      setBlockedTasks([]);
+      setOverrunTasks([]);
+      setAlerts({ new_calls: 0, delayed: 0, overrun: 0, unclosed: 0 });
     }
     setLoading(false);
   }, [orgId]);
