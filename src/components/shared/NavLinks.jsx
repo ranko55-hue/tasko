@@ -39,8 +39,9 @@ export default function NavLinks({ dark = false, vertical = false, onNavigate })
 
   return (
     <nav className={vertical ? 'flex flex-col gap-1' : 'flex items-center gap-0'}>
-      {link('/dashboard', 'לוח')}
-      {link('/clients', 'לקוחות')}
+      {link('/dashboard', he.nav.dashboard)}
+      {link('/clients', he.nav.clients)}
+      {link('/settings', he.nav.settings)}
     </nav>
   );
 }

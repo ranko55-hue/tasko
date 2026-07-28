@@ -11,6 +11,7 @@ import ClientDetailPage from './pages/ClientDetailPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import MyTasksPage from './pages/MyTasksPage';
 import DashboardPage from './pages/DashboardPage';
+import SettingsPage from './pages/SettingsPage';
 
 // שער כניסה: מחליט לאן לנווט לפי מצב ההתחברות והחברות בארגון.
 export default function App() {
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/my" element={<MyTasksPage />} />
             <Route path="/clients" element={<ClientsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/clients/:clientId" element={<ClientDetailPage />} />
             <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
           </Route>
