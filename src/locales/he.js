@@ -16,6 +16,7 @@ export const he = {
     required: 'שדה חובה',
     optional: '(רשות)',
     none: '—',
+    edit: 'עריכה',
     saveError: 'השמירה נכשלה. נסה שוב.',
   },
 

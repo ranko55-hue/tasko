@@ -6,9 +6,10 @@ import ProjectForm from '../projects/ProjectForm';
 import Row from '../ui/Row';
 import StatusPill from '../ui/StatusPill';
 import EmptyState from '../ui/EmptyState';
-import TabSection from './TabSection';
 
-// לשונית פרויקטים — פתוחים / סגורים, אותה Row משותפת. תג "פעיל · N משימות".
+const LOAD_SIZE = 25;
+
+// לשונית פרויקטים — פתוחים / סגורים, lazy loading, חיפוש. ללא TabSection (מחליפים עם toggle).
 export default function ProjectsTab({
   projects,
   openTaskCountByProject,
@@ -16,14 +17,31 @@ export default function ProjectsTab({
   onOpenProject,
 }) {
   const p = he.clientDetail.projectsTab;
-  const [open, setOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [filter, setFilter] = useState('open');
+  const [searchText, setSearchText] = useState('');
+  const [loadedCount, setLoadedCount] = useState(LOAD_SIZE);
 
-  const openP = projects.filter((x) => x.status === 'open');
-  const closedP = projects.filter((x) => x.status !== 'open');
+  const allOpen = projects.filter((x) => x.status === 'open');
+  const allClosed = projects.filter((x) => x.status !== 'open');
+
+  // סינון לפי חיפוש
+  const filteredOpen = allOpen.filter((x) =>
+    x.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+  const filteredClosed = allClosed.filter((x) =>
+    x.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  // lazy loading
+  const displayOpen = filteredOpen.slice(0, loadedCount);
+  const displayClosed = filteredClosed.slice(0, loadedCount);
+  const hasMoreOpen = filteredOpen.length > loadedCount;
+  const hasMoreClosed = filteredClosed.length > loadedCount;
 
   async function submit(fields) {
     await onAddProject(fields);
-    setOpen(false);
+    setFormOpen(false);
   }
 
   const row = (x) => (
@@ -46,30 +64,112 @@ export default function ProjectsTab({
     />
   );
 
+  const showSearch = (filteredOpen.length + filteredClosed.length) > 15;
+
   return (
     <div className="space-y-4">
-      <div className="w-48">
-        <Button onClick={() => setOpen(true)}>{p.add}</Button>
+      {/* Add button */}
+      <div className="max-w-xs">
+        <Button onClick={() => setFormOpen(true)}>{p.add}</Button>
       </div>
 
       {!projects.length ? (
         <EmptyState emoji="🗂️" message={p.empty} />
       ) : (
-        <div className="space-y-6">
-          <TabSection title={p.open.replace('{n}', openP.length)}>
-            {openP.map(row)}
-          </TabSection>
-          {closedP.length > 0 && (
-            <TabSection title={p.closed.replace('{n}', closedP.length)}>
-              {closedP.map(row)}
-            </TabSection>
+        <>
+          {/* Toggle Open/Closed */}
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setFilter('open')}
+              className={`flex-1 rounded-lg px-3 py-2 font-bold transition-colors ${
+                filter === 'open'
+                  ? 'bg-brand text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+            >
+              {p.open.replace('{n}', allOpen.length)}
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilter('closed')}
+              className={`flex-1 rounded-lg px-3 py-2 font-bold transition-colors ${
+                filter === 'closed'
+                  ? 'bg-brand text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+            >
+              {p.closed.replace('{n}', allClosed.length)}
+            </button>
+          </div>
+
+          {/* Search */}
+          {showSearch && (
+            <input
+              type="text"
+              placeholder="חיפוש פרויקטים…"
+              value={searchText}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+                setLoadedCount(LOAD_SIZE);
+              }}
+              className="w-full rounded-lg border border-line px-3 py-2 text-sm"
+            />
           )}
-        </div>
+
+          {/* Open Projects */}
+          {filter === 'open' && (
+            <>
+              {displayOpen.length === 0 && searchText && (
+                <EmptyState emoji="🔍" message={he.shell.searchEmpty} />
+              )}
+              {displayOpen.length === 0 && !searchText && (
+                <EmptyState emoji="✅" message={p.empty} />
+              )}
+              <div className="space-y-3">
+                {displayOpen.map(row)}
+              </div>
+              {hasMoreOpen && (
+                <button
+                  type="button"
+                  onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}
+                  className="mt-4 min-h-[44px] w-full rounded-lg border-2 border-line px-3 font-bold text-slate-700 hover:bg-slate-50"
+                >
+                  טען עוד…
+                </button>
+              )}
+            </>
+          )}
+
+          {/* Closed Projects */}
+          {filter === 'closed' && (
+            <>
+              {displayClosed.length === 0 && searchText && (
+                <EmptyState emoji="🔍" message={he.shell.searchEmpty} />
+              )}
+              {displayClosed.length === 0 && !searchText && (
+                <EmptyState emoji="✅" message={p.empty} />
+              )}
+              <div className="space-y-3">
+                {displayClosed.map(row)}
+              </div>
+              {hasMoreClosed && (
+                <button
+                  type="button"
+                  onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}
+                  className="mt-4 min-h-[44px] w-full rounded-lg border-2 border-line px-3 font-bold text-slate-700 hover:bg-slate-50"
+                >
+                  טען עוד…
+                </button>
+              )}
+            </>
+          )}
+        </>
       )}
 
-      {open && (
-        <Modal title={he.projects.addTitle} onClose={() => setOpen(false)}>
-          <ProjectForm onSubmit={submit} onCancel={() => setOpen(false)} />
+      {formOpen && (
+        <Modal title={he.projects.addTitle} onClose={() => setFormOpen(false)}>
+          <ProjectForm onSubmit={submit} onCancel={() => setFormOpen(false)} />
         </Modal>
       )}
     </div>

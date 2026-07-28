@@ -17,6 +17,7 @@ export default function TaskCardManager({
   blockedReason,
   onReturnToWork,
   onManagerUpdate,
+  onOpenTask,
 }) {
   const [showUpdate, setShowUpdate] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
@@ -93,10 +94,18 @@ export default function TaskCardManager({
 
       <button
         type="button"
+        onClick={() => onOpenTask?.(task.id)}
+        className="mt-2 min-h-[44px] w-full rounded-lg bg-brand px-3 text-sm font-bold text-white hover:bg-brand/90"
+      >
+        📋 {d.managerUpdate || 'פרטים'}
+      </button>
+
+      <button
+        type="button"
         onClick={() => setShowUpdate(true)}
         className="mt-2 min-h-[44px] w-full rounded-lg bg-slate-100 px-3 text-sm font-bold text-slate-700 hover:bg-slate-200"
       >
-        {d.managerUpdate}
+        💬 {d.managerUpdate}
       </button>
 
       <button

@@ -10,6 +10,7 @@ export default function KanbanColumn({
   blockedReasons,
   onReturnToWork,
   onManagerUpdate,
+  onOpenTask,
 }) {
   const accentDot = accent === 'red' ? 'bg-statusRed' : 'bg-slate-400';
 
@@ -37,6 +38,7 @@ export default function KanbanColumn({
               blockedReason={blockedReasons[t.id]}
               onReturnToWork={onReturnToWork}
               onManagerUpdate={onManagerUpdate}
+              onOpenTask={onOpenTask}
             />
           ))}
         </div>

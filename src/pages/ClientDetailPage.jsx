@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
 import { useClient } from '../hooks/useClients';
 import { useOrgMembers } from '../hooks/useOrgMembers';
@@ -12,18 +12,22 @@ import GeneralTab from '../components/clients/GeneralTab';
 import TasksTab from '../components/clients/TasksTab';
 import ProjectsTab from '../components/clients/ProjectsTab';
 import FinancesTab from '../components/clients/FinancesTab';
+import TaskDrawer from '../components/tasks/TaskDrawer';
 
 const TABS = ['general', 'tasks', 'projects', 'finance'];
 
 // מסך לקוח — כרטיס אחד עם 4 לשוניות פנימיות שמחליפות תוכן במקום.
+// TaskDrawer נפתח כשלוחצים על משימה (לא ניווט לעמוד אחר)
 export default function ClientDetailPage() {
   const { clientId } = useParams();
-  const navigate = useNavigate();
   const { member } = useOrg();
   const { client } = useClient(clientId);
   const { members } = useOrgMembers(member.org_id);
   const d = useClientDetail(clientId, member.org_id);
   const [tab, setTab] = useState('general');
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+
+  const isManager = ['project_manager', 'work_manager'].includes(member.role);
 
   const tabItems = TABS.map((key) => ({
     key,
@@ -45,7 +49,13 @@ export default function ClientDetailPage() {
         <TasksTab
           tasks={d.tasks}
           members={members}
-          onOpenTask={(t) => navigate(`/projects/${t.project_id}`)}
+          onOpenTask={(t) => setSelectedTaskId(t.id)}
+          onNewTask={() => {
+            // יוצר משימה חדשה בפרויקט הראשון של הלקוח
+            if (d.projects.length > 0) {
+              // בשלב זה יפתח דיאלוג יצירה חדש
+            }
+          }}
         />
       );
     if (tab === 'projects')
@@ -54,7 +64,9 @@ export default function ClientDetailPage() {
           projects={d.projects}
           openTaskCountByProject={d.openTaskCountByProject}
           onAddProject={d.addProject}
-          onOpenProject={(p) => navigate(`/projects/${p.id}`)}
+          onOpenProject={(p) => {
+            // פתיחת DrawerTasksTab של פרויקט
+          }}
         />
       );
     return <FinancesTab documents={d.documents} onAddDocument={d.addDocument} />;
@@ -74,10 +86,22 @@ export default function ClientDetailPage() {
           client={client}
           openProjects={d.openProjectCount}
           openTasks={d.openTaskCount}
+          onNewTask={() => {
+            // TODO: יצירת משימה חדשה
+          }}
         />
         <Tabs tabs={tabItems} active={tab} onChange={setTab} />
         <div className="p-4">{renderTab()}</div>
       </Card>
+
+      {/* TaskDrawer — פתיחה מכל מקום */}
+      <TaskDrawer
+        taskId={selectedTaskId}
+        isOpen={!!selectedTaskId}
+        onClose={() => setSelectedTaskId(null)}
+        orgId={member.org_id}
+        isManager={isManager}
+      />
     </>
   );
 }

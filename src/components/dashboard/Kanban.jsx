@@ -9,9 +9,10 @@ export default function Kanban({
   blockedReasons,
   onReturnToWork,
   onManagerUpdate,
+  onOpenTask,
 }) {
   const c = he.dashboard.columns;
-  const shared = { membersMap, blockedReasons, onReturnToWork, onManagerUpdate };
+  const shared = { membersMap, blockedReasons, onReturnToWork, onManagerUpdate, onOpenTask };
 
   return (
     <>

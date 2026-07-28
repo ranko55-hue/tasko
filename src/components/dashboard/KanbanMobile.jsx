@@ -10,6 +10,7 @@ export default function KanbanMobile({
   blockedReasons,
   onReturnToWork,
   onManagerUpdate,
+  onOpenTask,
 }) {
   const c = he.dashboard.columns;
   const groups = [
@@ -56,6 +57,7 @@ export default function KanbanMobile({
               blockedReason={blockedReasons[t.id]}
               onReturnToWork={onReturnToWork}
               onManagerUpdate={onManagerUpdate}
+              onOpenTask={onOpenTask}
             />
           ))}
         </div>
