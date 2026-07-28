@@ -6,11 +6,14 @@ import { useAlerts } from '../hooks/useAlerts';
 import { buildDashboard } from '../lib/dashboardModel';
 import { he } from '../locales/he';
 import { supabase } from '../lib/supabase';
+import { readStringArray, writeJSON } from '../lib/storage';
 import PageHeader from '../components/ui/PageHeader';
 import EmptyState from '../components/ui/EmptyState';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
 import DashboardTaskCard from '../components/dashboard/DashboardTaskCard';
 import TaskDrawer from '../components/tasks/TaskDrawer';
+
+const PINNED_CHIPS_KEY = 'dashboard.pinnedChips';
 
 // לוח הבקרה של המנהל — "מגדל הפיקוח" — עיצוב 2026.
 // TaskDrawer נפתח כשלוחצים על כרטיס משימה.
@@ -24,6 +27,7 @@ export default function DashboardPage() {
   const {
     tasks,
     blockedReasons,
+    doneTodayIds,
     loading,
     error,
     connection,
@@ -39,24 +43,20 @@ export default function DashboardPage() {
   } = useAlerts(member.org_id);
 
   const membersMap = Object.fromEntries(members.map((m) => [m.id, m.full_name]));
-  const { cols } = buildDashboard(tasks, []);
+  const { cols } = buildDashboard(tasks, doneTodayIds);
   const isEmpty = !loading && !error && tasks.length === 0;
   const live = connection === 'live';
   const isManager = ['project_manager', 'work_manager'].includes(member.role);
 
-  // Load pinned chips from localStorage
+  // צ'יפים מוצמדים — נשמרים כמערך מחרוזות ונקראים תמיד עם ‎.includes()
   useEffect(() => {
-    const saved = localStorage.getItem('dashboard.pinnedChips');
-    if (saved) {
-      try {
-        setPinnedChips(JSON.parse(saved));
-      } catch {}
-    }
+    setPinnedChips(readStringArray(PINNED_CHIPS_KEY));
   }, []);
 
   function handleTogglePinned(chips) {
-    setPinnedChips(chips);
-    localStorage.setItem('dashboard.pinnedChips', JSON.stringify(chips));
+    const safe = Array.isArray(chips) ? chips : [];
+    setPinnedChips(safe);
+    writeJSON(PINNED_CHIPS_KEY, safe);
   }
 
   // Fetch task events on demand (when card expands)

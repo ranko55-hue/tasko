@@ -5,15 +5,17 @@ import { formatDateTime } from '../../lib/time';
 // מודול "תדריך AI — חי" עם צ'יפים ותיוג ספציפי
 export default function AIGuidanceModule({
   alerts,
-  serviceRequests,
-  blockedTasks,
-  overrunTasks,
-  unclosedTasks,
+  serviceRequests = [],
+  blockedTasks = [],
+  overrunTasks = [],
+  unclosedTasks = [],
   pinnedChips,
   onTogglePinned,
   pinnedTaskCounts,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  // תמיד מערך — הצ'יפים המוצמדים נקראים עם ‎.includes()‎ בלבד
+  const pinned = Array.isArray(pinnedChips) ? pinnedChips : [];
 
   const alertCounter =
     (alerts?.new_calls || 0) +
@@ -43,7 +45,7 @@ export default function AIGuidanceModule({
     : [{ key: 'ok', label: 'הכל תקין', count: null, color: 'bg-statusGreen' }];
 
   // הוסף צ'יפים מוצמדים
-  const pinnedDisplay = pinnedOptions.filter((p) => pinnedChips?.includes(p.key));
+  const pinnedDisplay = pinnedOptions.filter((p) => pinned.includes(p.key));
 
   // בדוק אם הכול נכנס
   const allChips = [...displayChips, ...pinnedDisplay];
@@ -177,12 +179,12 @@ export default function AIGuidanceModule({
                 >
                   <input
                     type="checkbox"
-                    checked={pinnedChips?.includes(p.key) || false}
+                    checked={pinned.includes(p.key)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        onTogglePinned([...(pinnedChips || []), p.key].slice(0, 3));
+                        onTogglePinned([...pinned, p.key].slice(0, 3));
                       } else {
-                        onTogglePinned((pinnedChips || []).filter((c) => c !== p.key));
+                        onTogglePinned(pinned.filter((c) => c !== p.key));
                       }
                     }}
                     className="rounded"

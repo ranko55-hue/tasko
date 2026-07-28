@@ -6,15 +6,24 @@ export function isOverrun(t) {
   return t.overrun_alerted && ACTIVE.includes(t.status);
 }
 
+// doneTodayIds מתקבל כ-Set, אבל מנורמל כאן כדי שקורא שמעביר מערך/undefined
+// לא יפיל את הלוח כולו (‎.has is not a function‎).
+function toIdSet(value) {
+  if (value instanceof Set) return value;
+  if (Array.isArray(value)) return new Set(value);
+  return new Set();
+}
+
 export function buildDashboard(tasks, doneTodayIds) {
   const cols = { waiting: [], working: [], alert: [], done: [] };
   const workers = new Set();
+  const doneIds = toIdSet(doneTodayIds);
 
-  for (const t of tasks) {
+  for (const t of tasks ?? []) {
     if (t.status === 'in_progress' && t.assignee_id) workers.add(t.assignee_id);
 
     if (t.status === 'done') {
-      if (doneTodayIds.has(t.id)) cols.done.push(t);
+      if (doneIds.has(t.id)) cols.done.push(t);
       continue;
     }
     if (t.status === 'cancelled') continue;
