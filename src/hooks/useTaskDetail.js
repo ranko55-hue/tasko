@@ -1,7 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
-// משימה בודדת + כל הפרטים שלה (דרישות, ציר זמן, פרויקט, משויך)
+// הלקוח הוא העוגן (v8 §3.4) — client תמיד קיים, project עשוי להיות null.
+const SELECT = `
+  id, title, description, address, priority, status, due_at, scheduled_start_at,
+  est_minutes, requirements, required_workers, net_seconds, work_started_at,
+  assignee_id, created_by, team_lead_id, client_id, project_id, org_id,
+  client:clients(id, name),
+  project:projects(id, name, client_id)
+`;
+
+// משימה בודדת + כל הפרטים שלה (דרישות, לקוח, פרויקט, משויך)
 export function useTaskDetail(taskId) {
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(!!taskId);
@@ -15,23 +24,18 @@ export function useTaskDetail(taskId) {
     }
     setLoading(true);
     setError(null);
-    try {
-      const { data, error: err } = await supabase
-        .from('tasks')
-        .select(
-          `
-          id, title, description, address, priority, status, due_at, scheduled_start_at,
-          est_minutes, requirements, required_workers, net_seconds, work_started_at,
-          assignee_id, created_by, team_lead_id, project_id, org_id,
-          project:projects(id, name, client_id, clients(id, name))
-        `
-        )
-        .eq('id', taskId)
-        .single();
-      if (err) throw err;
+
+    const { data, error: err } = await supabase
+      .from('tasks')
+      .select(SELECT)
+      .eq('id', taskId)
+      .single();
+
+    if (err) {
+      console.error('useTaskDetail[load]', err.code ?? '', err.message);
+      setError(err.message);
+    } else {
       setTask(data);
-    } catch (e) {
-      setError(e.message);
     }
     setLoading(false);
   }, [taskId]);
@@ -40,23 +44,33 @@ export function useTaskDetail(taskId) {
     load();
   }, [load]);
 
+  // שמירת עריכה. הטריגר בשרת אוכף הרשאת מנהל ורושם אירוע 'edited',
+  // ולכן שגיאה מכאן היא מקור האמת — לא בודקים תפקיד בלקוח בלבד.
   async function updateTask(updates) {
-    if (!task) return;
-    try {
-      const { data, error: err } = await supabase
-        .from('tasks')
-        .update(updates)
-        .eq('id', taskId)
-        .select()
-        .single();
-      if (err) throw err;
-      setTask(data);
-      return data;
-    } catch (e) {
-      setError(e.message);
-      throw e;
+    if (!taskId) return null;
+
+    const { error: err } = await supabase.from('tasks').update(updates).eq('id', taskId);
+    if (err) {
+      console.error('useTaskDetail[update]', err.code ?? '', err.message);
+      throw err;
     }
+    await load(); // מרענן כדי לקבל את הלקוח/פרויקט המקושרים מחדש
+    return true;
   }
 
-  return { task, loading, error, refetch: load, updateTask };
+  // ביטול משימה — RPC שאוכף סיבה חובה והרשאת מנהל בצד שרת
+  async function cancelTask(reason) {
+    const { error: err } = await supabase.rpc('cancel_task', {
+      p_task_id: taskId,
+      p_reason: reason,
+    });
+    if (err) {
+      console.error('useTaskDetail[cancel]', err.code ?? '', err.message);
+      throw err;
+    }
+    await load();
+    return true;
+  }
+
+  return { task, loading, error, refetch: load, updateTask, cancelTask };
 }

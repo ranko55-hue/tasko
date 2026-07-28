@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { he } from '../../locales/he';
 import { formatDateTime } from '../../lib/time';
 import { useTaskTimeline } from '../../hooks/useTaskTimeline';
+import { describeEdit } from '../../lib/taskEdits';
 import Modal from '../shared/Modal';
 
 const t = he.media;
@@ -10,8 +11,10 @@ const t = he.media;
 function Row({ ev, onPhoto }) {
   const label = t.eventTypes[ev.type] ?? ev.type;
   const text =
-    ['text_note', 'manager_attachment', 'blocked'].includes(ev.type) &&
+    ['text_note', 'manager_attachment', 'blocked', 'cancelled'].includes(ev.type) &&
     ev.payload?.text;
+  // אירוע עריכה → שורה בעברית לכל שדה שהשתנה (v8 §3.4)
+  const edits = ev.type === 'edited' ? describeEdit(ev.payload) : [];
 
   return (
     <li className="rounded-xl bg-slate-50 p-3">
@@ -21,6 +24,16 @@ function Row({ ev, onPhoto }) {
       </div>
 
       {text && <p className="mt-1 whitespace-pre-wrap text-slate-800">{text}</p>}
+
+      {edits.length > 0 && (
+        <ul className="mt-1 space-y-0.5">
+          {edits.map((line, i) => (
+            <li key={i} className="text-slate-800">
+              {line}
+            </li>
+          ))}
+        </ul>
+      )}
 
       {ev.type === 'photo' && ev.url && (
         <button type="button" onClick={() => onPhoto(ev.url)} className="mt-2 block">

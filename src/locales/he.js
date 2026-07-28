@@ -27,9 +27,22 @@ export const he = {
   },
 
   nav: {
-    clients: '👥 לקוחות',
-    myTasks: '📱 המשימות שלי',
-    dashboard: '🗼 מגדל הפיקוח',
+    clients: 'לקוחות',
+    myTasks: 'המשימות שלי',
+    dashboard: 'לוח',
+    settings: 'הגדרות',
+  },
+
+  settings: {
+    title: 'הגדרות',
+    subtitle: 'התאמת המערכת לאופן העבודה של הארגון',
+    sectionTasks: 'משימות',
+    requireProject: 'משימה חייבת להיות משויכת לפרויקט',
+    requireProjectHint:
+      'כשההגדרה כבויה אפשר לפתוח משימה תחת לקוח בלבד. ההגדרה חלה על משימות חדשות בלבד.',
+    saved: 'ההגדרה נשמרה',
+    saveError: 'שמירת ההגדרה נכשלה. נסו שוב.',
+    managersOnly: 'הגדרות הארגון פתוחות למנהלים בלבד.',
   },
 
   shell: {
@@ -155,7 +168,31 @@ export const he = {
       manager_attachment: 'עדכון מנהל',
       photo: 'תמונה',
       voice_note: 'הקלטה קולית',
+      edited: 'עריכה',
+      cancelled: 'בוטלה',
+      from_service_request: 'נפתחה מקריאת שירות',
     },
+
+    // v8 — תיאור עריכה בציר הזמן
+    editedFields: {
+      title: 'כותרת',
+      description: 'תיאור',
+      address: 'כתובת',
+      client_id: 'לקוח',
+      project_id: 'פרויקט',
+      assignee_id: 'עובד מבצע',
+      team_lead_id: 'ראש צוות',
+      due_at: 'יעד לסיום',
+      scheduled_start_at: 'תחילת ביצוע',
+      est_minutes: 'מסגרת זמן',
+      priority: 'עדיפות',
+      requirements: 'דרישות',
+      required_workers: 'מספר עובדים',
+    },
+    editedChanged: (field, from, to) => `שונה ${field} מ-${from} ל-${to}`,
+    editedSet: (field, to) => `הוגדר ${field}: ${to}`,
+    editedCleared: (field) => `בוטל ${field}`,
+    editedEmpty: 'ללא',
     errors: {
       mic: 'אין הרשאת מיקרופון. אשרו גישה בדפדפן ונסו שוב.',
       camera: 'אין הרשאת מצלמה. אשרו גישה ונסו שוב.',
@@ -293,6 +330,34 @@ export const he = {
     // צד המנהל — טיפול במשימה חסומה
     returnToWork: 'החזרה לעבודה',
     blockReason: 'סיבת עיכוב',
+
+    // v8 §3.4 — הלקוח כעוגן
+    client: 'לקוח',
+    project: 'פרויקט',
+    noProject: 'ללא פרויקט',
+    clientRequired: 'יש לבחור לקוח',
+    projectRequired: 'בארגון זה חובה לשייך משימה לפרויקט',
+    projectClientMismatch: 'הפרויקט שנבחר אינו שייך ללקוח שנבחר',
+    noClients: 'אין עדיין לקוחות. הוסיפו לקוח כדי לפתוח משימה.',
+    noProjectsForClient: 'אין פרויקטים ללקוח זה',
+    quickClient: '＋ לקוח מהיר',
+    quickClientName: 'שם הלקוח',
+    quickClientPhone: 'טלפון',
+    quickClientCreate: 'יצירה ובחירה',
+    quickClientNameRequired: 'יש להזין שם לקוח',
+    quickClientError: 'יצירת הלקוח נכשלה. נסו שוב.',
+
+    // v8 — עריכה וביטול
+    editTitle: 'עריכת משימה',
+    saveFailed: 'השמירה נכשלה. נסו שוב.',
+    notManager: 'רק מנהל עבודה או מנהל פרויקט רשאים לערוך משימה.',
+    cancelTask: 'ביטול משימה',
+    cancelReason: 'סיבת הביטול',
+    cancelReasonRequired: 'יש להזין סיבת ביטול',
+    cancelConfirm: 'ביטול המשימה',
+    cancelFailed: 'ביטול המשימה נכשל. נסו שוב.',
+    cancelHint: 'המשימה תסומן כבוטלה ותישאר ביומן. אין מחיקה.',
+    alreadyCancelled: 'המשימה בוטלה',
   },
 
   worker: {
