@@ -30,6 +30,13 @@
 
 **Production URL:** https://tasko-gamma.vercel.app (שמור כאן, לא tasko.vercel.app שהוא פרויקט אחר)
 
+**פריסות Vercel — באחריותי, דרך vercel CLI. אין לשלוח את רן לטרמינל או לממשק Vercel.**
+הפרויקט: `ran10/tasko` (מקושר ב-`.vercel/project.json`). תצוגה מקדימה: `npx vercel deploy --yes`;
+פרודקשן: `npx vercel deploy --prod --yes`. תצוגות מקדימות מוגנות ב-SSO של Vercel — רן יכול
+לפתוח אותן בדפדפן שלו, אבל `curl` אנונימי יקבל 302; לאימות תוכן משתמשים ב-`vercel inspect <url> --logs`
+ומשווים את ה-hash של החבילה לבילד המקומי. אין להסיק שפריסה עלתה מעצם הצלחת `git push` —
+ראו [[tasko-vercel-deploy-stuck]].
+
 **סודות:** רק `.env.local` / Environment Variables. בקוד — אך ורק `VITE_SUPABASE_URL` ו-`VITE_SUPABASE_ANON_KEY` (ה-anon key מותר בלקוח; כל ההגנה על RLS). service_role לעולם לא בקוד לקוח.
 
 ## 3. מבנה תיקיות
