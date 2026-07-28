@@ -5,6 +5,12 @@ export const he = {
     tagline: 'ניהול משימות שטח',
   },
 
+  crash: {
+    title: 'משהו השתבש',
+    message: 'אירעה תקלה בהצגת המסך. הנתונים שלך לא נפגעו.',
+    refresh: 'רענון הדף',
+  },
+
   common: {
     loading: 'טוען…',
     logout: 'התנתקות',
