@@ -3,6 +3,8 @@ import { he } from '../../locales/he';
 import { STATUS_DOT } from '../../lib/taskMeta';
 import { isOverrun } from '../../lib/dashboardModel';
 import { formatDuration } from '../../lib/time';
+import Modal from '../shared/Modal';
+import EventMedia from '../media/EventMedia';
 
 // צבעי סטטוס לטקסט
 const STATUS_TEXT_COLOR = {
@@ -26,6 +28,7 @@ export default function DashboardTaskCard({
   onExpandDetails,
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [lightbox, setLightbox] = useState(null);
 
   function handleToggleExpand() {
     if (!expanded && onExpandDetails) {
@@ -185,6 +188,7 @@ export default function DashboardTaskCard({
                           minute: '2-digit',
                         })}
                       </div>
+                      <EventMedia event={evt} size="sm" onPhoto={setLightbox} />
                     </div>
                   </div>
                 ))}
@@ -238,8 +242,18 @@ export default function DashboardTaskCard({
           onClick={() => onReturnToWork?.(task)}
           className="w-full bg-brand px-3 py-2 font-bold text-white hover:bg-brand/90 text-sm"
         >
-          🔧 טפל עכשיו
+          {he.tasks.handleNow}
         </button>
+      )}
+
+      {lightbox && (
+        <Modal title={he.media.photoAlt} onClose={() => setLightbox(null)}>
+          <img
+            src={lightbox}
+            alt={he.media.photoAlt}
+            className="mx-auto max-h-[70vh] rounded-lg"
+          />
+        </Modal>
       )}
     </div>
   );

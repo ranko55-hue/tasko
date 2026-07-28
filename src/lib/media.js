@@ -34,6 +34,21 @@ export async function uploadTaskMedia(task, ext, blob, contentType, onProgress) 
   });
 }
 
+// העשרת אירועים בכתובות חתומות. משותף לציר הזמן ולכרטיס הלוח,
+// כדי ששני המקומות יציגו מדיה באותה צורה בדיוק.
+export async function withSignedUrls(events) {
+  return Promise.all(
+    (events ?? []).map(async (ev) => {
+      if (!['photo', 'voice_note'].includes(ev.type) || !ev.payload?.path) return ev;
+      try {
+        return { ...ev, url: await signedUrl(ev.payload.path) };
+      } catch {
+        return { ...ev, url: null };
+      }
+    })
+  );
+}
+
 // כתובת חתומה לצפייה (bucket פרטי)
 export async function signedUrl(path, expiresIn = 3600) {
   const { data, error } = await supabase.storage

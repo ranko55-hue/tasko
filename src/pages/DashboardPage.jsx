@@ -8,6 +8,7 @@ import { buildDashboard } from '../lib/dashboardModel';
 import { he } from '../locales/he';
 import { supabase } from '../lib/supabase';
 import { readStringArray, writeJSON } from '../lib/storage';
+import { withSignedUrls } from '../lib/media';
 import PageHeader from '../components/ui/PageHeader';
 import EmptyState from '../components/ui/EmptyState';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
@@ -64,14 +65,17 @@ export default function DashboardPage() {
   const fetchTaskEvents = useCallback(async (taskId) => {
     if (taskEventsMap[taskId]) return; // Already loaded
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('task_events')
         .select('id, type, payload, created_at, actor_id, actor:org_members(full_name)')
         .eq('task_id', taskId)
         .order('created_at', { ascending: true });
-      setTaskEventsMap((prev) => ({ ...prev, [taskId]: data || [] }));
+      if (error) throw error;
+      // כתובות חתומות כדי שתמונות והקלטות יוצגו גם בכרטיס, לא רק בציר המלא
+      const enriched = await withSignedUrls(data);
+      setTaskEventsMap((prev) => ({ ...prev, [taskId]: enriched }));
     } catch (err) {
-      console.error('Failed to fetch task events:', err);
+      console.error('DashboardPage[taskEvents]', err.code ?? '', err.message ?? err);
     }
   }, [taskEventsMap]);
 

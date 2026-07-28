@@ -7,6 +7,9 @@
 --
 -- עיקרון: עובד רואה לקוח/פרויקט רק אם הוא מופיע במשימה שהוקצתה לו —
 -- הוא צריך לדעת אצל מי הוא עובד. כספים סגורים בפניו לחלוטין.
+--
+-- הקובץ אידמפוטנטי: כל create policy מקדים לו drop policy if exists,
+-- כך שאפשר להריץ אותו מחדש בשלמותו גם אחרי הרצה שנקטעה באמצע.
 
 -- מזהי החבר הנוכחי (בדרך כלל אחד; unique(auth_user_id) ב-org_members)
 create or replace function my_member_ids()
@@ -17,6 +20,7 @@ $$;
 -- ── לקוחות ──────────────────────────────────────────────────────────────
 drop policy if exists cli_all on clients;
 
+drop policy if exists cli_select on clients;
 create policy cli_select on clients for select using (
   org_id in (select my_org_ids())
   and (
@@ -30,8 +34,11 @@ create policy cli_select on clients for select using (
   )
 );
 
+drop policy if exists cli_insert on clients;
 create policy cli_insert on clients for insert with check (
   org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'));
+
+drop policy if exists cli_update on clients;
 create policy cli_update on clients for update
   using (org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'))
   with check (org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'));
@@ -39,6 +46,7 @@ create policy cli_update on clients for update
 -- ── פרויקטים ────────────────────────────────────────────────────────────
 drop policy if exists prj_all on projects;
 
+drop policy if exists prj_select on projects;
 create policy prj_select on projects for select using (
   org_id in (select my_org_ids())
   and (
@@ -52,8 +60,11 @@ create policy prj_select on projects for select using (
   )
 );
 
+drop policy if exists prj_insert on projects;
 create policy prj_insert on projects for insert with check (
   org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'));
+
+drop policy if exists prj_update on projects;
 create policy prj_update on projects for update
   using (org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'))
   with check (org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'));
@@ -61,10 +72,15 @@ create policy prj_update on projects for update
 -- ── מסמכי כספים — מנהלים בלבד, גם בקריאה ────────────────────────────────
 drop policy if exists doc_all on client_documents;
 
+drop policy if exists doc_select on client_documents;
 create policy doc_select on client_documents for select using (
   org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'));
+
+drop policy if exists doc_insert on client_documents;
 create policy doc_insert on client_documents for insert with check (
   org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'));
+
+drop policy if exists doc_update on client_documents;
 create policy doc_update on client_documents for update
   using (org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'))
   with check (org_id in (select my_org_ids()) and my_role(org_id) in ('project_manager','work_manager'));

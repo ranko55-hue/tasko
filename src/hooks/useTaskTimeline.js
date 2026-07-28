@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { signedUrl } from '../lib/media';
+import { withSignedUrls } from '../lib/media';
 
 // ציר הזמן של משימה — כל האירועים, עם כתובות חתומות לתמונות/שמע.
 export function useTaskTimeline(taskId) {
@@ -21,22 +21,7 @@ export function useTaskTimeline(taskId) {
       setLoading(false);
       return;
     }
-    const withUrls = await Promise.all(
-      (data ?? []).map(async (ev) => {
-        if (
-          (ev.type === 'photo' || ev.type === 'voice_note') &&
-          ev.payload?.path
-        ) {
-          try {
-            ev.url = await signedUrl(ev.payload.path);
-          } catch {
-            ev.url = null;
-          }
-        }
-        return ev;
-      })
-    );
-    setEvents(withUrls);
+    setEvents(await withSignedUrls(data));
     setError(false);
     setLoading(false);
   }, [taskId]);

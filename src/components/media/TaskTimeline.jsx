@@ -4,6 +4,7 @@ import { formatDateTime } from '../../lib/time';
 import { useTaskTimeline } from '../../hooks/useTaskTimeline';
 import { describeEdit } from '../../lib/taskEdits';
 import Modal from '../shared/Modal';
+import EventMedia from './EventMedia';
 
 const t = he.media;
 
@@ -35,19 +36,7 @@ function Row({ ev, onPhoto }) {
         </ul>
       )}
 
-      {ev.type === 'photo' && ev.url && (
-        <button type="button" onClick={() => onPhoto(ev.url)} className="mt-2 block">
-          <img
-            src={ev.url}
-            alt={t.photoAlt}
-            className="h-24 w-24 rounded-lg object-cover"
-          />
-        </button>
-      )}
-
-      {ev.type === 'voice_note' && ev.url && (
-        <audio controls src={ev.url} className="mt-2 w-full" />
-      )}
+      <EventMedia event={ev} onPhoto={onPhoto} />
     </li>
   );
 }

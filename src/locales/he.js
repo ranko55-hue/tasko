@@ -329,6 +329,7 @@ export const he = {
     },
     // צד המנהל — טיפול במשימה חסומה
     returnToWork: 'החזרה לעבודה',
+    handleNow: 'טפל עכשיו',
     blockReason: 'סיבת עיכוב',
 
     // v8 §3.4 — הלקוח כעוגן
