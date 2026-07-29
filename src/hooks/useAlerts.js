@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { lateCount } from '../lib/lateness';
 
 // ל-tasks יש שלושה מפתחות זרים ל-org_members (assignee_id, created_by, team_lead_id),
 // ולכן חובה לציין במפורש דרך איזה מהם לשלוף — אחרת PostgREST מחזיר PGRST201.
@@ -26,6 +27,7 @@ export function useAlerts(orgId) {
   const [serviceRequests, setServiceRequests] = useState([]);
   const [blockedTasks, setBlockedTasks] = useState([]);
   const [overrunTasks, setOverrunTasks] = useState([]);
+  const [unclosedTasks, setUnclosedTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -79,12 +81,13 @@ export function useAlerts(orgId) {
     if (sr) setServiceRequests(sr);
     if (blocked) setBlockedTasks(blocked);
     if (overrun) setOverrunTasks(overrun);
+    if (unclosed) setUnclosedTasks(unclosed);
 
     setAlerts((prev) => ({
       new_calls: sr ? sr.length : prev.new_calls,
       delayed: blocked ? blocked.length : prev.delayed,
       overrun: overrun ? overrun.length : prev.overrun,
-      unclosed: unclosed ? unclosed.length : prev.unclosed,
+      unclosed: unclosed ? lateCount(unclosed) : prev.unclosed,
     }));
 
     setLoading(false);
@@ -101,5 +104,13 @@ export function useAlerts(orgId) {
     return () => clearInterval(interval);
   }, [load, orgId]);
 
-  return { alerts, serviceRequests, blockedTasks, overrunTasks, loading, refetch: load };
+  return {
+    alerts,
+    serviceRequests,
+    blockedTasks,
+    overrunTasks,
+    unclosedTasks,
+    loading,
+    refetch: load,
+  };
 }

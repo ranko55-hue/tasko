@@ -10,7 +10,7 @@ import { he } from '../locales/he';
 import { readStringArray, writeJSON } from '../lib/storage';
 import EmptyState from '../components/ui/EmptyState';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
-import DashboardTaskCard from '../components/dashboard/DashboardTaskCard';
+import BoardArea from '../components/dashboard/BoardArea';
 import TaskDrawer from '../components/tasks/TaskDrawer';
 import NewTaskModal from '../components/shell/NewTaskModal';
 
@@ -120,75 +120,14 @@ export default function DashboardPage() {
       ) : isEmpty ? (
         <EmptyState icon="project" message={he.dashboard.empty} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-4">
-          {/* Column: Waiting */}
-          <div>
-            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.waiting} ({cols.waiting.length})</h2>
-            <div className="space-y-3">
-              {cols.waiting.map((t) => (
-                <DashboardTaskCard
-                  key={t.id}
-                  task={t}
-                  assigneeName={membersMap[t.assignee_id]}
-                  blockedReason={blockedReasons[t.id]}
-                  onOpenTask={setSelectedTaskId}
-                  onReturnToWork={returnToWork}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Column: Working */}
-          <div>
-            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.working} ({cols.working.length})</h2>
-            <div className="space-y-3">
-              {cols.working.map((t) => (
-                <DashboardTaskCard
-                  key={t.id}
-                  task={t}
-                  assigneeName={membersMap[t.assignee_id]}
-                  blockedReason={blockedReasons[t.id]}
-                  onOpenTask={setSelectedTaskId}
-                  onReturnToWork={returnToWork}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Column: Alert */}
-          <div>
-            <h2 className="mb-3 font-bold text-statusRed">{he.dashboard.columns.alert} ({cols.alert.length})</h2>
-            <div className="space-y-3">
-              {cols.alert.map((t) => (
-                <DashboardTaskCard
-                  key={t.id}
-                  task={t}
-                  assigneeName={membersMap[t.assignee_id]}
-                  blockedReason={blockedReasons[t.id]}
-                  onOpenTask={setSelectedTaskId}
-                  onReturnToWork={returnToWork}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Column: Done */}
-          <div>
-            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.doneToday} ({cols.done.length})</h2>
-            <div className="space-y-3">
-              {cols.done.map((t) => (
-                <DashboardTaskCard
-                  key={t.id}
-                  task={t}
-                  assigneeName={membersMap[t.assignee_id]}
-                  blockedReason={blockedReasons[t.id]}
-                  onOpenTask={setSelectedTaskId}
-                  onReturnToWork={returnToWork}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <BoardArea
+          cols={cols}
+          tasks={tasks}
+          membersMap={membersMap}
+          blockedReasons={blockedReasons}
+          onOpenTask={setSelectedTaskId}
+          onReturnToWork={returnToWork}
+        />
       )}
 
       {newTaskOpen && (

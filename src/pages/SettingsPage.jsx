@@ -4,6 +4,8 @@ import { useOrgSettings } from '../hooks/useOrgSettings';
 import { he } from '../locales/he';
 import PageHeader from '../components/ui/PageHeader';
 import SettingRow from '../components/settings/SettingRow';
+import ViewToggle from '../components/shared/ViewToggle';
+import { useBoardView } from '../hooks/useBoardView';
 
 const t = he.settings;
 
@@ -12,6 +14,7 @@ const t = he.settings;
 export default function SettingsPage() {
   const { member } = useOrg();
   const manager = isManager(member);
+  const [boardView, chooseBoardView] = useBoardView();
   const { settings, loading, saving, error, update } = useOrgSettings(
     manager ? member?.org_id : null
   );
@@ -43,6 +46,12 @@ export default function SettingsPage() {
               onChange={(v) => update({ require_project: v })}
             />
           </div>
+
+          <h2 className="mb-1 mt-8 text-sm font-black text-slate-500">
+            {t.sectionBoardView}
+          </h2>
+          <p className="mb-3 text-sm text-slate-500">{t.boardViewHint}</p>
+          <ViewToggle view={boardView} onChange={chooseBoardView} size="lg" />
 
           {error && (
             <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 font-medium text-red-700">

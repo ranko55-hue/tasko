@@ -44,12 +44,24 @@ export const he = {
     title: 'הגדרות',
     subtitle: 'התאמת המערכת לאופן העבודה של הארגון',
     sectionTasks: 'משימות',
+    sectionBoardView: 'תצוגת משימות',
+    boardViewHint: 'כיצד יוצגו המשימות בלוח הניהול',
     requireProject: 'משימה חייבת להיות משויכת לפרויקט',
     requireProjectHint:
       'כשההגדרה כבויה אפשר לפתוח משימה תחת לקוח בלבד. ההגדרה חלה על משימות חדשות בלבד.',
     saved: 'ההגדרה נשמרה',
     saveError: 'שמירת ההגדרה נכשלה. נסו שוב.',
     managersOnly: 'הגדרות הארגון פתוחות למנהלים בלבד.',
+  },
+
+  brief: {
+    overrun: 'בחריגה',
+    late: 'באיחור',
+    newCalls: 'קריאות חדשות',
+    newCallOne: 'קריאה חדשה',
+    blocked: 'מעוכבות',
+    allClear: 'הכל תקין',
+    goToBoard: 'מעבר ללוח',
   },
 
   shell: {
@@ -84,6 +96,17 @@ export const he = {
       alerts: 'חריגות ומעוכב',
       doneToday: 'הושלמו היום',
     },
+    areaTitle: 'אזור המשימות',
+    viewColumns: 'עמודות',
+    viewRows: 'שורות',
+    lateUnassigned: 'באיחור · לא הוקצתה',
+    lateWorking: 'באיחור · בעבודה',
+    groupLate: 'באיחור',
+    groupWorking: 'בעבודה',
+    groupWaiting: 'ממתינות',
+    groupBlocked: 'מעוכבות',
+    groupDone: 'הושלמו היום',
+    groupEmpty: 'אין משימות בקבוצה זו',
     columns: {
       waiting: 'ממתין / מתוזמן',
       working: 'בעבודה',

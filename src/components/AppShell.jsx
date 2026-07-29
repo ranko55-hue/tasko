@@ -3,10 +3,13 @@ import { Outlet, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useOrg } from '../lib/orgContext';
 import { isManager, homePathFor } from '../lib/roles';
+import { useAlerts } from '../hooks/useAlerts';
+import { useRealtimeStatus } from '../hooks/useRealtimeStatus';
 import { he } from '../locales/he';
 import NavLinks from './shared/NavLinks';
 import SearchBar from './shell/SearchBar';
 import MobileDrawer from './shell/MobileDrawer';
+import BriefingBar from './shell/BriefingBar';
 import PageShell from './ui/PageShell';
 
 // מעטפת אחידה לכל המערכת: פס navy קבוע (זהות המערכת) + PageShell אחיד.
@@ -17,11 +20,14 @@ export default function AppShell() {
   const [searchOpen, setSearchOpen] = useState(false); // מובייל: החיפוש הפרוש מפנה מקום
   // לעובד/ראש צוות: לוגו, שם, התנתקות בלבד. בלי ניווט ניהולי, חיפוש או פעולות.
   const manager = isManager(member);
+  // שורת התדריך מלווה כל מסך, ולכן הנתונים נשלפים כאן ולא בלוח
+  const { alerts } = useAlerts(manager ? member?.org_id : null);
+  const live = useRealtimeStatus(member?.org_id);
 
   return (
     <div className="min-h-full">
       <header className="sticky top-0 z-40 bg-navy text-white">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2">
           {manager && (
             <button
               type="button"
@@ -67,6 +73,8 @@ export default function AppShell() {
             <img src="/brand/tasko-header-dark.png" alt={he.app.name} className="h-7 w-auto" />
           </Link>
         </div>
+
+        {manager && <BriefingBar alerts={alerts} live={live} />}
       </header>
 
       {manager && drawer && <MobileDrawer onClose={() => setDrawer(false)} />}
