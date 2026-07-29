@@ -13,6 +13,7 @@ export default function AIGuidanceModule({
   pinnedChips,
   onTogglePinned,
   pinnedTaskCounts,
+  live = false,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   // תמיד מערך — הצ'יפים המוצמדים נקראים עם ‎.includes()‎ בלבד
@@ -100,6 +101,14 @@ export default function AIGuidanceModule({
         <h2 className="flex items-center gap-2 text-sm font-black text-white">
           <Icon name="ai" />
           {he.dashboard.aiTitle}
+          {/* מחוון חיבור — נקודה בלבד, ההסבר ב-tooltip */}
+          <span
+            title={live ? he.dashboard.live : he.dashboard.polling}
+            aria-label={live ? he.dashboard.live : he.dashboard.polling}
+            className={`h-2 w-2 rounded-full ${
+              live ? 'animate-pulse bg-statusGreen' : 'bg-slate-500'
+            }`}
+          />
         </h2>
         <div className="flex items-center gap-3">
           {alertCounter > 0 && (

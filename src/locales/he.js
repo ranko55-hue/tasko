@@ -65,8 +65,8 @@ export const he = {
 
   dashboard: {
     title: 'מגדל הפיקוח',
-    live: 'חי',
-    polling: 'עדכון כל 15ש׳',
+    live: 'חי · עדכון כל 15 שניות',
+    polling: 'מנותק · מנסה להתחבר מחדש',
     loading: 'טוען את הלוח…',
     error: 'טעינת הלוח נכשלה. נסו שוב.',
     empty: 'אין עדיין משימות. פִּתחו משימה מתוך פרויקט.',
@@ -223,6 +223,17 @@ export const he = {
     paymentTermsPlaceholder: 'למשל: שוטף+60',
     nameRequired: 'יש להזין שם לקוח',
     openProjects: 'פרויקטים',
+    loadError: 'טעינת הלקוחות נכשלה. נסו שוב.',
+    table: {
+      name: 'לקוח',
+      contact: 'איש קשר',
+      projects: 'פרויקטים פעילים',
+      openTasks: 'משימות פתוחות',
+      waitingDelayed: 'ממתינות / בעיכוב',
+      newTask: 'משימה חדשה',
+      waitingLabel: 'ממתינות',
+      delayedLabel: 'בעיכוב',
+    },
   },
 
   clientDetail: {

@@ -11,7 +11,6 @@ import { supabase } from '../lib/supabase';
 import { readStringArray, writeJSON } from '../lib/storage';
 import { withSignedUrls } from '../lib/media';
 import EmptyState from '../components/ui/EmptyState';
-import SearchBar from '../components/shell/SearchBar';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
 import DashboardTaskCard from '../components/dashboard/DashboardTaskCard';
 import TaskDrawer from '../components/tasks/TaskDrawer';
@@ -35,6 +34,7 @@ export default function DashboardPage() {
     doneTodayIds,
     loading,
     error,
+    connection,
     returnToWork,
     refetch,
   } = useDashboard(member.org_id, member.id);
@@ -102,13 +102,9 @@ export default function DashboardPage() {
           pinnedChips={pinnedChips}
           onTogglePinned={handleTogglePinned}
           pinnedTaskCounts={pinnedTaskCounts}
+          live={connection === 'live'}
         />
       )}
-
-      {/* חיפוש רחב — מתחת לתדריך, מעל שורת הפעולות */}
-      <div className="mb-4">
-        <SearchBar />
-      </div>
 
       {/* פס פעולות — הכפתורים היו ללא onClick ולכן לא הגיבו כלל */}
       <div className="mb-6 flex flex-wrap gap-3">
