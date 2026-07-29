@@ -77,6 +77,7 @@ export default function ClientDetailPage() {
         <ProjectsTab
           projects={d.projects}
           openTaskCountByProject={d.openTaskCountByProject}
+          members={members}
           onAddProject={d.addProject}
           onOpenProject={(p) => {
             // פתיחת DrawerTasksTab של פרויקט

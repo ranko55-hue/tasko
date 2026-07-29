@@ -69,7 +69,7 @@ export const he = {
     polling: 'עדכון כל 15ש׳',
     loading: 'טוען את הלוח…',
     error: 'טעינת הלוח נכשלה. נסו שוב.',
-    empty: 'אין עדיין משימות. פִּתחו משימה מתוך פרויקט 🗂️',
+    empty: 'אין עדיין משימות. פִּתחו משימה מתוך פרויקט.',
     columnEmpty: 'אין כאן משימות',
     kpi: {
       open: 'משימות פתוחות',
@@ -93,6 +93,11 @@ export const he = {
     updateTitle: 'עדכון לעובד',
     updatePlaceholder: 'הודעה שתופיע לעובד בציר הזמן של המשימה',
     sendUpdate: 'שליחת עדכון',
+    newTask: 'משימה חדשה',
+    aiTitle: 'תדריך AI — חי',
+    collapse: 'כיווץ התדריך',
+    expand: 'פתיחת התדריך',
+    detailsToggle: 'פרטים ועדכונים',
   },
 
   auth: {
@@ -143,12 +148,12 @@ export const he = {
   },
 
   media: {
-    photoCapture: '📷 צלם ביצוע',
+    photoCapture: 'צלם ביצוע',
     uploading: 'מעלה…',
-    recordChoice: '🎤 הקלטה',
+    recordChoice: 'הקלטה',
     recording: 'מקליט…',
     stopSave: 'סיום — נשמר אוטומטית',
-    openTimeline: '📜 יומן המשימה',
+    openTimeline: 'יומן המשימה',
     timelineTitle: 'יומן המשימה',
     timelineEmpty: 'אין עדיין אירועים ביומן.',
     photoAlt: 'תמונת ביצוע',
@@ -257,7 +262,7 @@ export const he = {
     },
     finance: {
       add: '＋ מסמך',
-      empty: 'אין עדיין מסמכים ללקוח זה 🧾',
+      empty: 'אין עדיין מסמכים ללקוח זה.',
       addTitle: 'מסמך חדש',
       kind: 'סוג המסמך',
       title: 'כותרת',
@@ -287,6 +292,9 @@ export const he = {
     name: 'שם הפרויקט',
     address: 'כתובת',
     nameRequired: 'יש להזין שם פרויקט',
+    endsAt: 'תאריך יעד',
+    manager: 'מנהל הפרויקט',
+    noManager: 'לא נבחר',
     status: {
       open: 'פתוח',
       closed: 'סגור',
@@ -330,6 +338,7 @@ export const he = {
     // צד המנהל — טיפול במשימה חסומה
     returnToWork: 'החזרה לעבודה',
     handleNow: 'טפל עכשיו',
+    assignWorker: 'שייך לעובד',
     blockReason: 'סיבת עיכוב',
 
     // v8 §3.4 — הלקוח כעוגן
