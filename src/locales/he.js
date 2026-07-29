@@ -29,7 +29,7 @@ export const he = {
   nav: {
     clients: 'לקוחות',
     myTasks: 'המשימות שלי',
-    dashboard: 'לוח',
+    dashboard: 'לוח ניהול',
     settings: 'הגדרות',
   },
 

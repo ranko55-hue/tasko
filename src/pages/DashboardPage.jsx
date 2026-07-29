@@ -10,8 +10,8 @@ import { he } from '../locales/he';
 import { supabase } from '../lib/supabase';
 import { readStringArray, writeJSON } from '../lib/storage';
 import { withSignedUrls } from '../lib/media';
-import PageHeader from '../components/ui/PageHeader';
 import EmptyState from '../components/ui/EmptyState';
+import SearchBar from '../components/shell/SearchBar';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
 import DashboardTaskCard from '../components/dashboard/DashboardTaskCard';
 import TaskDrawer from '../components/tasks/TaskDrawer';
@@ -35,7 +35,6 @@ export default function DashboardPage() {
     doneTodayIds,
     loading,
     error,
-    connection,
     returnToWork,
     refetch,
   } = useDashboard(member.org_id, member.id);
@@ -50,7 +49,6 @@ export default function DashboardPage() {
   const membersMap = Object.fromEntries(members.map((m) => [m.id, m.full_name]));
   const { cols } = buildDashboard(tasks, doneTodayIds);
   const isEmpty = !loading && !error && tasks.length === 0;
-  const live = connection === 'live';
   const manager = isManager(member);
 
   // צ'יפים מוצמדים — נשמרים כמערך מחרוזות ונקראים תמיד עם ‎.includes()
@@ -93,16 +91,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader
-        title={he.dashboard.title}
-        subtitle={
-          <span className="inline-flex items-center gap-1.5">
-            <span className={`h-2 w-2 rounded-full ${live ? 'animate-pulse bg-statusGreen' : 'bg-slate-400'}`} />
-            {live ? he.dashboard.live : he.dashboard.polling}
-          </span>
-        }
-      />
-
       {/* AI Guidance Module — החלף KPI row */}
       {!error && (
         <AIGuidanceModule
@@ -116,6 +104,11 @@ export default function DashboardPage() {
           pinnedTaskCounts={pinnedTaskCounts}
         />
       )}
+
+      {/* חיפוש רחב — מתחת לתדריך, מעל שורת הפעולות */}
+      <div className="mb-4">
+        <SearchBar />
+      </div>
 
       {/* פס פעולות — הכפתורים היו ללא onClick ולכן לא הגיבו כלל */}
       <div className="mb-6 flex flex-wrap gap-3">

@@ -5,7 +5,6 @@ import { useOrg } from '../lib/orgContext';
 import { isManager, homePathFor } from '../lib/roles';
 import { he } from '../locales/he';
 import NavLinks from './shared/NavLinks';
-import SearchBar from './shell/SearchBar';
 import MobileDrawer from './shell/MobileDrawer';
 import PageShell from './ui/PageShell';
 
@@ -40,14 +39,9 @@ export default function AppShell() {
           {/* כל השאר מקובץ בקצה הנגדי */}
           <div className="ms-auto flex min-w-0 items-center gap-3">
             {manager && (
-              <>
-                <div className="hidden md:block">
-                  <NavLinks dark />
-                </div>
-                <div className="hidden min-w-0 md:block md:w-56 lg:w-72">
-                  <SearchBar />
-                </div>
-              </>
+              <div className="hidden md:block">
+                <NavLinks dark />
+              </div>
             )}
 
             <span className="max-w-[7rem] truncate text-sm text-slate-300 sm:max-w-none">
@@ -62,13 +56,6 @@ export default function AppShell() {
             </button>
           </div>
         </div>
-
-        {/* מובייל: שורת חיפוש מלאת-רוחב (אותה פעולה, צפיפות שונה) — מנהלים בלבד */}
-        {manager && (
-          <div className="px-4 pb-3 md:hidden">
-            <SearchBar onNavigate={() => setDrawer(false)} />
-          </div>
-        )}
       </header>
 
       {manager && drawer && <MobileDrawer onClose={() => setDrawer(false)} />}
