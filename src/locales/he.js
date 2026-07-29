@@ -20,7 +20,7 @@ export const he = {
 
   common: {
     loading: 'טוען…',
-    logout: 'התנתקות',
+    logout: 'יציאה',
     save: 'שמירה',
     cancel: 'ביטול',
     add: 'הוספה',

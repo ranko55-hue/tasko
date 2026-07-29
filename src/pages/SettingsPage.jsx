@@ -51,7 +51,7 @@ export default function SettingsPage() {
             {t.sectionBoardView}
           </h2>
           <p className="mb-3 text-sm text-slate-500">{t.boardViewHint}</p>
-          <ViewToggle view={boardView} onChange={chooseBoardView} size="lg" />
+          <ViewToggle view={boardView} onChange={chooseBoardView} />
 
           {error && (
             <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 font-medium text-red-700">
