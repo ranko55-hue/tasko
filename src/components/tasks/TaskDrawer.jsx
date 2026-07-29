@@ -7,6 +7,8 @@ import DrawerHeader from './drawer/DrawerHeader';
 import DrawerViewBody from './drawer/DrawerViewBody';
 import TaskEditForm from './TaskEditForm';
 import TaskCancelForm from './TaskCancelForm';
+import ManagerUpdateModal from './drawer/ManagerUpdateModal';
+import { printTaskSummary } from '../../lib/taskSummary';
 
 const t = he.tasks;
 
@@ -19,11 +21,14 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
   const [mode, setMode] = useState('view'); // 'view' | 'edit' | 'cancel'
   const [full, setFull] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const [events, setEvents] = useState([]);
 
   // פתיחה על משימה אחרת מאפסת מצב
   useEffect(() => {
     setMode('view');
     setFull(false);
+    setUpdateOpen(false);
   }, [taskId]);
 
   useEffect(() => {
@@ -36,7 +41,8 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
   if (!isOpen) return null;
 
   const assigneeName = members.find((m) => m.id === task?.assignee_id)?.full_name ?? null;
-  const isCancelled = task?.status === 'cancelled';
+  // משימה סגורה = תיעוד בלבד: אין עריכה, אין ביטול, יש סיכום
+  const isClosed = ['done', 'cancelled'].includes(task?.status);
 
   async function save(fields) {
     await updateTask(fields);
@@ -84,6 +90,7 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
                   task={task}
                   assigneeName={assigneeName}
                   refreshKey={refreshKey}
+                  onEvents={setEvents}
                 />
               )}
 
@@ -114,16 +121,25 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
         {/* שורת פעולות תחתונה — נשארת מוצמדת מתחת לתוכן הנגלל */}
         {task && !loading && mode === 'view' && (
           <div className="shrink-0 border-t border-line bg-surfaceBar px-4 py-3 sm:px-5">
-            {isCancelled ? (
-              <p className="text-center font-bold text-slate-500">{t.alreadyCancelled}</p>
+            {isClosed ? (
+              <div className="space-y-2">
+                <p className="text-center text-sm text-slate-500">{t.drawer.closedTitle}</p>
+                <button
+                  type="button"
+                  onClick={() => printTaskSummary(task, events, assigneeName)}
+                  className="min-h-touch w-full rounded-xl border-2 border-line bg-white px-4 font-bold text-slate-700 hover:bg-slate-50"
+                >
+                  {t.drawer.downloadPdf}
+                </button>
+              </div>
             ) : isManager ? (
               <div className="flex gap-3">
                 <button
                   type="button"
-                  onClick={() => setMode('edit')}
+                  onClick={() => setUpdateOpen(true)}
                   className="min-h-touch flex-1 rounded-xl bg-brand px-4 font-bold text-white hover:bg-brand-dark"
                 >
-                  {he.dashboard.managerUpdate}
+                  {t.drawer.managerUpdateTitle}
                 </button>
                 <button
                   type="button"
@@ -142,6 +158,17 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
               </div>
             ) : null}
           </div>
+        )}
+
+        {updateOpen && task && (
+          <ManagerUpdateModal
+            task={task}
+            onClose={() => setUpdateOpen(false)}
+            onSent={() => {
+              setUpdateOpen(false);
+              setRefreshKey((k) => k + 1);
+            }}
+          />
         )}
       </div>
     </div>

@@ -130,8 +130,8 @@ export async function markOverrun(task, actorId) {
 }
 
 // עדכון מהמנהל לעובד — מופיע בציר הזמן של שני הצדדים
-export async function addManagerUpdate(task, actorId, text) {
-  await logEvent(task, actorId, 'manager_attachment', { text });
+export async function addManagerUpdate(task, actorId, text, path = null) {
+  await logEvent(task, actorId, 'manager_attachment', path ? { text, path } : { text });
 }
 
 // תמונה / הקלטה קולית — נשמרות ב-Storage, כאן נרשם האירוע עם הנתיב

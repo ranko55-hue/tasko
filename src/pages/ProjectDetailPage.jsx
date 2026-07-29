@@ -13,6 +13,8 @@ import Modal from '../components/shared/Modal';
 import PageHeader from '../components/ui/PageHeader';
 import TaskList from '../components/tasks/TaskList';
 import TaskForm from '../components/tasks/TaskForm';
+import TaskDrawer from '../components/tasks/TaskDrawer';
+import { isManager } from '../lib/roles';
 
 // מסך פרויקט — משימות + פתיחת משימה (תמיד בהקשר הפרויקט)
 export default function ProjectDetailPage() {
@@ -28,6 +30,7 @@ export default function ProjectDetailPage() {
   const reasons = useBlockReasons(tasks);
   const target = useTaskTargets(member.org_id);
   const [open, setOpen] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   async function handleSubmit(fields) {
     await addTask(fields);
@@ -65,12 +68,21 @@ export default function ProjectDetailPage() {
         <p className="text-lg text-slate-500">{he.common.loading}</p>
       ) : (
         <TaskList
+          onOpenTask={setSelectedTaskId}
           tasks={tasks}
           members={members}
           reasons={reasons}
           onReturnToWork={handleReturnToWork}
         />
       )}
+
+      <TaskDrawer
+        taskId={selectedTaskId}
+        isOpen={!!selectedTaskId}
+        onClose={() => setSelectedTaskId(null)}
+        orgId={member.org_id}
+        isManager={isManager(member)}
+      />
 
       {open && (
         <Modal title={he.tasks.addTitle} onClose={() => setOpen(false)}>

@@ -8,7 +8,7 @@ import Button from '../shared/Button';
 import Icon from '../ui/Icon';
 
 // רשימת משימות בפרויקט — Row משותפת. למשימה חסומה: סיבת עיכוב + החזרה לעבודה (למנהל).
-export default function TaskList({ tasks, members, reasons = {}, onReturnToWork }) {
+export default function TaskList({ tasks, members, reasons = {}, onReturnToWork, onOpenTask }) {
   if (tasks.length === 0) {
     return <EmptyState icon="task" message={he.tasks.empty} />;
   }
@@ -24,6 +24,7 @@ export default function TaskList({ tasks, members, reasons = {}, onReturnToWork 
             icon={<Icon name="task" />}
             title={task.title}
             subtitle={`${nameOf(task.assignee_id)} · ${formatDateTime(task.due_at) ?? he.tasks.noDueDate}`}
+            onClick={onOpenTask ? () => onOpenTask(task.id) : undefined}
             trailing={
               <div className="flex flex-col items-end gap-1">
                 {task.priority === 'urgent' && (

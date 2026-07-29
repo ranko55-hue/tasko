@@ -78,7 +78,7 @@ export default function TimelineList({ events, onPhoto }) {
             </div>
 
             {/* ממוזערת אינליין 26px */}
-            {ev.type === 'photo' && ev.url && (
+            {['photo', 'manager_attachment'].includes(ev.type) && ev.url && (
               <button
                 type="button"
                 onClick={() => onPhoto?.(ev.url)}

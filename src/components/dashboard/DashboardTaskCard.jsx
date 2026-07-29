@@ -1,11 +1,8 @@
-import { useState } from 'react';
 import { he } from '../../locales/he';
 import { STATUS_DOT } from '../../lib/taskMeta';
 import { isOverrun } from '../../lib/dashboardModel';
 import { overrunMinutes } from '../../lib/taskTime';
 import { formatDuration } from '../../lib/time';
-import Modal from '../shared/Modal';
-import EventMedia from '../media/EventMedia';
 import Icon from '../ui/Icon';
 
 // צבעי סטטוס לטקסט
@@ -26,18 +23,8 @@ export default function DashboardTaskCard({
   blockedReason,
   onOpenTask,
   onReturnToWork,
-  taskEvents = [],
-  onExpandDetails,
 }) {
-  const [expanded, setExpanded] = useState(false);
-  const [lightbox, setLightbox] = useState(null);
 
-  function handleToggleExpand() {
-    if (!expanded && onExpandDetails) {
-      onExpandDetails();
-    }
-    setExpanded(!expanded);
-  }
   const overrun = isOverrun(task);
   const progress = task.est_minutes ? (task.net_seconds / 60) / task.est_minutes : 0;
   const progressPct = Math.round(progress * 100);
@@ -57,15 +44,16 @@ export default function DashboardTaskCard({
     statusText = `מתקרב ליעד · ${progressPct}%`;
   }
 
-  // 3 עדכונים אחרונים לתצוגה
-  const recentEvents = (taskEvents || []).slice(-3).reverse();
 
   const timeDisplay = task.est_minutes
     ? `${Math.floor(task.net_seconds / 60)}:${String(task.net_seconds % 60).padStart(2, '0')} / ${task.est_minutes}:00`
     : null;
 
   return (
-    <div className="overflow-hidden rounded-[10px] border border-line bg-white shadow-sm">
+    <div
+      onClick={() => onOpenTask?.(task.id)}
+      className="cursor-pointer overflow-hidden rounded-[10px] border border-line bg-white shadow-sm transition-colors hover:border-slate-300"
+    >
       {/* Top row: status dot + name + number */}
       <div className="flex items-baseline gap-2 border-b border-line px-3 py-2">
         <span
@@ -164,83 +152,11 @@ export default function DashboardTaskCard({
         )}
       </div>
 
-      {/* Details toggle */}
-      <button
-        type="button"
-        onClick={handleToggleExpand}
-        className="min-h-touch w-full border-t border-line px-3 text-center text-sm font-bold text-slate-600 hover:bg-slate-50"
-      >
-        {he.dashboard.detailsToggle} {expanded ? '⌃' : '⌄'}
-      </button>
-
-      {/* Expanded details */}
-      {expanded && (
-        <div className="border-t border-line px-3 py-3 space-y-3 bg-slate-50">
-          {/* Timeline (3 latest) */}
-          <div>
-            <div className="text-xs font-bold text-slate-500 mb-2">עדכונים אחרונים</div>
-            {recentEvents.length > 0 ? (
-              <div className="space-y-1">
-                {recentEvents.map((evt) => (
-                  <div key={evt.id} className="flex gap-2 text-xs">
-                    <span
-                      className={`shrink-0 h-2 w-2 rounded-full mt-1.5 ${
-                        evt.type === 'manager_attachment' ? 'bg-brandYellow' : 'bg-statusGreen'
-                      }`}
-                    />
-                    <div className="min-w-0 flex-1">
-                      <div className="font-bold text-slate-700">
-                        {evt.payload?.text || he.media.eventTypes[evt.type] || evt.type}
-                      </div>
-                      <div className="text-slate-500">
-                        {new Date(evt.created_at).toLocaleTimeString('he-IL', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </div>
-                      <EventMedia event={evt} size="sm" onPhoto={setLightbox} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-xs text-slate-500">אין עדכונים עדיין</div>
-            )}
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => onOpenTask?.(task.id)}
-              className="flex-1 rounded-lg bg-brand px-3 py-1.5 text-xs font-bold text-white hover:bg-brand/90"
-            >
-              עדכון לעובד
-            </button>
-            <button
-              type="button"
-              onClick={() => onOpenTask?.(task.id)}
-              className="flex-1 rounded-lg border border-line px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100"
-            >
-              ערוך
-            </button>
-            <button
-              type="button"
-              onClick={() => onOpenTask?.(task.id)}
-              className="px-3 py-1.5 text-slate-500 hover:text-slate-700"
-              title="מסך מלא"
-            >
-              ⤢
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Action button (only when needed) */}
       {!task.assignee_id && (
         <button
           type="button"
-          onClick={() => onOpenTask?.(task.id)}
+          onClick={(e) => { e.stopPropagation(); onOpenTask?.(task.id); }}
           className="w-full bg-brand px-3 py-2 font-bold text-white hover:bg-brand/90 text-sm"
         >
           {he.tasks.assignWorker}
@@ -249,22 +165,13 @@ export default function DashboardTaskCard({
       {task.status === 'blocked' && (
         <button
           type="button"
-          onClick={() => onReturnToWork?.(task)}
+          onClick={(e) => { e.stopPropagation(); onReturnToWork?.(task); }}
           className="w-full bg-brand px-3 py-2 font-bold text-white hover:bg-brand/90 text-sm"
         >
           {he.tasks.handleNow}
         </button>
       )}
 
-      {lightbox && (
-        <Modal title={he.media.photoAlt} onClose={() => setLightbox(null)}>
-          <img
-            src={lightbox}
-            alt={he.media.photoAlt}
-            className="mx-auto max-h-[70vh] rounded-lg"
-          />
-        </Modal>
-      )}
     </div>
   );
 }

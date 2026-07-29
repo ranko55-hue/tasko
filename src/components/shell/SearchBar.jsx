@@ -91,10 +91,11 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
       )}
 
       <div
-        className={`w-full items-center gap-2 rounded-full bg-white/10 px-3
-                    focus-within:bg-white/20 ${expanded ? 'flex' : 'hidden md:flex'}`}
+        className={`w-full items-center gap-2 rounded-full border border-white/20
+                    bg-white/[0.14] px-3 transition-colors focus-within:border-white/40
+                    focus-within:bg-white/25 ${expanded ? 'flex' : 'hidden md:flex'}`}
       >
-        <Icon name="search" size="sm" className="text-slate-400" />
+        <Icon name="search" size="sm" className="text-slate-300" />
         <input
           ref={inputRef}
           value={q}
@@ -105,7 +106,7 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
             if (!q) setExpandedBoth(false);
           }}
           placeholder={he.shell.searchPlaceholder}
-          className="min-h-[44px] w-full bg-transparent text-white placeholder:text-slate-400
+          className="min-h-[44px] w-full bg-transparent text-white placeholder:text-slate-300
                      focus:outline-none"
         />
       </div>

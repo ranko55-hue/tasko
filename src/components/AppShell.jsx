@@ -33,16 +33,8 @@ export default function AppShell() {
             </button>
           )}
 
-          {/* לוגו בקצה אחד (ימין ב-RTL) */}
-          <Link
-            to={homePathFor(member)}
-            className={`min-h-touch shrink-0 items-center ${searchOpen ? 'hidden md:flex' : 'flex'}`}
-          >
-            <img src="/brand/tasko-header-dark.png" alt={he.app.name} className="h-7 w-auto" />
-          </Link>
-
-          {/* כל השאר מקובץ בקצה הנגדי */}
-          <div className={`ms-auto flex min-w-0 items-center gap-3 ${searchOpen ? 'flex-1' : ''}`}>
+          {/* ניווט, חיפוש וזהות — בצד ימין (תחילת ה-RTL) */}
+          <div className={`flex min-w-0 items-center gap-3 ${searchOpen ? 'flex-1' : ''}`}>
             {manager && (
               <>
                 <div className="hidden md:block">
@@ -65,6 +57,15 @@ export default function AppShell() {
               {he.common.logout}
             </button>
           </div>
+
+          {/* 4) לוגו TASKO — קצה שמאל של הפס. קובץ dark על רקע navy, גובה בלבד. */}
+          <Link
+            to={homePathFor(member)}
+            className={`ms-auto min-h-touch shrink-0 items-center ${searchOpen ? 'hidden md:flex' : 'flex'}`}
+            aria-label={he.app.name}
+          >
+            <img src="/brand/tasko-header-dark.png" alt={he.app.name} className="h-7 w-auto" />
+          </Link>
         </div>
       </header>
 

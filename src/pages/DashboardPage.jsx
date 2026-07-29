@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
 import { isManager } from '../lib/roles';
@@ -7,9 +7,7 @@ import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useAlerts } from '../hooks/useAlerts';
 import { buildDashboard } from '../lib/dashboardModel';
 import { he } from '../locales/he';
-import { supabase } from '../lib/supabase';
 import { readStringArray, writeJSON } from '../lib/storage';
-import { withSignedUrls } from '../lib/media';
 import EmptyState from '../components/ui/EmptyState';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
 import DashboardTaskCard from '../components/dashboard/DashboardTaskCard';
@@ -25,7 +23,6 @@ export default function DashboardPage() {
   const { members } = useOrgMembers(member.org_id);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [pinnedChips, setPinnedChips] = useState([]);
-  const [taskEventsMap, setTaskEventsMap] = useState({});
   const [newTaskOpen, setNewTaskOpen] = useState(false);
 
   const {
@@ -62,23 +59,6 @@ export default function DashboardPage() {
     writeJSON(PINNED_CHIPS_KEY, safe);
   }
 
-  // Fetch task events on demand (when card expands)
-  const fetchTaskEvents = useCallback(async (taskId) => {
-    if (taskEventsMap[taskId]) return; // Already loaded
-    try {
-      const { data, error } = await supabase
-        .from('task_events')
-        .select('id, type, payload, created_at, actor_id, actor:org_members(full_name)')
-        .eq('task_id', taskId)
-        .order('created_at', { ascending: true });
-      if (error) throw error;
-      // כתובות חתומות כדי שתמונות והקלטות יוצגו גם בכרטיס, לא רק בציר המלא
-      const enriched = await withSignedUrls(data);
-      setTaskEventsMap((prev) => ({ ...prev, [taskId]: enriched }));
-    } catch (err) {
-      console.error('DashboardPage[taskEvents]', err.code ?? '', err.message ?? err);
-    }
-  }, [taskEventsMap]);
 
   // Calculate pinned chip counts from tasks
   const pinnedTaskCounts = {
@@ -153,8 +133,6 @@ export default function DashboardPage() {
                   blockedReason={blockedReasons[t.id]}
                   onOpenTask={setSelectedTaskId}
                   onReturnToWork={returnToWork}
-                  taskEvents={taskEventsMap[t.id] || []}
-                  onExpandDetails={() => fetchTaskEvents(t.id)}
                 />
               ))}
             </div>
@@ -172,8 +150,6 @@ export default function DashboardPage() {
                   blockedReason={blockedReasons[t.id]}
                   onOpenTask={setSelectedTaskId}
                   onReturnToWork={returnToWork}
-                  taskEvents={taskEventsMap[t.id] || []}
-                  onExpandDetails={() => fetchTaskEvents(t.id)}
                 />
               ))}
             </div>
@@ -191,8 +167,6 @@ export default function DashboardPage() {
                   blockedReason={blockedReasons[t.id]}
                   onOpenTask={setSelectedTaskId}
                   onReturnToWork={returnToWork}
-                  taskEvents={taskEventsMap[t.id] || []}
-                  onExpandDetails={() => fetchTaskEvents(t.id)}
                 />
               ))}
             </div>
@@ -210,8 +184,6 @@ export default function DashboardPage() {
                   blockedReason={blockedReasons[t.id]}
                   onOpenTask={setSelectedTaskId}
                   onReturnToWork={returnToWork}
-                  taskEvents={taskEventsMap[t.id] || []}
-                  onExpandDetails={() => fetchTaskEvents(t.id)}
                 />
               ))}
             </div>

@@ -39,7 +39,8 @@ export async function uploadTaskMedia(task, ext, blob, contentType, onProgress) 
 export async function withSignedUrls(events) {
   return Promise.all(
     (events ?? []).map(async (ev) => {
-      if (!['photo', 'voice_note'].includes(ev.type) || !ev.payload?.path) return ev;
+      if (!['photo', 'voice_note', 'manager_attachment'].includes(ev.type) || !ev.payload?.path)
+        return ev;
       try {
         return { ...ev, url: await signedUrl(ev.payload.path) };
       } catch {

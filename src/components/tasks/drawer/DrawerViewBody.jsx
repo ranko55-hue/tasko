@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { he } from '../../../locales/he';
 import { useTaskTimeline } from '../../../hooks/useTaskTimeline';
 import Modal from '../../shared/Modal';
@@ -13,10 +13,13 @@ const d = he.tasks.drawer;
 const PREVIEW = 4; // כמה עדכונים מוצגים לפני "הצג הכל"
 
 // גוף המגירה במצב צפייה — צ'יפים, זמן, עובד, מדיה וציר זמן.
-export default function DrawerViewBody({ task, assigneeName, refreshKey }) {
+export default function DrawerViewBody({ task, assigneeName, refreshKey, onEvents }) {
   const { events } = useTaskTimeline(task?.id, refreshKey);
   const [allTimeline, setAllTimeline] = useState(false);
   const [lightbox, setLightbox] = useState(null);
+
+  // מדווח את האירועים למעלה לצורך סיכום ה-PDF
+  useEffect(() => { onEvents?.(events); }, [events, onEvents]);
 
   const photos = events.filter((e) => e.type === 'photo' && e.url);
   const voices = events.filter((e) => e.type === 'voice_note' && e.url);
