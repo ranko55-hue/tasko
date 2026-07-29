@@ -5,6 +5,13 @@ export const he = {
     tagline: 'ניהול משימות שטח',
   },
 
+  time: {
+    minutes: 'דקות',
+    hour: 'שעה',
+    hours: 'שעות',
+    and: 'ו-',
+  },
+
   crash: {
     title: 'משהו השתבש',
     message: 'אירעה תקלה בהצגת המסך. הנתונים שלך לא נפגעו.',
@@ -379,6 +386,28 @@ export const he = {
     cancelFailed: 'ביטול המשימה נכשל. נסו שוב.',
     cancelHint: 'המשימה תסומן כבוטלה ותישאר ביומן. אין מחיקה.',
     alreadyCancelled: 'המשימה בוטלה',
+
+    // v2 — מגירת המשימה
+    drawer: {
+      fullScreen: 'מסך מלא',
+      close: 'סגירה',
+      chipUrgent: 'דחוף',
+      chipDue: 'יעד',
+      chipAllocated: 'מוקצב',
+      chipRequirements: 'דרישות',
+      overTitle: 'חריגה · {amount} מעל המוקצב',
+      onTrackTitle: 'ניצול זמן',
+      usedOfAllocated: 'נוצל / מוקצב',
+      workingNow: 'בעבודה כעת',
+      notWorking: 'לא בעבודה',
+      sectionMedia: 'מדיה',
+      sectionTimeline: 'ציר הזמן',
+      updatesCount: '{n} עדכונים',
+      showAll: 'הצג הכל',
+      noMedia: 'אין מדיה במשימה',
+      play: 'נגן',
+      pause: 'השהה',
+    },
   },
 
   worker: {

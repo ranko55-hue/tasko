@@ -17,6 +17,11 @@ const PATHS = {
   camera: 'M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Zm8 3a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Z',
   mic: 'M12 4a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3ZM6 11a6 6 0 0 0 12 0M12 17v3',
   timeline: 'M6 4v16M6 7h12M6 12h9M6 17h12',
+  close: 'M6 6l12 12M18 6 6 18',
+  expand: 'M9 4H4v5M15 4h5v5M15 20h5v-5M9 20H4v-5',
+  play: 'M8 5.5v13l11-6.5-11-6.5Z',
+  pauseBars: 'M9.5 5v14M14.5 5v14',
+  clock: 'M12 4a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 4v4l3 2',
 };
 
 const SIZES = { sm: 'h-4 w-4', md: 'h-5 w-5', lg: 'h-8 w-8', xl: 'h-12 w-12' };

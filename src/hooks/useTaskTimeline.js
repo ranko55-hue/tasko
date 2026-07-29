@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { withSignedUrls } from '../lib/media';
 
 // ציר הזמן של משימה — כל האירועים, עם כתובות חתומות לתמונות/שמע.
-export function useTaskTimeline(taskId) {
+export function useTaskTimeline(taskId, refreshKey = 0) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -13,7 +13,7 @@ export function useTaskTimeline(taskId) {
     setLoading(true);
     const { data, error: e } = await supabase
       .from('task_events')
-      .select('id, type, payload, created_at, actor_id')
+      .select('id, type, payload, created_at, actor_id, actor:org_members(full_name)')
       .eq('task_id', taskId)
       .order('created_at', { ascending: true });
     if (e) {
@@ -24,7 +24,7 @@ export function useTaskTimeline(taskId) {
     setEvents(await withSignedUrls(data));
     setError(false);
     setLoading(false);
-  }, [taskId]);
+  }, [taskId, refreshKey]);
 
   useEffect(() => {
     load();

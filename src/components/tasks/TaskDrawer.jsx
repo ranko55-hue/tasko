@@ -3,29 +3,27 @@ import { he } from '../../locales/he';
 import { useTaskDetail } from '../../hooks/useTaskDetail';
 import { useOrgMembers } from '../../hooks/useOrgMembers';
 import { useTaskTargets } from '../../hooks/useTaskTargets';
-import Button from '../shared/Button';
-import StatusPill, { STATUS_TONE } from '../ui/StatusPill';
-import TaskTimeline from '../media/TaskTimeline';
-import TaskDetailsView from './TaskDetailsView';
+import DrawerHeader from './drawer/DrawerHeader';
+import DrawerViewBody from './drawer/DrawerViewBody';
 import TaskEditForm from './TaskEditForm';
 import TaskCancelForm from './TaskCancelForm';
 
 const t = he.tasks;
 
 // משימה בודדת: bottom sheet (מובייל) / side panel (דסקטופ). נפתחת מכל מקום.
-// המסך הוא מתאם בלבד — התצוגה, העריכה והביטול הם רכיבים נפרדים.
+// המסך הוא מתאם בלבד — הכותרת, הגוף, העריכה והביטול הם רכיבים נפרדים.
 export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager = false }) {
   const { task, loading, error, updateTask, cancelTask } = useTaskDetail(taskId);
   const { members } = useOrgMembers(orgId);
   const target = useTaskTargets(orgId);
   const [mode, setMode] = useState('view'); // 'view' | 'edit' | 'cancel'
-  const [showTimeline, setShowTimeline] = useState(false);
-  const [timelineKey, setTimelineKey] = useState(0);
+  const [full, setFull] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  // סגירה/פתיחה מאפסת מצב, כדי שלא ייפתח על משימה אחרת במצב עריכה
+  // פתיחה על משימה אחרת מאפסת מצב
   useEffect(() => {
     setMode('view');
-    setShowTimeline(false);
+    setFull(false);
   }, [taskId]);
 
   useEffect(() => {
@@ -37,21 +35,24 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
 
   if (!isOpen) return null;
 
-  const assigneeName =
-    members.find((m) => m.id === task?.assignee_id)?.full_name ?? t.unassigned;
+  const assigneeName = members.find((m) => m.id === task?.assignee_id)?.full_name ?? null;
   const isCancelled = task?.status === 'cancelled';
 
   async function save(fields) {
     await updateTask(fields);
     setMode('view');
-    setTimelineKey((k) => k + 1); // אירוע 'edited' נכתב בשרת — נטען מחדש
+    setRefreshKey((k) => k + 1); // אירוע 'edited' נכתב בשרת — נטען מחדש
   }
 
   async function confirmCancel(reason) {
     await cancelTask(reason);
     setMode('view');
-    setTimelineKey((k) => k + 1);
+    setRefreshKey((k) => k + 1);
   }
+
+  const panel = full
+    ? 'h-full w-full rounded-none'
+    : 'max-h-[92vh] w-full rounded-t-2xl sm:max-w-lg sm:rounded-2xl';
 
   return (
     <div
@@ -59,96 +60,89 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
       onClick={onClose}
     >
       <div
-        className="max-h-[92vh] w-full overflow-y-auto rounded-t-2xl bg-white shadow-xl sm:max-w-lg sm:rounded-2xl"
+        className={`flex flex-col overflow-hidden bg-white shadow-xl ${panel}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-white p-4 sm:p-6">
-          <h2 className="text-lg font-bold text-slate-900">
-            {mode === 'edit' ? t.editTitle : task?.title || t.addTitle}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={he.common.cancel}
-            className="px-2 text-3xl leading-none text-slate-400 hover:text-slate-600"
-          >
-            ×
-          </button>
-        </div>
+        <DrawerHeader
+          task={task}
+          onClose={onClose}
+          onFullScreen={() => setFull((v) => !v)}
+        />
 
-        <div className="p-4 sm:p-6">
+        <div className="min-h-0 flex-1 overflow-y-auto">
           {error && (
-            <p className="py-4 text-center text-red-600">{he.clientDetail.loadError}</p>
+            <p className="py-6 text-center text-red-600">{he.clientDetail.loadError}</p>
           )}
           {loading && (
-            <p className="py-4 text-center text-slate-500">{he.common.loading}</p>
+            <p className="py-6 text-center text-slate-500">{he.common.loading}</p>
           )}
 
           {task && !loading && (
             <>
-              <div className="mb-6 flex items-center gap-3">
-                <StatusPill
-                  tone={STATUS_TONE[task.status]}
-                  label={t.status[task.status] ?? task.status}
-                />
-                {task.priority === 'urgent' && (
-                  <StatusPill tone="red" label={t.priorityOpt.urgent} />
-                )}
-              </div>
-
               {mode === 'view' && (
-                <TaskDetailsView task={task} assigneeName={assigneeName} />
+                <DrawerViewBody
+                  task={task}
+                  assigneeName={assigneeName}
+                  refreshKey={refreshKey}
+                />
               )}
 
               {mode === 'edit' && (
-                <TaskEditForm
-                  task={task}
-                  members={members}
-                  target={target}
-                  onSave={save}
-                  onCancel={() => setMode('view')}
-                />
+                <div className="p-4 sm:p-5">
+                  <TaskEditForm
+                    task={task}
+                    members={members}
+                    target={target}
+                    onSave={save}
+                    onCancel={() => setMode('view')}
+                  />
+                </div>
               )}
 
               {mode === 'cancel' && (
-                <TaskCancelForm
-                  onConfirm={confirmCancel}
-                  onBack={() => setMode('view')}
-                />
-              )}
-
-              <button
-                type="button"
-                onClick={() => setShowTimeline((v) => !v)}
-                className="mt-6 min-h-touch w-full rounded-lg px-3 text-sm font-bold text-brand hover:bg-brand/5"
-              >
-                {he.media.openTimeline}
-              </button>
-              {showTimeline && (
-                <div className="mt-4">
-                  <TaskTimeline key={timelineKey} taskId={taskId} />
+                <div className="p-4 sm:p-5">
+                  <TaskCancelForm
+                    onConfirm={confirmCancel}
+                    onBack={() => setMode('view')}
+                  />
                 </div>
-              )}
-
-              {isManager && mode === 'view' && !isCancelled && (
-                <div className="mt-8 space-y-3">
-                  <Button variant="secondary" fullWidth onClick={() => setMode('edit')}>
-                    {he.common.edit}
-                  </Button>
-                  <Button variant="danger" fullWidth onClick={() => setMode('cancel')}>
-                    {t.cancelTask}
-                  </Button>
-                </div>
-              )}
-
-              {isCancelled && (
-                <p className="mt-8 rounded-lg bg-slate-100 px-3 py-2 text-center font-bold text-slate-600">
-                  {t.alreadyCancelled}
-                </p>
               )}
             </>
           )}
         </div>
+
+        {/* שורת פעולות תחתונה — נשארת מוצמדת מתחת לתוכן הנגלל */}
+        {task && !loading && mode === 'view' && (
+          <div className="shrink-0 border-t border-line bg-surfaceBar px-4 py-3 sm:px-5">
+            {isCancelled ? (
+              <p className="text-center font-bold text-slate-500">{t.alreadyCancelled}</p>
+            ) : isManager ? (
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setMode('edit')}
+                  className="min-h-touch flex-1 rounded-xl bg-brand px-4 font-bold text-white hover:bg-brand-dark"
+                >
+                  {he.dashboard.managerUpdate}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('edit')}
+                  className="min-h-touch rounded-xl border-2 border-line px-5 font-bold text-slate-700 hover:bg-white"
+                >
+                  {he.common.edit}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('cancel')}
+                  className="min-h-touch rounded-xl border-2 border-red-300 px-4 font-bold text-red-600 hover:bg-red-50"
+                >
+                  {t.cancelTask}
+                </button>
+              </div>
+            ) : null}
+          </div>
+        )}
       </div>
     </div>
   );

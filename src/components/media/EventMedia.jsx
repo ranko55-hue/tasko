@@ -1,6 +1,7 @@
 import { he } from '../../locales/he';
+import AudioPlayer from './AudioPlayer';
 
-// רנדור מדיה של אירוע — תמונה ממוזערת או נגן שמע.
+// רנדור מדיה של אירוע — תמונה ממוזערת או נגן שמע מעוצב.
 // רכיב אחד משותף לכל מקום שהציר מופיע: מסך העובד, TaskDrawer, וכרטיס הלוח.
 export default function EventMedia({ event, size = 'md', onPhoto }) {
   if (!event?.url) return null;
@@ -26,7 +27,7 @@ export default function EventMedia({ event, size = 'md', onPhoto }) {
   }
 
   if (event.type === 'voice_note') {
-    return <audio controls preload="none" src={event.url} className="mt-2 w-full" />;
+    return <AudioPlayer src={event.url} />;
   }
 
   return null;

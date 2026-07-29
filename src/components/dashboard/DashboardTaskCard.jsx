@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { he } from '../../locales/he';
 import { STATUS_DOT } from '../../lib/taskMeta';
 import { isOverrun } from '../../lib/dashboardModel';
+import { overrunMinutes } from '../../lib/taskTime';
 import { formatDuration } from '../../lib/time';
 import Modal from '../shared/Modal';
 import EventMedia from '../media/EventMedia';
@@ -50,8 +51,7 @@ export default function DashboardTaskCard({
     statusText = `הזמן עצור · הפסקה`;
   } else if (overrun) {
     barColor = 'bg-statusRed';
-    const overrunMin = Math.ceil((task.net_seconds / 60 - task.est_minutes));
-    statusText = `חריגה · ${overrunMin} דקות מעל`;
+    statusText = `חריגה · ${overrunMinutes(task)} ${he.time.minutes} מעל`;
   } else if (progressPct >= 85) {
     barColor = 'bg-yellow-500';
     statusText = `מתקרב ליעד · ${progressPct}%`;
