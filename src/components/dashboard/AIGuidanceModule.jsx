@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import { formatDateTime } from '../../lib/time';
+import Icon from '../ui/Icon';
 
 // מודול "תדריך AI — חי" עם צ'יפים ותיוג ספציפי
 export default function AIGuidanceModule({
@@ -96,8 +97,9 @@ export default function AIGuidanceModule({
     <div className="mb-6 bg-navy px-4 py-3 rounded-lg shadow-md">
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-black text-white">
-          🤖 תדריך AI — חי
+        <h2 className="flex items-center gap-2 text-sm font-black text-white">
+          <Icon name="ai" />
+          {he.dashboard.aiTitle}
         </h2>
         <div className="flex items-center gap-3">
           {alertCounter > 0 && (
@@ -105,12 +107,18 @@ export default function AIGuidanceModule({
               {Math.min(alertCounter, 9)}
             </span>
           )}
+          {/* אזור לחיצה 44px, מסגרת ורקע כדי שיהיה ברור שזה כפתור */}
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="px-2 text-xl font-bold text-brandYellow hover:opacity-80"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? he.dashboard.collapse : he.dashboard.expand}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg
+                       border border-white/25 bg-white/10 text-lg font-bold text-brandYellow
+                       transition-colors hover:bg-white/20 focus:outline-none
+                       focus:ring-2 focus:ring-brandYellow/60"
           >
-            {isOpen ? '⌄' : '⌃'}
+            {isOpen ? '⌃' : '⌄'}
           </button>
         </div>
       </div>
@@ -157,7 +165,7 @@ export default function AIGuidanceModule({
             <button
               type="button"
               onClick={() => setIsOpen(true)}
-              className="inline-flex shrink-0 items-center justify-center rounded-full border border-slate-300 bg-transparent px-2 py-1 text-sm font-bold text-slate-400 hover:bg-slate-300/20"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-transparent text-lg font-bold text-slate-300 hover:bg-slate-300/20"
             >
               ＋
             </button>

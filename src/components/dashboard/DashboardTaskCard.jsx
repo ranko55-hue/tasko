@@ -5,6 +5,7 @@ import { isOverrun } from '../../lib/dashboardModel';
 import { formatDuration } from '../../lib/time';
 import Modal from '../shared/Modal';
 import EventMedia from '../media/EventMedia';
+import Icon from '../ui/Icon';
 
 // צבעי סטטוס לטקסט
 const STATUS_TEXT_COLOR = {
@@ -106,7 +107,14 @@ export default function DashboardTaskCard({
         <div className="min-w-0 border-l border-line pl-4">
           <div className="text-slate-400">דחיפות</div>
           <div>
-            {task.priority === 'urgent' ? '🔥 דחוף' : 'רגילה'}
+            {task.priority === 'urgent' ? (
+              <span className="inline-flex items-center gap-1 font-bold text-statusRed">
+                <Icon name="urgent" size="sm" />
+                {he.tasks.priorityOpt.urgent}
+              </span>
+            ) : (
+              he.tasks.priorityOpt.normal
+            )}
           </div>
         </div>
       </div>
@@ -141,9 +149,11 @@ export default function DashboardTaskCard({
 
       {/* Footer: avatar + name + timer */}
       <div className="border-t border-line px-3 py-2 flex items-center gap-2">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
-          {(assigneeName || '?')[0]?.toUpperCase()}
-        </div>
+        {assigneeName && (
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
+            {assigneeName[0].toUpperCase()}
+          </div>
+        )}
         <div className="flex-1 min-w-0 text-sm font-bold text-slate-700 truncate">
           {assigneeName || he.tasks.unassigned}
         </div>
@@ -158,9 +168,9 @@ export default function DashboardTaskCard({
       <button
         type="button"
         onClick={handleToggleExpand}
-        className="w-full border-t border-line px-3 py-2 text-center text-sm font-bold text-slate-600 hover:bg-slate-50"
+        className="min-h-touch w-full border-t border-line px-3 text-center text-sm font-bold text-slate-600 hover:bg-slate-50"
       >
-        פרטים ועדכונים {expanded ? '⌄' : '⌃'}
+        {he.dashboard.detailsToggle} {expanded ? '⌃' : '⌄'}
       </button>
 
       {/* Expanded details */}
@@ -233,7 +243,7 @@ export default function DashboardTaskCard({
           onClick={() => onOpenTask?.(task.id)}
           className="w-full bg-brand px-3 py-2 font-bold text-white hover:bg-brand/90 text-sm"
         >
-          ＋ שייך לעובד
+          {he.tasks.assignWorker}
         </button>
       )}
       {task.status === 'blocked' && (

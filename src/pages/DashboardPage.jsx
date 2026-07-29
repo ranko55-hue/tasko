@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
 import { isManager } from '../lib/roles';
 import { useDashboard } from '../hooks/useDashboard';
@@ -14,6 +15,7 @@ import EmptyState from '../components/ui/EmptyState';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
 import DashboardTaskCard from '../components/dashboard/DashboardTaskCard';
 import TaskDrawer from '../components/tasks/TaskDrawer';
+import NewTaskModal from '../components/shell/NewTaskModal';
 
 const PINNED_CHIPS_KEY = 'dashboard.pinnedChips';
 
@@ -25,6 +27,7 @@ export default function DashboardPage() {
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [pinnedChips, setPinnedChips] = useState([]);
   const [taskEventsMap, setTaskEventsMap] = useState({});
+  const [newTaskOpen, setNewTaskOpen] = useState(false);
 
   const {
     tasks,
@@ -114,20 +117,21 @@ export default function DashboardPage() {
         />
       )}
 
-      {/* Action bar */}
-      <div className="mb-6 flex gap-3">
+      {/* פס פעולות — הכפתורים היו ללא onClick ולכן לא הגיבו כלל */}
+      <div className="mb-6 flex flex-wrap gap-3">
         <button
           type="button"
-          className="rounded-lg bg-brand px-4 py-2.5 font-bold text-white hover:bg-brand/90 min-h-touch"
+          onClick={() => setNewTaskOpen(true)}
+          className="min-h-touch rounded-lg bg-brandYellow px-4 py-2.5 font-bold text-navy hover:bg-brandYellow/90"
         >
-          ＋ משימה חדשה
+          {he.dashboard.newTask}
         </button>
-        <button
-          type="button"
-          className="rounded-lg border-2 border-line px-4 py-2 font-bold text-slate-700 hover:bg-slate-50 min-h-touch"
+        <Link
+          to="/my"
+          className="flex min-h-touch items-center rounded-lg border-2 border-line px-4 font-bold text-slate-700 hover:bg-slate-50"
         >
           {he.nav.myTasks}
-        </button>
+        </Link>
       </div>
 
       {/* Main content */}
@@ -145,12 +149,12 @@ export default function DashboardPage() {
           </button>
         </div>
       ) : isEmpty ? (
-        <EmptyState emoji="🗂️" message={he.dashboard.empty} />
+        <EmptyState icon="project" message={he.dashboard.empty} />
       ) : (
         <div className="grid gap-4 md:grid-cols-4">
           {/* Column: Waiting */}
           <div>
-            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.waiting}</h2>
+            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.waiting} ({cols.waiting.length})</h2>
             <div className="space-y-3">
               {cols.waiting.map((t) => (
                 <DashboardTaskCard
@@ -169,7 +173,7 @@ export default function DashboardPage() {
 
           {/* Column: Working */}
           <div>
-            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.working}</h2>
+            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.working} ({cols.working.length})</h2>
             <div className="space-y-3">
               {cols.working.map((t) => (
                 <DashboardTaskCard
@@ -188,7 +192,7 @@ export default function DashboardPage() {
 
           {/* Column: Alert */}
           <div>
-            <h2 className="mb-3 font-bold text-statusRed">{he.dashboard.columns.alert}</h2>
+            <h2 className="mb-3 font-bold text-statusRed">{he.dashboard.columns.alert} ({cols.alert.length})</h2>
             <div className="space-y-3">
               {cols.alert.map((t) => (
                 <DashboardTaskCard
@@ -207,7 +211,7 @@ export default function DashboardPage() {
 
           {/* Column: Done */}
           <div>
-            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.doneToday}</h2>
+            <h2 className="mb-3 font-bold text-slate-900">{he.dashboard.columns.doneToday} ({cols.done.length})</h2>
             <div className="space-y-3">
               {cols.done.map((t) => (
                 <DashboardTaskCard
@@ -224,6 +228,16 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {newTaskOpen && (
+        <NewTaskModal
+          onClose={() => setNewTaskOpen(false)}
+          onDone={() => {
+            setNewTaskOpen(false);
+            refetch();
+          }}
+        />
       )}
 
       {/* TaskDrawer */}
