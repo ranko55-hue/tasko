@@ -6,13 +6,10 @@ import Textarea from '../shared/Textarea';
 import Select from '../shared/Select';
 import RequirementsEditor from './RequirementsEditor';
 import TaskTargetPicker from './TaskTargetPicker';
+import { datesFromForm, defaultDates } from '../../lib/taskDates';
 
 const t = he.tasks;
 
-// המרה מ-datetime-local (זמן מקומי) ל-ISO עבור timestamptz, או null
-function toIso(local) {
-  return local ? new Date(local).toISOString() : null;
-}
 
 // טופס פתיחת משימה. הלקוח הוא העוגן (v8 §3.4): לקוח חובה, פרויקט רשות.
 // target — { clients, projects, requireProject, quickCreateClient } מ-useTaskTargets.
@@ -34,8 +31,10 @@ export default function TaskForm({
   const [address, setAddress] = useState('');
   const [assigneeId, setAssigneeId] = useState('');
   const [priority, setPriority] = useState('normal');
-  const [dueAt, setDueAt] = useState('');
-  const [scheduledStart, setScheduledStart] = useState('');
+  const d0 = defaultDates();
+  const [startsOn, setStartsOn] = useState(d0.starts_on);
+  const [endsOn, setEndsOn] = useState(d0.ends_on);
+  const [dueTime, setDueTime] = useState(d0.due_time);
   const [estMinutes, setEstMinutes] = useState('');
   const [requirements, setRequirements] = useState([]);
   const [requiredWorkers, setRequiredWorkers] = useState('1');
@@ -70,8 +69,7 @@ export default function TaskForm({
         address: address.trim() || null,
         assignee_id: assigneeId || null,
         priority,
-        due_at: toIso(dueAt),
-        scheduled_start_at: toIso(scheduledStart),
+        ...datesFromForm({ startsOn, endsOn, dueTime }),
         est_minutes: estMinutes ? parseInt(estMinutes, 10) : null,
         requirements: requirements.map((r) => r.trim()).filter(Boolean),
         required_workers: workers,
@@ -129,18 +127,28 @@ export default function TaskForm({
         <option value="urgent">{t.priorityOpt.urgent}</option>
       </Select>
 
-      <Field
-        label={t.dueAt}
-        type="datetime-local"
-        value={dueAt}
-        onChange={setDueAt}
-      />
-      <Field
-        label={`${t.scheduledStart} ${he.common.optional}`}
-        type="datetime-local"
-        value={scheduledStart}
-        onChange={setScheduledStart}
-      />
+      {/* שלושת שדות התאריך — אף אחד אינו חובה, יש להם ברירות מחדל */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Field
+          label={`${t.startsOn} ${he.common.optional}`}
+          type="date"
+          value={startsOn}
+          onChange={setStartsOn}
+        />
+        <Field
+          label={`${t.endsOn} ${he.common.optional}`}
+          type="date"
+          value={endsOn}
+          onChange={setEndsOn}
+        />
+        <Field
+          label={`${t.dueTime} ${he.common.optional}`}
+          type="time"
+          value={dueTime}
+          onChange={setDueTime}
+        />
+      </div>
+
       <Field
         label={`${t.estMinutes} ${he.common.optional}`}
         type="number"

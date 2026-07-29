@@ -1,5 +1,5 @@
 import { he } from '../../../locales/he';
-import { formatDateTime } from '../../../lib/time';
+import { dateRangeLabel, dueTimeLabel } from '../../../lib/taskDates';
 
 const d = he.tasks.drawer;
 const BASE = 'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold';
@@ -12,11 +12,13 @@ export default function TaskChips({ task }) {
   if (task?.priority === 'urgent') {
     chips.push({ key: 'urgent', cls: 'bg-urgentSoft text-urgentInk', label: d.chipUrgent });
   }
-  if (task?.due_at) {
+  if (task?.ends_on) {
+    const range = dateRangeLabel(task);
+    const time = dueTimeLabel(task);
     chips.push({
       key: 'due',
       cls: 'bg-dueSoft text-dueInk',
-      label: `${d.chipDue} ${formatDateTime(task.due_at)}`,
+      label: `${d.chipDue} ${range}${time ? ` · ${time}` : ''}`,
       num: true,
     });
   }

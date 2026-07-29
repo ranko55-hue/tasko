@@ -3,6 +3,7 @@ import { he } from '../../locales/he';
 import Button from '../shared/Button';
 import Field from '../ui/Field';
 import Select from '../shared/Select';
+import Textarea from '../shared/Textarea';
 
 const t = he.projects;
 
@@ -10,6 +11,8 @@ const t = he.projects;
 export default function ProjectForm({ onSubmit, onCancel, members = [] }) {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
+  const [sku, setSku] = useState('');
+  const [details, setDetails] = useState('');
   const [endsAt, setEndsAt] = useState('');
   const [managerId, setManagerId] = useState('');
   const [error, setError] = useState('');
@@ -25,6 +28,8 @@ export default function ProjectForm({ onSubmit, onCancel, members = [] }) {
       await onSubmit({
         name: name.trim(),
         address: address.trim() || null,
+        sku: sku.trim() || null,
+        details: details.trim() || null,
         ends_at: endsAt || null,
         // נשלח רק כשנבחר מנהל, כדי שיצירת פרויקט רגילה תעבוד גם לפני מיגרציה 006
         ...(managerId ? { manager_id: managerId } : {}),
@@ -42,6 +47,16 @@ export default function ProjectForm({ onSubmit, onCancel, members = [] }) {
         label={`${t.address} ${he.common.optional}`}
         value={address}
         onChange={setAddress}
+      />
+      <Field
+        label={`${t.sku} ${he.common.optional}`}
+        value={sku}
+        onChange={setSku}
+      />
+      <Textarea
+        label={`${t.details} ${he.common.optional}`}
+        value={details}
+        onChange={setDetails}
       />
       <Field
         label={`${t.endsAt} ${he.common.optional}`}

@@ -1,6 +1,7 @@
 import { he } from '../../../locales/he';
 import { STATUS_DOT } from '../../../lib/taskMeta';
 import { isActiveStatus } from '../../../lib/taskTime';
+import { taskSubtitle } from '../../../lib/taskSubtitle';
 import Icon from '../../ui/Icon';
 
 const t = he.tasks;
@@ -24,9 +25,7 @@ const GHOST =
 // כותרת המגירה — פס navy עם מדרג, סטטוס, זהות המשימה ופעולות חלון.
 export default function DrawerHeader({ task, onClose, onFullScreen }) {
   const status = task?.status;
-  const subtitle = [task?.client?.name, task?.project?.name, task?.address]
-    .filter(Boolean)
-    .join(' · ');
+  const subtitle = taskSubtitle(task);
 
   return (
     <div

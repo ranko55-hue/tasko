@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { he } from '../../locales/he';
 import { lateness, sortByUrgency } from '../../lib/lateness';
 import { STATUS_DOT } from '../../lib/taskMeta';
-import { formatDate } from '../../lib/time';
+import { dateRangeLabel, isMultiDay } from '../../lib/taskDates';
 import Icon from '../ui/Icon';
 
 const d = he.dashboard;
@@ -115,8 +115,13 @@ export default function BoardRows({ tasks, membersMap, onOpenTask }) {
                       <span className="hidden w-24 shrink-0 truncate text-xs text-slate-500 md:block">
                         {membersMap?.[task.assignee_id] ?? he.tasks.unassigned}
                       </span>
-                      <span className="w-16 shrink-0 text-end text-xs text-slate-500" style={NUM}>
-                        {task.due_at ? formatDate(task.due_at) : he.common.none}
+                      <span
+                        className={`w-20 shrink-0 text-end text-xs ${
+                          isMultiDay(task) ? 'text-slate-700' : 'text-slate-500'
+                        }`}
+                        style={NUM}
+                      >
+                        {dateRangeLabel(task) ?? he.common.none}
                       </span>
                       <LateTag task={task} />
                     </button>

@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 const COLS =
   'id, org_id, title, description, address, status, priority, due_at, ' +
   'scheduled_start_at, est_minutes, requirements, required_workers, ' +
+  'starts_on, ends_on, due_time, ' +
   'team_lead_id, assignee_id, net_seconds, work_started_at, ' +
   'client:clients(name), project:projects(name)';
 

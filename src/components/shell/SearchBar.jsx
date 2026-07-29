@@ -47,7 +47,12 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
       const [t, c, p] = await Promise.all([
         supabase.from('tasks').select('id,title,project_id').eq('org_id', org).ilike('title', term).limit(5),
         supabase.from('clients').select('id,name').eq('org_id', org).ilike('name', term).limit(5),
-        supabase.from('projects').select('id,name').eq('org_id', org).ilike('name', term).limit(5),
+        supabase
+          .from('projects')
+          .select('id,name,sku')
+          .eq('org_id', org)
+          .or(`name.ilike.${term},sku.ilike.${term}`)
+          .limit(5),
       ]);
       setRes({ tasks: t.data ?? [], clients: c.data ?? [], projects: p.data ?? [] });
       setOpen(true);

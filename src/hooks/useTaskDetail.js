@@ -5,9 +5,10 @@ import { supabase } from '../lib/supabase';
 const SELECT = `
   id, title, description, address, priority, status, due_at, scheduled_start_at,
   est_minutes, requirements, required_workers, net_seconds, work_started_at,
+  starts_on, ends_on, due_time,
   assignee_id, created_by, team_lead_id, client_id, project_id, org_id,
   client:clients(id, name),
-  project:projects(id, name, client_id)
+  project:projects(id, name, client_id, sku, address)
 `;
 
 // משימה בודדת + כל הפרטים שלה (דרישות, לקוח, פרויקט, משויך)

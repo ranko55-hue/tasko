@@ -1,13 +1,18 @@
+import { deadlineOf } from './taskDates';
 // חישוב איחור — מקור אמת יחיד.
-// הצ'יפ "N באיחור" בשורת התדריך והמיון בלוח חייבים להסכים, ולכן שניהם
-// נגזרים מכאן ולא מחישוב מקומי.
+// הצ'יפ "N באיחור" בשורת התדריך, המיון, התגים והקבוצה בתצוגת השורות —
+// כולם נגזרים מכאן ולא מחישוב מקומי בשום רכיב.
+//
+// המועד הוא תאריך הסיום + שעת היעד (מיגרציה 009). deadlineOf מחזיר את
+// due_at, שהטריגר בשרת גוזר בדיוק משני אלה.
 
 const CLOSED = ['done', 'cancelled'];
 
 // null = לא באיחור · 'unassigned' = חמור · 'working' = קל
 export function lateness(task, now = new Date()) {
   if (!task || CLOSED.includes(task.status)) return null;
-  if (!task.due_at || new Date(task.due_at) >= now) return null;
+  const deadline = deadlineOf(task);
+  if (!deadline || new Date(deadline) >= now) return null;
   return task.assignee_id ? 'working' : 'unassigned';
 }
 
@@ -30,13 +35,13 @@ export function sortByUrgency(tasks, now = new Date()) {
     if (la && lb) {
       const r = RANK[la] - RANK[lb];
       if (r !== 0) return r;
-      return new Date(a.due_at) - new Date(b.due_at);
+      return new Date(deadlineOf(a)) - new Date(deadlineOf(b));
     }
     if (la) return -1;
     if (lb) return 1;
-    // שאר המשימות לפי יעד; משימה בלי יעד יורדת לסוף
-    const da = a.due_at ? new Date(a.due_at) : Infinity;
-    const db = b.due_at ? new Date(b.due_at) : Infinity;
+    // שאר המשימות לפי מועד; משימה בלי מועד יורדת לסוף
+    const da = deadlineOf(a) ? new Date(deadlineOf(a)) : Infinity;
+    const db = deadlineOf(b) ? new Date(deadlineOf(b)) : Infinity;
     return da - db;
   });
 }

@@ -2,6 +2,7 @@ import { he } from '../../locales/he';
 import { STATUS_DOT } from '../../lib/taskMeta';
 import { isOverrun } from '../../lib/dashboardModel';
 import { overrunMinutes } from '../../lib/taskTime';
+import { dateRangeLabel, isMultiDay } from '../../lib/taskDates';
 import { formatDuration } from '../../lib/time';
 import Icon from '../ui/Icon';
 
@@ -83,7 +84,7 @@ export default function DashboardTaskCard({
         <div className="min-w-0">
           <div className="text-slate-400">יעד</div>
           <div style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {task.due_at ? new Date(task.due_at).toLocaleDateString('he-IL') : he.common.none}
+            {dateRangeLabel(task) ?? he.common.none}
           </div>
         </div>
         <div className="min-w-0 border-l border-line pl-4">

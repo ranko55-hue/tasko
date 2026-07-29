@@ -6,19 +6,10 @@ import Textarea from '../shared/Textarea';
 import Field from '../ui/Field';
 import RequirementsEditor from './RequirementsEditor';
 import TaskTargetPicker from './TaskTargetPicker';
+import { datesFromForm, DEFAULT_DUE_TIME } from '../../lib/taskDates';
 
 const t = he.tasks;
 
-// ISO ↔ datetime-local
-function toLocal(iso) {
-  if (!iso) return '';
-  const d = new Date(iso);
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-function toIso(local) {
-  return local ? new Date(local).toISOString() : null;
-}
 
 // עריכת משימה קיימת. שינוי לקוח/פרויקט מותר — האילוץ נאכף בטריגר בשרת.
 // requireProject לא נאכף כאן: ההגדרה חלה על יצירה בלבד (v8 §3.9, הכרעה 2).
@@ -30,7 +21,9 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
   const [address, setAddress] = useState(task.address ?? '');
   const [assigneeId, setAssigneeId] = useState(task.assignee_id ?? '');
   const [priority, setPriority] = useState(task.priority ?? 'normal');
-  const [dueAt, setDueAt] = useState(toLocal(task.due_at));
+  const [startsOn, setStartsOn] = useState(task.starts_on ?? '');
+  const [endsOn, setEndsOn] = useState(task.ends_on ?? '');
+  const [dueTime, setDueTime] = useState((task.due_time ?? DEFAULT_DUE_TIME).slice(0, 5));
   const [estMinutes, setEstMinutes] = useState(task.est_minutes ?? '');
   const [requirements, setRequirements] = useState(task.requirements ?? []);
   const [error, setError] = useState('');
@@ -58,7 +51,7 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
         address: address.trim() || null,
         assignee_id: assigneeId || null,
         priority,
-        due_at: toIso(dueAt),
+        ...datesFromForm({ startsOn, endsOn, dueTime }),
         est_minutes: estMinutes ? parseInt(estMinutes, 10) : null,
         requirements: (requirements ?? []).map((r) => r.trim()).filter(Boolean),
       });
@@ -112,7 +105,11 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
         <option value="urgent">{t.priorityOpt.urgent}</option>
       </Select>
 
-      <Field label={t.dueAt} type="datetime-local" value={dueAt} onChange={setDueAt} />
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Field label={t.startsOn} type="date" value={startsOn} onChange={setStartsOn} />
+        <Field label={t.endsOn} type="date" value={endsOn} onChange={setEndsOn} />
+        <Field label={t.dueTime} type="time" value={dueTime} onChange={setDueTime} />
+      </div>
       <Field
         label={`${t.estMinutes} ${he.common.optional}`}
         type="number"
