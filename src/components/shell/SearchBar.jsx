@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrg } from '../../lib/orgContext';
 import { supabase } from '../../lib/supabase';
@@ -27,7 +27,9 @@ function Group({ label, items, icon, render, onPick }) {
 }
 
 // חיפוש גלובלי בפס — משימות / לקוחות / פרויקטים, תוצאות מקובצות.
-export default function SearchBar({ onNavigate }) {
+export default function SearchBar({ onNavigate, onExpandedChange }) {
+  const inputRef = useRef(null);
+  const [expanded, setExpanded] = useState(false); // מובייל: אייקון שמתרחב לשדה
   const { member } = useOrg();
   const navigate = useNavigate();
   const [q, setQ] = useState('');
@@ -63,16 +65,50 @@ export default function SearchBar({ onNavigate }) {
 
   const total = res ? res.tasks.length + res.clients.length + res.projects.length : 0;
 
+  // ב-390 השדה מכווץ לאייקון עד שלוחצים; בדסקטופ תמיד פרוש
+  function setExpandedBoth(v) {
+    setExpanded(v);
+    onExpandedChange?.(v);
+  }
+
+  function openField() {
+    setExpandedBoth(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  }
+
   return (
-    <div className="relative">
-      <input
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        onFocus={() => res && setOpen(true)}
-        onBlur={() => setTimeout(() => setOpen(false), 150)}
-        placeholder={he.shell.searchPlaceholder}
-        className="min-h-[44px] w-full rounded-xl bg-white/10 px-4 text-white placeholder:text-slate-400 focus:bg-white focus:text-slate-900 focus:outline-none"
-      />
+    <div className={`relative ${expanded ? 'w-full flex-1' : ''} md:w-full`}>
+      {!expanded && (
+        <button
+          type="button"
+          onClick={openField}
+          aria-label={he.shell.search}
+          className="flex h-11 w-11 items-center justify-center rounded-full text-slate-300
+                     hover:bg-white/10 md:hidden"
+        >
+          <Icon name="search" />
+        </button>
+      )}
+
+      <div
+        className={`w-full items-center gap-2 rounded-full bg-white/10 px-3
+                    focus-within:bg-white/20 ${expanded ? 'flex' : 'hidden md:flex'}`}
+      >
+        <Icon name="search" size="sm" className="text-slate-400" />
+        <input
+          ref={inputRef}
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          onFocus={() => res && setOpen(true)}
+          onBlur={() => {
+            setTimeout(() => setOpen(false), 150);
+            if (!q) setExpandedBoth(false);
+          }}
+          placeholder={he.shell.searchPlaceholder}
+          className="min-h-[44px] w-full bg-transparent text-white placeholder:text-slate-400
+                     focus:outline-none"
+        />
+      </div>
       {open && res && (
         <div className="absolute z-50 mt-1 max-h-80 w-full overflow-y-auto rounded-xl bg-white p-2 text-slate-900 shadow-xl">
           {total === 0 ? (

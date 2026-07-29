@@ -5,6 +5,7 @@ import { useOrg } from '../lib/orgContext';
 import { isManager, homePathFor } from '../lib/roles';
 import { he } from '../locales/he';
 import NavLinks from './shared/NavLinks';
+import SearchBar from './shell/SearchBar';
 import MobileDrawer from './shell/MobileDrawer';
 import PageShell from './ui/PageShell';
 
@@ -13,6 +14,7 @@ import PageShell from './ui/PageShell';
 export default function AppShell() {
   const { member } = useOrg();
   const [drawer, setDrawer] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false); // מובייל: החיפוש הפרוש מפנה מקום
   // לעובד/ראש צוות: לוגו, שם, התנתקות בלבד. בלי ניווט ניהולי, חיפוש או פעולות.
   const manager = isManager(member);
 
@@ -32,19 +34,27 @@ export default function AppShell() {
           )}
 
           {/* לוגו בקצה אחד (ימין ב-RTL) */}
-          <Link to={homePathFor(member)} className="flex min-h-touch shrink-0 items-center">
+          <Link
+            to={homePathFor(member)}
+            className={`min-h-touch shrink-0 items-center ${searchOpen ? 'hidden md:flex' : 'flex'}`}
+          >
             <img src="/brand/tasko-header-dark.png" alt={he.app.name} className="h-7 w-auto" />
           </Link>
 
           {/* כל השאר מקובץ בקצה הנגדי */}
-          <div className="ms-auto flex min-w-0 items-center gap-3">
+          <div className={`ms-auto flex min-w-0 items-center gap-3 ${searchOpen ? 'flex-1' : ''}`}>
             {manager && (
-              <div className="hidden md:block">
-                <NavLinks dark />
-              </div>
+              <>
+                <div className="hidden md:block">
+                  <NavLinks dark />
+                </div>
+                <div className={`min-w-0 md:w-64 lg:w-80 ${searchOpen ? 'flex-1' : ''}`}>
+                  <SearchBar onExpandedChange={setSearchOpen} />
+                </div>
+              </>
             )}
 
-            <span className="max-w-[7rem] truncate text-sm text-slate-300 sm:max-w-none">
+            <span className={`max-w-[7rem] truncate text-sm text-slate-300 sm:max-w-none ${searchOpen ? 'hidden sm:inline' : ''}`}>
               {member?.full_name}
             </span>
             <button
