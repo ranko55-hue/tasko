@@ -6,15 +6,16 @@ import Row from '../ui/Row';
 import StatusPill from '../ui/StatusPill';
 import EmptyState from '../ui/EmptyState';
 import DocumentForm from './DocumentForm';
+import Icon from '../ui/Icon';
 
 const f = he.clientDetail.finance;
 
 const KIND_ICON = {
-  quote: '📝',
-  delivery_note: '🚚',
-  invoice: '🧾',
-  receipt: '💵',
-  other: '📄',
+  quote: 'task',
+  delivery_note: 'project',
+  invoice: 'finance',
+  receipt: 'finance',
+  other: 'task',
 };
 
 // גווני סטטוס מסמך — רק צבעי DESIGN §4
@@ -42,13 +43,13 @@ export default function FinancesTab({ documents, onAddDocument }) {
       </div>
 
       {!documents.length ? (
-        <EmptyState emoji="🧾" message={f.empty} />
+        <EmptyState icon="finance" message={f.empty} />
       ) : (
         <div className="space-y-3">
           {documents.map((d) => (
             <Row
               key={d.id}
-              icon={KIND_ICON[d.kind] ?? '📄'}
+              icon={<Icon name={KIND_ICON[d.kind] ?? 'task'} />}
               title={d.title}
               subtitle={
                 d.amount != null

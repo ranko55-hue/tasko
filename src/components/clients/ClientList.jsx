@@ -2,13 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { he } from '../../locales/he';
 import Row from '../ui/Row';
 import EmptyState from '../ui/EmptyState';
+import Icon from '../ui/Icon';
 
 // רשימת לקוחות — Row משותפת, לחיצה נכנסת לכרטיס הלקוח.
 export default function ClientList({ clients }) {
   const navigate = useNavigate();
 
   if (clients.length === 0) {
-    return <EmptyState emoji="👥" message={he.clients.empty} />;
+    return <EmptyState icon="users" message={he.clients.empty} />;
   }
 
   return (
@@ -16,7 +17,7 @@ export default function ClientList({ clients }) {
       {clients.map((c) => (
         <Row
           key={c.id}
-          icon="🏢"
+          icon={<Icon name="client" />}
           title={c.name}
           subtitle={
             [c.contact_name, c.contact_phone].filter(Boolean).join(' · ') ||

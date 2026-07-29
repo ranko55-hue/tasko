@@ -4,6 +4,7 @@ import Row from '../ui/Row';
 import StatusPill, { STATUS_TONE } from '../ui/StatusPill';
 import EmptyState from '../ui/EmptyState';
 import TabSection from './TabSection';
+import Icon from '../ui/Icon';
 
 const CLOSED = ['done', 'cancelled'];
 const LOAD_SIZE = 25;
@@ -15,7 +16,7 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
   const [searchText, setSearchText] = useState('');
   const [loadedCount, setLoadedCount] = useState(LOAD_SIZE);
 
-  if (!tasks.length) return <EmptyState emoji="📋" message={t.empty} />;
+  if (!tasks.length) return <EmptyState icon="task" message={t.empty} />;
 
   const nameOf = (id) =>
     members.find((m) => m.id === id)?.full_name ?? he.tasks.unassigned;
@@ -40,7 +41,7 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
   const row = (x) => (
     <Row
       key={x.id}
-      icon="📋"
+      icon={<Icon name="task" />}
       title={x.title}
       subtitle={nameOf(x.assignee_id)}
       trailing={
@@ -101,10 +102,10 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
       {filter === 'open' && (
         <>
           {displayOpen.length === 0 && searchText && (
-            <EmptyState emoji="🔍" message={he.shell.searchEmpty} />
+            <EmptyState icon="search" message={he.shell.searchEmpty} />
           )}
           {displayOpen.length === 0 && !searchText && (
-            <EmptyState emoji="✅" message={t.empty} />
+            <EmptyState icon="check" message={t.empty} />
           )}
           <div className="space-y-3">
             {displayOpen.map(row)}
@@ -125,10 +126,10 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
       {filter === 'closed' && (
         <>
           {displayClosed.length === 0 && searchText && (
-            <EmptyState emoji="🔍" message={he.shell.searchEmpty} />
+            <EmptyState icon="search" message={he.shell.searchEmpty} />
           )}
           {displayClosed.length === 0 && !searchText && (
-            <EmptyState emoji="✅" message={t.empty} />
+            <EmptyState icon="check" message={t.empty} />
           )}
           <div className="space-y-3">
             {displayClosed.map(row)}

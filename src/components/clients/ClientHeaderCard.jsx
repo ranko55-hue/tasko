@@ -1,4 +1,5 @@
 import { he } from '../../locales/he';
+import Icon from '../ui/Icon';
 
 function initials(name) {
   return (name || '')
@@ -22,7 +23,7 @@ export default function ClientHeaderCard({ client, openProjects, openTasks, onNe
     <div className="flex items-center justify-between gap-4 border-b border-line p-5">
       <div className="flex min-w-0 flex-1 items-center gap-4">
         <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-navy text-2xl font-black text-white">
-          {initials(client?.name) || '🗂️'}
+          {initials(client?.name) || <Icon name="client" size="lg" />}
         </div>
         <div className="min-w-0">
           <h1 className="truncate text-2xl font-black text-slate-900">
@@ -35,9 +36,9 @@ export default function ClientHeaderCard({ client, openProjects, openTasks, onNe
         <button
           type="button"
           onClick={onNewTask}
-          className="shrink-0 rounded-lg bg-brand px-3 py-2 font-bold text-white hover:bg-brand/90 min-h-[44px]"
+          className="min-h-touch shrink-0 rounded-lg bg-brandYellow px-4 py-2 font-bold text-navy hover:bg-brandYellow/90"
         >
-          ＋ משימה
+          {he.dashboard.newTask}
         </button>
       )}
     </div>

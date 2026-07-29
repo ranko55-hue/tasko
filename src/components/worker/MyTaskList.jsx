@@ -4,7 +4,7 @@ import MyTaskItem from './MyTaskItem';
 
 export default function MyTaskList({ tasks, onUpdated }) {
   if (tasks.length === 0) {
-    return <EmptyState emoji="🙌" message={he.worker.empty} />;
+    return <EmptyState icon="check" message={he.worker.empty} />;
   }
 
   return (

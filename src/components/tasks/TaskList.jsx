@@ -5,11 +5,12 @@ import Row from '../ui/Row';
 import StatusPill from '../ui/StatusPill';
 import EmptyState from '../ui/EmptyState';
 import Button from '../shared/Button';
+import Icon from '../ui/Icon';
 
 // רשימת משימות בפרויקט — Row משותפת. למשימה חסומה: סיבת עיכוב + החזרה לעבודה (למנהל).
 export default function TaskList({ tasks, members, reasons = {}, onReturnToWork }) {
   if (tasks.length === 0) {
-    return <EmptyState emoji="📋" message={he.tasks.empty} />;
+    return <EmptyState icon="task" message={he.tasks.empty} />;
   }
 
   const nameOf = (id) =>
@@ -20,7 +21,7 @@ export default function TaskList({ tasks, members, reasons = {}, onReturnToWork 
       {tasks.map((task) => (
         <div key={task.id} className="space-y-2">
           <Row
-            icon="📋"
+            icon={<Icon name="task" />}
             title={task.title}
             subtitle={`${nameOf(task.assignee_id)} · ${formatDateTime(task.due_at) ?? he.tasks.noDueDate}`}
             trailing={

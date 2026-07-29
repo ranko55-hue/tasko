@@ -6,6 +6,7 @@ import ProjectForm from '../projects/ProjectForm';
 import Row from '../ui/Row';
 import StatusPill from '../ui/StatusPill';
 import EmptyState from '../ui/EmptyState';
+import Icon from '../ui/Icon';
 
 const LOAD_SIZE = 25;
 
@@ -15,6 +16,7 @@ export default function ProjectsTab({
   openTaskCountByProject,
   onAddProject,
   onOpenProject,
+  members = [],
 }) {
   const p = he.clientDetail.projectsTab;
   const [formOpen, setFormOpen] = useState(false);
@@ -47,7 +49,7 @@ export default function ProjectsTab({
   const row = (x) => (
     <Row
       key={x.id}
-      icon="🗂️"
+      icon={<Icon name="project" />}
       title={x.name}
       subtitle={x.address}
       trailing={
@@ -74,7 +76,7 @@ export default function ProjectsTab({
       </div>
 
       {!projects.length ? (
-        <EmptyState emoji="🗂️" message={p.empty} />
+        <EmptyState icon="project" message={p.empty} />
       ) : (
         <>
           {/* Toggle Open/Closed */}
@@ -121,10 +123,10 @@ export default function ProjectsTab({
           {filter === 'open' && (
             <>
               {displayOpen.length === 0 && searchText && (
-                <EmptyState emoji="🔍" message={he.shell.searchEmpty} />
+                <EmptyState icon="search" message={he.shell.searchEmpty} />
               )}
               {displayOpen.length === 0 && !searchText && (
-                <EmptyState emoji="✅" message={p.empty} />
+                <EmptyState icon="check" message={p.empty} />
               )}
               <div className="space-y-3">
                 {displayOpen.map(row)}
@@ -145,10 +147,10 @@ export default function ProjectsTab({
           {filter === 'closed' && (
             <>
               {displayClosed.length === 0 && searchText && (
-                <EmptyState emoji="🔍" message={he.shell.searchEmpty} />
+                <EmptyState icon="search" message={he.shell.searchEmpty} />
               )}
               {displayClosed.length === 0 && !searchText && (
-                <EmptyState emoji="✅" message={p.empty} />
+                <EmptyState icon="check" message={p.empty} />
               )}
               <div className="space-y-3">
                 {displayClosed.map(row)}
@@ -169,7 +171,7 @@ export default function ProjectsTab({
 
       {formOpen && (
         <Modal title={he.projects.addTitle} onClose={() => setFormOpen(false)}>
-          <ProjectForm onSubmit={submit} onCancel={() => setFormOpen(false)} />
+          <ProjectForm members={members} onSubmit={submit} onCancel={() => setFormOpen(false)} />
         </Modal>
       )}
     </div>

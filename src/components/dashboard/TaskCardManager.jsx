@@ -62,7 +62,7 @@ export default function TaskCardManager({
       {active && (
         <div className="mt-2 flex items-center gap-2">
           {task.status === 'paused' && (
-            <span className="text-sm font-bold text-yellow-600">⏸ {d.pausedMark}</span>
+            <span className="text-sm font-bold text-yellow-600">{d.pausedMark}</span>
           )}
           <LiveNet
             task={task}
@@ -97,7 +97,7 @@ export default function TaskCardManager({
         onClick={() => onOpenTask?.(task.id)}
         className="mt-2 min-h-[44px] w-full rounded-lg bg-brand px-3 text-sm font-bold text-white hover:bg-brand/90"
       >
-        📋 {d.managerUpdate || 'פרטים'}
+        {d.managerUpdate || 'פרטים'}
       </button>
 
       <button
@@ -105,7 +105,7 @@ export default function TaskCardManager({
         onClick={() => setShowUpdate(true)}
         className="mt-2 min-h-[44px] w-full rounded-lg bg-slate-100 px-3 text-sm font-bold text-slate-700 hover:bg-slate-200"
       >
-        💬 {d.managerUpdate}
+        {d.managerUpdate}
       </button>
 
       <button

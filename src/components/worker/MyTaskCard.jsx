@@ -20,6 +20,7 @@ import TextEntryModal from './TextEntryModal';
 import PhotoCaptureButton from '../media/PhotoCaptureButton';
 import NoteModal from '../media/NoteModal';
 import TaskTimeline from '../media/TaskTimeline';
+import Icon from '../ui/Icon';
 
 const w = he.worker;
 
@@ -94,7 +95,8 @@ export default function MyTaskCard({ task, onUpdated }) {
 
       {locked ? (
         <div className="rounded-xl bg-slate-100 px-4 py-4 text-center text-lg font-bold text-slate-600">
-          🔒 {w.lockedUntil.replace('{date}', formatDateTime(task.scheduled_start_at))}
+          <Icon name="lock" size="sm" />
+          {w.lockedUntil.replace('{date}', formatDateTime(task.scheduled_start_at))}
         </div>
       ) : task.status === 'done' ? (
         <div className="rounded-xl bg-emerald-50 px-4 py-4 text-center text-lg font-bold text-emerald-800">

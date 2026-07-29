@@ -46,7 +46,7 @@ export default function KanbanMobile({
       </div>
 
       {active.tasks.length === 0 ? (
-        <EmptyState emoji="✅" message={he.dashboard.columnEmpty} />
+        <EmptyState icon="check" message={he.dashboard.columnEmpty} />
       ) : (
         <div className="space-y-3">
           {active.tasks.map((t) => (

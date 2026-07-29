@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useOrg } from '../../lib/orgContext';
 import { supabase } from '../../lib/supabase';
 import { he } from '../../locales/he';
+import Icon from '../ui/Icon';
 
 function Group({ label, items, icon, render, onPick }) {
   if (!items.length) return null;
@@ -78,9 +79,9 @@ export default function SearchBar({ onNavigate }) {
             <p className="p-3 text-center text-slate-400">{he.shell.searchEmpty}</p>
           ) : (
             <>
-              <Group label={he.shell.groupTasks} items={res.tasks} icon="📋" render={(x) => x.title} onPick={(x) => go(`/projects/${x.project_id}`)} />
-              <Group label={he.shell.groupClients} items={res.clients} icon="🏢" render={(x) => x.name} onPick={(x) => go(`/clients/${x.id}`)} />
-              <Group label={he.shell.groupProjects} items={res.projects} icon="🗂️" render={(x) => x.name} onPick={(x) => go(`/projects/${x.id}`)} />
+              <Group label={he.shell.groupTasks} items={res.tasks} icon={<Icon name="task" />} render={(x) => x.title} onPick={(x) => go(`/projects/${x.project_id}`)} />
+              <Group label={he.shell.groupClients} items={res.clients} icon={<Icon name="client" />} render={(x) => x.name} onPick={(x) => go(`/clients/${x.id}`)} />
+              <Group label={he.shell.groupProjects} items={res.projects} icon={<Icon name="project" />} render={(x) => x.name} onPick={(x) => go(`/projects/${x.id}`)} />
             </>
           )}
         </div>
