@@ -13,6 +13,7 @@ import ProjectDetailPage from './pages/ProjectDetailPage';
 import MyTasksPage from './pages/MyTasksPage';
 import DashboardPage from './pages/DashboardPage';
 import SettingsPage from './pages/SettingsPage';
+import MockupsPage from './pages/MockupsPage';
 
 // שער כניסה: מחליט לאן לנווט לפי מצב ההתחברות והחברות בארגון.
 export default function App() {
@@ -46,6 +47,11 @@ export default function App() {
         />
 
         {/* אזור מחובר — דורש session + חברות בארגון. AppShell אחיד לכל המסכים. */}
+        {/* מוקאפים — סטטי לגמרי: נתוני דמה, אפס שאילתות, אפס כתיבה.
+            פתוח בכוונה כדי שניתן יהיה לצפות ולצלם בלי חשבון. אם החלופה
+            תיבחר — הנתיב הזה יוסר יחד עם תיקיית src/mockups. */}
+        <Route path="/mockups" element={<MockupsPage />} />
+
         <Route element={<Protected session={session} member={member} />}>
           <Route element={<AppShell />}>
             {/* נחיתה לפי תפקיד: מנהל ללוח, עובד/ראש צוות למשימות שלו */}

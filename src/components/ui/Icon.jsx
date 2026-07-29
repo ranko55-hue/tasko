@@ -21,6 +21,8 @@ const PATHS = {
   expand: 'M9 4H4v5M15 4h5v5M15 20h5v-5M9 20H4v-5',
   play: 'M8 5.5v13l11-6.5-11-6.5Z',
   pauseBars: 'M9.5 5v14M14.5 5v14',
+  chevronDown: 'M6 9l6 6 6-6',
+  chevronUp: 'M6 15l6-6 6 6',
   clock: 'M12 4a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 4v4l3 2',
 };
 
