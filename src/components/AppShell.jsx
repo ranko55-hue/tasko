@@ -6,7 +6,6 @@ import { isManager, homePathFor } from '../lib/roles';
 import { he } from '../locales/he';
 import NavLinks from './shared/NavLinks';
 import SearchBar from './shell/SearchBar';
-import QuickActions from './shell/QuickActions';
 import MobileDrawer from './shell/MobileDrawer';
 import PageShell from './ui/PageShell';
 
@@ -33,30 +32,31 @@ export default function AppShell() {
             </button>
           )}
 
-          <Link to={homePathFor(member)} className="flex items-center">
+          {/* לוגו בקצה אחד (ימין ב-RTL) */}
+          <Link to={homePathFor(member)} className="flex min-h-touch shrink-0 items-center">
             <img src="/brand/tasko-header-dark.png" alt={he.app.name} className="h-7 w-auto" />
           </Link>
 
-          {manager && (
-            <>
-              <div className="hidden md:block">
-                <NavLinks dark />
-              </div>
-              <div className="hidden min-w-0 flex-1 md:block">
-                <SearchBar />
-              </div>
-              <div className="hidden md:block">
-                <QuickActions />
-              </div>
-            </>
-          )}
+          {/* כל השאר מקובץ בקצה הנגדי */}
+          <div className="ms-auto flex min-w-0 items-center gap-3">
+            {manager && (
+              <>
+                <div className="hidden md:block">
+                  <NavLinks dark />
+                </div>
+                <div className="hidden min-w-0 md:block md:w-56 lg:w-72">
+                  <SearchBar />
+                </div>
+              </>
+            )}
 
-          <div className="ms-auto flex items-center gap-2">
-            <span className="text-sm text-slate-300">{member?.full_name}</span>
+            <span className="max-w-[7rem] truncate text-sm text-slate-300 sm:max-w-none">
+              {member?.full_name}
+            </span>
             <button
               type="button"
               onClick={() => supabase.auth.signOut()}
-              className="min-h-touch rounded-lg px-3 text-sm font-medium text-slate-300 hover:bg-white/10"
+              className="min-h-touch shrink-0 rounded-lg px-3 text-sm font-medium text-slate-300 hover:bg-white/10"
             >
               {he.common.logout}
             </button>
