@@ -26,7 +26,8 @@ export default function ProjectForm({ onSubmit, onCancel, members = [] }) {
         name: name.trim(),
         address: address.trim() || null,
         ends_at: endsAt || null,
-        manager_id: managerId || null,
+        // נשלח רק כשנבחר מנהל, כדי שיצירת פרויקט רגילה תעבוד גם לפני מיגרציה 006
+        ...(managerId ? { manager_id: managerId } : {}),
       });
     } catch {
       setError(he.common.saveError);
