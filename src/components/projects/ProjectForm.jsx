@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { he } from '../../locales/he';
 import Button from '../shared/Button';
 import Field from '../ui/Field';
+import Select from '../shared/Select';
 
 const t = he.projects;
 
 // טופס פרויקט חדש — שם חובה, כתובת רשות.
-export default function ProjectForm({ onSubmit, onCancel }) {
+export default function ProjectForm({ onSubmit, onCancel, members = [] }) {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
+  const [endsAt, setEndsAt] = useState('');
+  const [managerId, setManagerId] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -22,6 +25,8 @@ export default function ProjectForm({ onSubmit, onCancel }) {
       await onSubmit({
         name: name.trim(),
         address: address.trim() || null,
+        ends_at: endsAt || null,
+        manager_id: managerId || null,
       });
     } catch {
       setError(he.common.saveError);
@@ -37,6 +42,24 @@ export default function ProjectForm({ onSubmit, onCancel }) {
         value={address}
         onChange={setAddress}
       />
+      <Field
+        label={`${t.endsAt} ${he.common.optional}`}
+        type="date"
+        value={endsAt}
+        onChange={setEndsAt}
+      />
+      <Select
+        label={`${t.manager} ${he.common.optional}`}
+        value={managerId}
+        onChange={setManagerId}
+      >
+        <option value="">{t.noManager}</option>
+        {members.map((m) => (
+          <option key={m.id} value={m.id}>
+            {m.full_name}
+          </option>
+        ))}
+      </Select>
 
       {error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
