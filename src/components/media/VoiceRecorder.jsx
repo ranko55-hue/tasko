@@ -10,9 +10,13 @@ import Button from '../shared/Button';
 // מסך הקלטה — נקודה אדומה פועמת + טיימר + כפתור ענק "סיום".
 export default function VoiceRecorder({ task, onDone, onCancel }) {
   const { member } = useOrg();
+  // starting = ממתין לאישור מיקרופון. מצב ההקלטה מוצג רק אחרי ש-getUserMedia הצליח,
+  // אחרת המשתמש רואה טיימר רץ בזמן שדבר לא מוקלט.
   const [phase, setPhase] = useState('starting'); // starting|recording|uploading|error
   const [secs, setSecs] = useState(0);
   const [error, setError] = useState('');
+  const [hint, setHint] = useState('');
+  const [canRetry, setCanRetry] = useState(false);
   const rec = useRef({});
 
   useEffect(() => {
@@ -31,7 +35,13 @@ export default function VoiceRecorder({ task, onDone, onCancel }) {
       setError(he.media.voiceUnsupported);
       return setPhase('error');
     }
+    setError('');
+    setHint('');
+    setCanRetry(false);
+    setSecs(0);
+    setPhase('starting');
     try {
+      // עד שההרשאה מאושרת בפועל נשארים ב-starting ולא מציגים מצב הקלטה
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const { mimeType, ext } = pickAudioType();
       const mr = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
@@ -48,8 +58,17 @@ export default function VoiceRecorder({ task, onDone, onCancel }) {
         ),
       };
       setPhase('recording');
-    } catch {
-      setError(he.media.errors.mic);
+    } catch (err) {
+      // NotAllowedError = המשתמש דחה או שההרשאה חסומה; NotFoundError = אין מיקרופון
+      if (err?.name === 'NotAllowedError' || err?.name === 'SecurityError') {
+        setError(he.media.errors.micDenied);
+        setHint(he.media.errors.micDeniedHint);
+      } else if (err?.name === 'NotFoundError') {
+        setError(he.media.errors.micNotFound);
+      } else {
+        setError(he.media.errors.mic);
+      }
+      setCanRetry(true);
       setPhase('error');
     }
   }
@@ -76,7 +95,9 @@ export default function VoiceRecorder({ task, onDone, onCancel }) {
   if (phase === 'error') {
     return (
       <div className="space-y-3">
-        <p className="rounded-lg bg-red-50 px-3 py-3 text-red-700">{error}</p>
+        <p className="rounded-lg bg-red-50 px-3 py-3 font-medium text-red-700">{error}</p>
+        {hint && <p className="px-1 text-sm text-slate-600">{hint}</p>}
+        {canRetry && <Button onClick={start}>{he.common.retry}</Button>}
         <Button variant="ghost" onClick={onCancel}>
           {he.common.cancel}
         </Button>
@@ -87,6 +108,19 @@ export default function VoiceRecorder({ task, onDone, onCancel }) {
   if (phase === 'uploading') {
     return (
       <p className="py-8 text-center text-lg text-slate-500">{he.media.uploading}</p>
+    );
+  }
+
+  // ממתין לאישור המיקרופון — בלי נקודה אדומה ובלי טיימר, כדי שלא ייראה כמקליט
+  if (phase === 'starting') {
+    return (
+      <div className="space-y-4 py-8 text-center">
+        <p className="text-lg font-bold text-slate-700">{he.media.waitingMic}</p>
+        <p className="text-sm text-slate-500">{he.media.waitingMicHint}</p>
+        <Button variant="ghost" onClick={onCancel}>
+          {he.common.cancel}
+        </Button>
+      </div>
     );
   }
 
