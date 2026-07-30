@@ -7,8 +7,8 @@ const SELECT = `
   est_minutes, requirements, required_workers, net_seconds, work_started_at,
   starts_on, ends_on, due_time,
   assignee_id, created_by, team_lead_id, client_id, project_id, org_id,
-  client:clients(id, name),
-  project:projects(id, name, client_id, sku, address)
+  client:clients(id, number, name),
+  project:projects(id, number, name, client_id, sku, address)
 `;
 
 // משימה בודדת + כל הפרטים שלה (דרישות, לקוח, פרויקט, משויך)

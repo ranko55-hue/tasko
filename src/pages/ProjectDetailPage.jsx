@@ -11,6 +11,7 @@ import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Modal from '../components/shared/Modal';
 import PageHeader from '../components/ui/PageHeader';
+import RefNumber from '../components/shared/RefNumber';
 import TaskList from '../components/tasks/TaskList';
 import TaskForm from '../components/tasks/TaskForm';
 import TaskDrawer from '../components/tasks/TaskDrawer';
@@ -55,7 +56,12 @@ export default function ProjectDetailPage() {
       )}
 
       <PageHeader
-        title={project?.name ?? he.common.loading}
+        title={
+          <span className="flex items-baseline gap-2">
+            <span className="min-w-0 truncate">{project?.name ?? he.common.loading}</span>
+            <RefNumber value={project?.number} className="shrink-0 text-base font-bold" />
+          </span>
+        }
         subtitle={he.tasks.title}
         actions={
           <div className="w-44">

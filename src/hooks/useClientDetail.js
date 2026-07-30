@@ -17,7 +17,7 @@ export function useClientDetail(clientId, orgId) {
     try {
       const { data: pr, error: pe } = await supabase
         .from('projects')
-        .select('id, name, status, address, ends_at')
+        .select('id, number, name, status, address, ends_at')
         .eq('client_id', clientId)
         .order('created_at', { ascending: false });
       if (pe) throw pe;
@@ -56,7 +56,7 @@ export function useClientDetail(clientId, orgId) {
     const { data, error: e } = await supabase
       .from('projects')
       .insert({ org_id: orgId, client_id: clientId, ...fields })
-      .select('id, name, status, address, ends_at')
+      .select('id, number, name, status, address, ends_at')
       .single();
     if (e) throw e;
     setProjects((p) => [data, ...p]);

@@ -294,6 +294,7 @@ export const he = {
       businessId: 'ח.פ / עוסק',
       address: 'כתובת',
       paymentTerms: 'תנאי תשלום',
+      addedOn: 'נוסף ב-{date}',
       serviceLink: 'קישור טופס קריאות של הלקוח',
       copy: 'העתקה',
       copied: 'הועתק!',

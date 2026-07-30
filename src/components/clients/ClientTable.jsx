@@ -1,5 +1,6 @@
 import { he } from '../../locales/he';
 import EmptyState from '../ui/EmptyState';
+import RefNumber from '../shared/RefNumber';
 import ClientCounters, { WaitingDelayedCell, delayTone } from './ClientCounters';
 
 const t = he.clients.table;
@@ -26,7 +27,10 @@ export default function ClientTable({ rows, onOpen, onNewTask }) {
               onClick={() => onOpen(r)}
               className="block w-full text-right"
             >
-              <div className="font-bold text-slate-900">{r.name}</div>
+              <div className="flex items-baseline gap-2">
+                <span className="min-w-0 truncate font-bold text-slate-900">{r.name}</span>
+                <RefNumber value={r.number} className="shrink-0 text-sm" />
+              </div>
               <div className="mt-0.5 truncate text-sm text-slate-500">{contactOf(r)}</div>
               <div className="mt-2">
                 <ClientCounters row={r} layout="card" />
@@ -63,7 +67,12 @@ export default function ClientTable({ rows, onOpen, onNewTask }) {
                 onClick={() => onOpen(r)}
                 className="cursor-pointer border-b border-line last:border-0 hover:bg-slate-50"
               >
-                <td className="px-4 py-3 font-bold text-slate-900">{r.name}</td>
+                <td className="px-4 py-3 font-bold text-slate-900">
+                  <span className="flex items-baseline gap-2">
+                    <span className="min-w-0 truncate">{r.name}</span>
+                    <RefNumber value={r.number} className="shrink-0 text-sm font-normal" />
+                  </span>
+                </td>
                 <td className="px-4 py-3 text-slate-600">{contactOf(r)}</td>
                 <td className={`px-4 py-3 ${NUM}`}>{r.active_projects ?? 0}</td>
                 <td className={`px-4 py-3 ${NUM}`}>{r.open_tasks ?? 0}</td>

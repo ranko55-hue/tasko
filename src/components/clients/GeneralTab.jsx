@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
+import { formatDate } from '../../lib/time';
 
 const g = he.clientDetail.general;
 
@@ -37,6 +38,12 @@ export default function GeneralTab({ client }) {
         <Tile label={g.address} value={client?.address} />
         <Tile label={g.paymentTerms} value={client?.payment_terms} />
       </div>
+
+      {client?.created_at && (
+        <p className="px-1 text-sm text-slate-400">
+          {g.addedOn.replace('{date}', formatDate(client.created_at))}
+        </p>
+      )}
 
       <div className="rounded-xl bg-slate-50 p-3">
         <div className="text-xs text-slate-400">{g.serviceLink}</div>

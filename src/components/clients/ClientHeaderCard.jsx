@@ -1,5 +1,6 @@
 import { he } from '../../locales/he';
 import Icon from '../ui/Icon';
+import RefNumber from '../shared/RefNumber';
 
 function initials(name) {
   return (name || '')
@@ -26,9 +27,12 @@ export default function ClientHeaderCard({ client, openProjects, openTasks, onNe
           {initials(client?.name) || <Icon name="client" size="lg" />}
         </div>
         <div className="min-w-0">
-          <h1 className="truncate text-2xl font-black text-slate-900">
-            {client?.name ?? he.common.loading}
-          </h1>
+          <div className="flex items-baseline gap-2">
+            <h1 className="min-w-0 truncate text-2xl font-black text-slate-900">
+              {client?.name ?? he.common.loading}
+            </h1>
+            <RefNumber value={client?.number} className="shrink-0 text-base font-bold" />
+          </div>
           <p className="mt-1 text-sm text-slate-500">{statusLine}</p>
         </div>
       </div>
