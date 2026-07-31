@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useOrg } from '../../lib/orgContext';
-import { isManager } from '../../lib/roles';
+import { isManager, isAdmin } from '../../lib/roles';
 import { he } from '../../locales/he';
 
 
@@ -9,6 +9,7 @@ import { he } from '../../locales/he';
 export default function NavLinks({ dark = false, vertical = false, onNavigate }) {
   const { member } = useOrg();
   const manager = isManager(member);
+  const admin = isAdmin(member);
 
   const base =
     'flex items-center min-h-touch px-3 text-base font-bold transition-colors ' +
@@ -41,6 +42,7 @@ export default function NavLinks({ dark = false, vertical = false, onNavigate })
     <nav className={vertical ? 'flex flex-col gap-1' : 'flex items-center gap-0'}>
       {link('/dashboard', he.nav.dashboard)}
       {link('/clients', he.nav.clients)}
+      {admin && link('/team', he.nav.team)}
       {link('/settings', he.nav.settings)}
     </nav>
   );

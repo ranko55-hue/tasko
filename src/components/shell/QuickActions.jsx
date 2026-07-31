@@ -15,11 +15,22 @@ export default function QuickActions({ vertical = false, onDone }) {
 
   if (!isManager(member)) return null;
 
-  async function addClient(fields) {
-    const { error } = await supabase
+  async function addClient(fields, managerIds = []) {
+    const { data, error } = await supabase
       .from('clients')
-      .insert({ org_id: member.org_id, ...fields });
+      .insert({ org_id: member.org_id, ...fields })
+      .select('id')
+      .single();
     if (error) throw error;
+
+    // הקצאת הלקוח למנהלים (מיגרציה 015) — אותה התנהגות כמו במסך הלקוחות
+    if (managerIds.length) {
+      const { error: assignErr } = await supabase.from('client_managers').insert(
+        managerIds.map((member_id) => ({ client_id: data.id, member_id, org_id: member.org_id }))
+      );
+      if (assignErr) throw assignErr;
+    }
+
     setModal(null);
     onDone?.();
   }

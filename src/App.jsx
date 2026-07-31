@@ -2,7 +2,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { useMembership } from './hooks/useMembership';
 import { OrgContext } from './lib/orgContext';
-import { isManager, homePathFor } from './lib/roles';
+import { isManager, isAdmin, homePathFor } from './lib/roles';
 import { he } from './locales/he';
 import LoginPage from './pages/LoginPage';
 import OrgSetupPage from './pages/OrgSetupPage';
@@ -13,6 +13,8 @@ import ProjectDetailPage from './pages/ProjectDetailPage';
 import MyTasksPage from './pages/MyTasksPage';
 import DashboardPage from './pages/DashboardPage';
 import SettingsPage from './pages/SettingsPage';
+import TeamPage from './pages/TeamPage';
+import MemberDetailPage from './pages/MemberDetailPage';
 
 // שער כניסה: מחליט לאן לנווט לפי מצב ההתחברות והחברות בארגון.
 export default function App() {
@@ -58,6 +60,12 @@ export default function App() {
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/clients/:clientId" element={<ClientDetailPage />} />
               <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
+              <Route path="/team/:memberId" element={<MemberDetailPage />} />
+            </Route>
+
+            {/* מסך צוות — admin בלבד */}
+            <Route element={<AdminOnly member={member} />}>
+              <Route path="/team" element={<TeamPage />} />
             </Route>
           </Route>
         </Route>
@@ -78,6 +86,11 @@ function Protected({ session, member }) {
 // שומר סף למסכי ניהול. זו הגנת UX בלבד — האבטחה עצמה ב-RLS.
 function ManagerOnly({ member }) {
   if (!isManager(member)) return <Navigate to="/my" replace />;
+  return <Outlet />;
+}
+
+function AdminOnly({ member }) {
+  if (!isAdmin(member)) return <Navigate to={homePathFor(member)} replace />;
   return <Outlet />;
 }
 

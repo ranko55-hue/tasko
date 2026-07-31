@@ -26,13 +26,27 @@ export function useClients(orgId) {
     load();
   }, [load]);
 
-  async function addClient(fields) {
+  // managerIds — הקצאת הלקוח למנהלים (מיגרציה 015). ריק = ללא הקצאה,
+  // כלומר רק admin יראה אותו.
+  async function addClient(fields, managerIds = []) {
     const { data, error } = await supabase
       .from('clients')
       .insert({ org_id: orgId, ...fields })
       .select()
       .single();
     if (error) throw error;
+
+    if (managerIds.length) {
+      const rows = managerIds.map((member_id) => ({
+        client_id: data.id,
+        member_id,
+        org_id: orgId,
+      }));
+      const { error: assignErr } = await supabase.from('client_managers').insert(rows);
+      // הלקוח כבר נוצר; כשל הקצאה לא מוחק אותו אלא מדווח כלפי מעלה
+      if (assignErr) throw assignErr;
+    }
+
     setClients((prev) => [data, ...prev]);
     return data;
   }

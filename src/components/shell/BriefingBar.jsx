@@ -19,8 +19,14 @@ export default function BriefingBar({ alerts, live }) {
     {
       key: 'calls',
       n: alerts?.new_calls ?? 0,
-      label: null, // לקריאות יש ניסוח ליחיד ולרבים
+      label: null,
       cls: 'bg-brandYellow/20 text-brandYellow',
+    },
+    {
+      key: 'expiringDocs',
+      n: alerts?.expiringDocs ?? 0,
+      label: b.expiringDocs,
+      cls: 'bg-orange-500/20 text-orange-300',
     },
   ].filter((c) => c.n > 0);
 
