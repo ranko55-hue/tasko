@@ -275,6 +275,33 @@ export const he = {
     },
   },
 
+  projectDetail: {
+    tabs: {
+      tasks: 'משימות',
+      general: 'כללי',
+      files: 'קבצים',
+    },
+    general: {
+      addedOn: 'נוסף ב-{date}',
+      address: 'כתובת',
+      sku: 'מק"ט',
+      details: 'פרטים נוספים',
+    },
+    files: {
+      upload: 'העלאת קובץ',
+      uploading: 'מעלה… {percent}%',
+      empty: 'אין עדיין קבצים בפרויקט',
+      loadError: 'טעינת הקבצים נכשלה. נסו שוב.',
+      uploadError: 'ההעלאה נכשלה. נסו שוב.',
+      deleteError: 'המחיקה נכשלה. נסו שוב.',
+      download: 'הורדה',
+      remove: 'מחיקה',
+      confirmRemove: 'למחוק את "{name}"?',
+      uploadedBy: 'הועלה על ידי {name}',
+      unknownUploader: 'לא ידוע',
+    },
+  },
+
   clientDetail: {
     active: 'לקוח פעיל',
     inactive: 'לקוח לא פעיל',
