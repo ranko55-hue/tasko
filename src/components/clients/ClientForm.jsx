@@ -1,12 +1,22 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
+import { useOrg } from '../../lib/orgContext';
+import { useOrgManagers } from '../../hooks/useOrgManagers';
+import { isAdmin } from '../../lib/roles';
 import Button from '../shared/Button';
 import Field from '../ui/Field';
+import ManagerPicker from '../shared/ManagerPicker';
 
 const t = he.clients;
 
 // טופס לקוח חדש — שם חובה, שאר השדות רשות.
+// בחירת המנהלים האחראים מוצגת ל-admin בלבד: הקצאה היא פעולה ניהולית,
+// ו-RLS (מיגרציה 015) חוסם כתיבה ל-client_managers לכל תפקיד אחר.
 export default function ClientForm({ onSubmit, onCancel }) {
+  const { member } = useOrg();
+  const { managers } = useOrgManagers(member?.org_id);
+  const [managerIds, setManagerIds] = useState([]);
+  const admin = isAdmin(member);
   const [f, setF] = useState({
     name: '',
     contact_name: '',
@@ -31,7 +41,7 @@ export default function ClientForm({ onSubmit, onCancel }) {
       const cleaned = Object.fromEntries(
         Object.entries(f).map(([k, v]) => [k, v.trim() === '' ? null : v.trim()])
       );
-      await onSubmit(cleaned);
+      await onSubmit(cleaned, admin ? managerIds : []);
     } catch {
       setError(he.common.saveError);
       setBusy(false);
@@ -47,6 +57,14 @@ export default function ClientForm({ onSubmit, onCancel }) {
       <Field label={`${t.businessId} ${he.common.optional}`} value={f.business_id} onChange={set('business_id')} />
       <Field label={`${t.address} ${he.common.optional}`} value={f.address} onChange={set('address')} />
       <Field label={`${t.paymentTerms} ${he.common.optional}`} value={f.payment_terms} onChange={set('payment_terms')} placeholder={t.paymentTermsPlaceholder} />
+
+      {admin && (
+        <div>
+          <p className="mb-1 text-sm font-bold text-slate-700">{he.assignments.clientManagers}</p>
+          <p className="mb-2 text-xs text-slate-500">{he.assignments.clientManagersHint}</p>
+          <ManagerPicker managers={managers} value={managerIds} onChange={setManagerIds} />
+        </div>
+      )}
 
       {error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">

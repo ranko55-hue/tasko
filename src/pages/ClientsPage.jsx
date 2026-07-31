@@ -26,8 +26,8 @@ export default function ClientsPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [taskForClient, setTaskForClient] = useState(null);
 
-  async function handleAddClient(fields) {
-    await addClient(fields);
+  async function handleAddClient(fields, managerIds) {
+    await addClient(fields, managerIds);
     setAddOpen(false);
     refetch();
   }

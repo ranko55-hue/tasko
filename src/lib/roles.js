@@ -12,3 +12,8 @@ export function isManager(member) {
 export function homePathFor(member) {
   return isManager(member) ? '/dashboard' : '/my';
 }
+
+// מנהל מערכת — רואה הכל בארגון ומבצע פעולות ניהוליות (הקצאות, תפקידים)
+export function isAdmin(member) {
+  return member?.role === 'admin';
+}

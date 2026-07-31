@@ -278,6 +278,24 @@ export const he = {
     },
   },
 
+  // שמות התפקידים — שלושה בלבד (מיגרציה 013)
+  roles: {
+    admin: 'מנהל מערכת',
+    manager: 'מנהל',
+    worker: 'עובד',
+  },
+
+  assignments: {
+    clientManagers: 'מנהלים אחראים',
+    clientManagersHint: 'מי מהמנהלים יראה את הלקוח הזה ואת המשימות שתחתיו',
+    workerManager: 'מנהל אחראי',
+    workerManagerHint: 'עובד ללא מנהל כפוף למנהל המערכת',
+    noManagers: 'אין עדיין מנהלים בארגון',
+    noManagerOption: 'ללא מנהל — כפוף למנהל המערכת',
+    none: 'לא הוקצה',
+    saveError: 'שמירת ההקצאה נכשלה. נסו שוב.',
+  },
+
   projectDetail: {
     tabs: {
       tasks: 'משימות',
