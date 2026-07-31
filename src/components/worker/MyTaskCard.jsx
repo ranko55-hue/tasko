@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useOrg } from '../../lib/orgContext';
+import { useOrgSettings } from '../../hooks/useOrgSettings';
 import { he } from '../../locales/he';
 import { formatDateTime, formatDuration } from '../../lib/time';
 import {
@@ -9,6 +10,7 @@ import {
   pauseTask,
   resumeTask,
   finishTask,
+  finishForApproval,
   blockTask,
   unblockTask,
 } from '../../lib/taskFlow';
@@ -27,6 +29,7 @@ const w = he.worker;
 // גוף הכרטיס הפתוח: יעד בולט, טיימר, דרישות, צוות, מדיה, יומן, ופעולות לפי מצב.
 export default function MyTaskCard({ task, onUpdated }) {
   const { member } = useOrg();
+  const { settings } = useOrgSettings(member?.org_id);
   const [modal, setModal] = useState(null); // 'finish' | 'note' | 'delay' | 'reqs'
   const [showTimeline, setShowTimeline] = useState(false);
   const [tlKey, setTlKey] = useState(0);
@@ -54,7 +57,8 @@ export default function MyTaskCard({ task, onUpdated }) {
   };
 
   async function confirmFinish() {
-    onUpdated(await finishTask(task, member.id));
+    const fn = settings.require_approval ? finishForApproval : finishTask;
+    onUpdated(await fn(task, member.id));
     setModal(null);
   }
   async function sendDelay(text) {

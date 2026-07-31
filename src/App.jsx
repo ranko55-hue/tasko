@@ -15,6 +15,9 @@ import DashboardPage from './pages/DashboardPage';
 import SettingsPage from './pages/SettingsPage';
 import TeamPage from './pages/TeamPage';
 import MemberDetailPage from './pages/MemberDetailPage';
+import TasksPage from './pages/TasksPage';
+import ProjectsPage from './pages/ProjectsPage';
+import ReportsPage from './pages/ReportsPage';
 
 // שער כניסה: מחליט לאן לנווט לפי מצב ההתחברות והחברות בארגון.
 export default function App() {
@@ -56,16 +59,19 @@ export default function App() {
             {/* מסכי ניהול — עובד/ראש צוות מנותבים ל-/my */}
             <Route element={<ManagerOnly member={member} />}>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/tasks" element={<TasksPage />} />
               <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/clients/:clientId" element={<ClientDetailPage />} />
               <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
               <Route path="/team/:memberId" element={<MemberDetailPage />} />
             </Route>
 
-            {/* מסך צוות — admin בלבד */}
+            {/* מסכי admin בלבד */}
             <Route element={<AdminOnly member={member} />}>
               <Route path="/team" element={<TeamPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
             </Route>
           </Route>
         </Route>

@@ -5,9 +5,17 @@ const w = he.worker;
 
 // חוקת הכפתורים: פעולה ראשית אחת ענקית לכל מצב + משניות ברוחב מלא (≥48px).
 export default function TaskActionBar({ task, locked, actions }) {
-  // משימה נעולה / הושלמה / בוטלה — אין פעולות ביצוע
   if (locked || task.status === 'done' || task.status === 'cancelled') {
     return null;
+  }
+
+  // ממתינה לאישור — העובד רואה הודעה בלבד
+  if (task.status === 'pending_approval') {
+    return (
+      <div className="rounded-xl bg-purple-50 px-4 py-3 text-center text-sm font-bold text-purple-700">
+        {w.pendingApprovalMsg}
+      </div>
+    );
   }
 
   const { onStart, onPause, onResume, onFinish, onUnblock, onNote, onDelay } =
@@ -49,7 +57,6 @@ export default function TaskActionBar({ task, locked, actions }) {
         </Button>
       )}
 
-      {/* פעולות משניות זמינות תמיד (מלבד חסום → בלי דיווח עיכוב נוסף) */}
       <Button variant="outline" onClick={onNote}>
         {w.note}
       </Button>

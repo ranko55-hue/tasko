@@ -6,6 +6,7 @@ export const STATUS_STYLES = {
   in_progress: 'bg-green-100 text-green-700',
   paused: 'bg-yellow-100 text-yellow-800',
   blocked: 'bg-red-100 text-red-700',
+  pending_approval: 'bg-purple-100 text-purple-700',
   done: 'bg-slate-200 text-slate-500',
   cancelled: 'bg-slate-200 text-slate-500',
 };
@@ -17,6 +18,7 @@ export const STATUS_DOT = {
   in_progress: 'bg-statusGreen',
   paused: 'bg-brandYellow',
   blocked: 'bg-statusRed',
+  pending_approval: 'bg-purple-500',
   done: 'bg-slate-400',
   cancelled: 'bg-slate-400',
 };

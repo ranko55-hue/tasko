@@ -11,7 +11,7 @@ const NUM = { fontVariantNumeric: 'tabular-nums' };
 export default function BoardArea({ cols, tasks, membersMap, blockedReasons, onOpenTask, onReturnToWork }) {
   const [view, choose] = useBoardView();
 
-  const order = ['waiting', 'working', 'alert', 'done'];
+  const order = ['waiting', 'working', 'alert', 'approval', 'done'];
 
   return (
     <section className="rounded-2xl border border-line bg-slate-50/60 p-3 sm:p-4">
@@ -24,7 +24,7 @@ export default function BoardArea({ cols, tasks, membersMap, blockedReasons, onO
       {view === 'rows' ? (
         <BoardRows tasks={tasks} membersMap={membersMap} onOpenTask={onOpenTask} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-5">
           {order.map((key) => {
             const list = sortByUrgency(cols[key]);
             return (
@@ -32,7 +32,7 @@ export default function BoardArea({ cols, tasks, membersMap, blockedReasons, onO
                 <div className="mb-3 flex items-center gap-2">
                   <h3
                     className={`font-bold ${
-                      key === 'alert' ? 'text-statusRed' : 'text-slate-900'
+                      key === 'alert' ? 'text-statusRed' : key === 'approval' ? 'text-purple-700' : 'text-slate-900'
                     }`}
                   >
                     {d.columns[key]}

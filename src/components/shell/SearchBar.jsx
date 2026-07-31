@@ -49,7 +49,7 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
     // רק ספרות — כדי ש-"12 רחוב" לא ייחשב מספר.
     const asNumber = /^\d+$/.test(raw) ? Number(raw) : null;
     const id = setTimeout(async () => {
-      const [t, c, p] = await Promise.all([
+      const [t, c, p, w] = await Promise.all([
         supabase
           .from('tasks')
           .select('id,title,project_id')
@@ -72,8 +72,20 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
               : `name.ilike.${term},sku.ilike.${term},number.eq.${asNumber}`
           )
           .limit(5),
+        supabase
+          .from('org_members')
+          .select('id,full_name,phone')
+          .eq('org_id', org)
+          .eq('is_active', true)
+          .or(`full_name.ilike.${term},phone.ilike.${term}`)
+          .limit(5),
       ]);
-      setRes({ tasks: t.data ?? [], clients: c.data ?? [], projects: p.data ?? [] });
+      setRes({
+        tasks: t.data ?? [],
+        clients: c.data ?? [],
+        projects: p.data ?? [],
+        workers: w.data ?? [],
+      });
       setOpen(true);
     }, 300);
     return () => clearTimeout(id);
@@ -87,7 +99,9 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
     navigate(path);
   }
 
-  const total = res ? res.tasks.length + res.clients.length + res.projects.length : 0;
+  const total = res
+    ? res.tasks.length + res.clients.length + res.projects.length + (res.workers?.length ?? 0)
+    : 0;
 
   // ב-390 השדה מכווץ לאייקון עד שלוחצים; בדסקטופ תמיד פרוש
   function setExpandedBoth(v) {
@@ -143,6 +157,7 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
               <Group label={he.shell.groupTasks} items={res.tasks} icon={<Icon name="task" />} render={(x) => <>{x.title} <RefNumber value={x.id} className="text-xs" /></>} onPick={(x) => go(`/projects/${x.project_id}`)} />
               <Group label={he.shell.groupClients} items={res.clients} icon={<Icon name="client" />} render={(x) => <>{x.name} <RefNumber value={x.number} className="text-xs" /></>} onPick={(x) => go(`/clients/${x.id}`)} />
               <Group label={he.shell.groupProjects} items={res.projects} icon={<Icon name="project" />} render={(x) => <>{x.name} <RefNumber value={x.number} className="text-xs" /></>} onPick={(x) => go(`/projects/${x.id}`)} />
+              <Group label={he.shell.groupWorkers} items={res.workers ?? []} icon={<Icon name="users" />} render={(x) => x.full_name} onPick={(x) => go(`/team/${x.id}`)} />
             </>
           )}
         </div>

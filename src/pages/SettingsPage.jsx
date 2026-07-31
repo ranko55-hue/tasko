@@ -47,6 +47,13 @@ export default function SettingsPage() {
               disabled={saving}
               onChange={(v) => update({ require_project: v })}
             />
+            <SettingRow
+              label={t.requireApproval}
+              hint={t.requireApprovalHint}
+              checked={settings.require_approval}
+              disabled={saving}
+              onChange={(v) => update({ require_approval: v })}
+            />
           </div>
 
           {/* מקטע אחד לשתי התצוגות — הלוח ו"המשימות שלי" */}

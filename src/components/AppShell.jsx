@@ -12,21 +12,20 @@ import MobileDrawer from './shell/MobileDrawer';
 import BriefingBar from './shell/BriefingBar';
 import PageShell from './ui/PageShell';
 
-// מעטפת אחידה לכל המערכת: פס navy קבוע (זהות המערכת) + PageShell אחיד.
-// אותו פס בכל מסך ובכל רוחב — דסקטופ פרוש, מובייל מגירה.
+// מעטפת אחידה: הדר דו-שורתי — שורה 1 זהות, שורה 2 ניווט+חיפוש.
+// עובד/ראש צוות רואים רק שורה 1 (לוגו+שם+התנתקות).
 export default function AppShell() {
   const { member } = useOrg();
   const [drawer, setDrawer] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false); // מובייל: החיפוש הפרוש מפנה מקום
-  // לעובד/ראש צוות: לוגו, שם, התנתקות בלבד. בלי ניווט ניהולי, חיפוש או פעולות.
+  const [searchOpen, setSearchOpen] = useState(false);
   const manager = isManager(member);
-  // שורת התדריך מלווה כל מסך, ולכן הנתונים נשלפים כאן ולא בלוח
   const { alerts } = useAlerts(manager ? member?.org_id : null);
   const live = useRealtimeStatus(member?.org_id);
 
   return (
     <div className="min-h-full">
       <header className="sticky top-0 z-40 bg-navy text-white">
+        {/* שורה 1 — זהות: שם+התנתקות בצד ימין, לוגו בצד שמאל */}
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2">
           {manager && (
             <button
@@ -39,40 +38,39 @@ export default function AppShell() {
             </button>
           )}
 
-          {/* ניווט, חיפוש וזהות — בצד ימין (תחילת ה-RTL) */}
-          <div className={`flex min-w-0 items-center gap-3 ${searchOpen ? 'flex-1' : ''}`}>
-            {manager && (
-              <>
-                <div className="hidden md:block">
-                  <NavLinks dark />
-                </div>
-                <div className={`min-w-0 md:w-64 lg:w-80 ${searchOpen ? 'flex-1' : ''}`}>
-                  <SearchBar onExpandedChange={setSearchOpen} />
-                </div>
-              </>
-            )}
+          <span className="max-w-[7rem] truncate text-sm text-slate-300 sm:max-w-none">
+            {member?.full_name}
+          </span>
+          <button
+            type="button"
+            onClick={() => supabase.auth.signOut()}
+            className="min-h-touch shrink-0 rounded-lg px-3 text-sm font-medium text-slate-300 hover:bg-white/10"
+          >
+            {he.common.logout}
+          </button>
 
-            <span className={`max-w-[7rem] truncate text-sm text-slate-300 sm:max-w-none ${searchOpen ? 'hidden sm:inline' : ''}`}>
-              {member?.full_name}
-            </span>
-            <button
-              type="button"
-              onClick={() => supabase.auth.signOut()}
-              className="min-h-touch shrink-0 rounded-lg px-3 text-sm font-medium text-slate-300 hover:bg-white/10"
-            >
-              {he.common.logout}
-            </button>
-          </div>
-
-          {/* 4) לוגו TASKO — קצה שמאל של הפס. קובץ dark על רקע navy, גובה בלבד. */}
           <Link
             to={homePathFor(member)}
-            className={`ms-auto min-h-touch shrink-0 items-center ${searchOpen ? 'hidden md:flex' : 'flex'}`}
+            className="ms-auto flex min-h-touch shrink-0 items-center"
             aria-label={he.app.name}
           >
             <img src="/brand/tasko-header-dark.png" alt={he.app.name} className="h-7 w-auto" />
           </Link>
         </div>
+
+        {/* שורה 2 — ניווט + חיפוש (מנהלים בלבד, דסקטופ) */}
+        {manager && (
+          <div className="border-t border-white/10">
+            <div className="mx-auto flex max-w-6xl items-center gap-3 px-4">
+              <div className="hidden flex-1 overflow-x-auto md:block">
+                <NavLinks dark />
+              </div>
+              <div className={`min-w-0 md:w-64 lg:w-80 ${searchOpen ? 'flex-1' : ''}`}>
+                <SearchBar onExpandedChange={setSearchOpen} />
+              </div>
+            </div>
+          </div>
+        )}
 
         {manager && <BriefingBar alerts={alerts} live={live} />}
       </header>

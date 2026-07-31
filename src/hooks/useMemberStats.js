@@ -21,7 +21,7 @@ export function useMemberStats(memberId, orgId) {
       const total = tasks.length;
       const done = tasks.filter((t) => t.status === 'done');
       const active = tasks.filter((t) =>
-        ['pending', 'scheduled', 'in_progress', 'paused', 'blocked'].includes(t.status),
+        ['pending', 'scheduled', 'in_progress', 'paused', 'blocked', 'pending_approval'].includes(t.status),
       );
 
       const onTime = done.filter((t) => !t.due_at || new Date(t.due_at) >= new Date(t.created_at));

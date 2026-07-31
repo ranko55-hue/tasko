@@ -23,6 +23,18 @@ export default function BriefingBar({ alerts, live }) {
       cls: 'bg-brandYellow/20 text-brandYellow',
     },
     {
+      key: 'pendingApproval',
+      n: alerts?.pendingApproval ?? 0,
+      label: b.pendingApproval,
+      cls: 'bg-purple-500/20 text-purple-300',
+    },
+    {
+      key: 'returnedTasks',
+      n: alerts?.returnedTasks ?? 0,
+      label: b.returnedTasks,
+      cls: 'bg-amber-500/20 text-amber-300',
+    },
+    {
       key: 'expiringDocs',
       n: alerts?.expiringDocs ?? 0,
       label: b.expiringDocs,

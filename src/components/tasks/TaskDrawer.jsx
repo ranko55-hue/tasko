@@ -3,11 +3,15 @@ import { he } from '../../locales/he';
 import { useTaskDetail } from '../../hooks/useTaskDetail';
 import { useOrgMembers } from '../../hooks/useOrgMembers';
 import { useTaskTargets } from '../../hooks/useTaskTargets';
+import { useOrg } from '../../lib/orgContext';
+import { approveTask, returnTask, transferTask } from '../../lib/taskFlow';
 import DrawerHeader from './drawer/DrawerHeader';
 import DrawerViewBody from './drawer/DrawerViewBody';
 import TaskEditForm from './TaskEditForm';
 import TaskCancelForm from './TaskCancelForm';
 import ManagerUpdateModal from './drawer/ManagerUpdateModal';
+import ReturnModal from './drawer/ReturnModal';
+import TransferModal from './drawer/TransferModal';
 import { printTaskSummary } from '../../lib/taskSummary';
 
 const t = he.tasks;
@@ -17,18 +21,22 @@ const t = he.tasks;
 export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager = false }) {
   const { task, loading, error, updateTask, cancelTask } = useTaskDetail(taskId);
   const { members } = useOrgMembers(orgId);
+  const { member } = useOrg();
   const target = useTaskTargets(orgId);
   const [mode, setMode] = useState('view'); // 'view' | 'edit' | 'cancel'
   const [full, setFull] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [updateOpen, setUpdateOpen] = useState(false);
+  const [returnOpen, setReturnOpen] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
   const [events, setEvents] = useState([]);
 
-  // פתיחה על משימה אחרת מאפסת מצב
   useEffect(() => {
     setMode('view');
     setFull(false);
     setUpdateOpen(false);
+    setReturnOpen(false);
+    setTransferOpen(false);
   }, [taskId]);
 
   useEffect(() => {
@@ -132,6 +140,35 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
                   {t.drawer.downloadPdf}
                 </button>
               </div>
+            ) : isManager && task.status === 'pending_approval' ? (
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await approveTask(task, member.id);
+                    setRefreshKey((k) => k + 1);
+                  }}
+                  className="min-h-touch w-full rounded-xl bg-green-600 px-4 font-bold text-white hover:bg-green-700"
+                >
+                  {t.drawer.approveBtn}
+                </button>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setReturnOpen(true)}
+                    className="min-h-touch flex-1 rounded-xl border-2 border-amber-400 px-4 font-bold text-amber-700 hover:bg-amber-50"
+                  >
+                    {t.drawer.returnBtn}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTransferOpen(true)}
+                    className="min-h-touch flex-1 rounded-xl border-2 border-line px-4 font-bold text-slate-700 hover:bg-slate-50"
+                  >
+                    {t.drawer.transferBtn}
+                  </button>
+                </div>
+              </div>
             ) : isManager ? (
               <div className="flex gap-3">
                 <button
@@ -166,6 +203,31 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
             onClose={() => setUpdateOpen(false)}
             onSent={() => {
               setUpdateOpen(false);
+              setRefreshKey((k) => k + 1);
+            }}
+          />
+        )}
+
+        {returnOpen && task && (
+          <ReturnModal
+            task={task}
+            actorId={member.id}
+            onClose={() => setReturnOpen(false)}
+            onDone={() => {
+              setReturnOpen(false);
+              setRefreshKey((k) => k + 1);
+            }}
+          />
+        )}
+
+        {transferOpen && task && (
+          <TransferModal
+            task={task}
+            actorId={member.id}
+            members={members}
+            onClose={() => setTransferOpen(false)}
+            onDone={() => {
+              setTransferOpen(false);
               setRefreshKey((k) => k + 1);
             }}
           />

@@ -6,7 +6,7 @@ import { deadlineOf } from './taskDates';
 // המועד הוא תאריך הסיום + שעת היעד (מיגרציה 009). deadlineOf מחזיר את
 // due_at, שהטריגר בשרת גוזר בדיוק משני אלה.
 
-const CLOSED = ['done', 'cancelled'];
+const CLOSED = ['done', 'cancelled', 'pending_approval'];
 
 // null = לא באיחור · 'unassigned' = חמור · 'working' = קל
 export function lateness(task, now = new Date()) {

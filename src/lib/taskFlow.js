@@ -81,7 +81,7 @@ export async function resumeTask(task, actorId) {
   return updated;
 }
 
-// סיום — צובר את המקטע האחרון וסוגר
+// סיום — צובר את המקטע האחרון וסוגר (כש-require_approval כבוי)
 export async function finishTask(task, actorId) {
   const net = (task.net_seconds || 0) + runningSeg(task);
   const updated = await patch(task.id, {
@@ -90,6 +90,50 @@ export async function finishTask(task, actorId) {
     work_started_at: null,
   });
   await logEvent(task, actorId, 'finished', { seconds: net });
+  return updated;
+}
+
+// סיום לאישור — העובד סיים, ממתין לאישור מנהל
+export async function finishForApproval(task, actorId) {
+  const net = (task.net_seconds || 0) + runningSeg(task);
+  const updated = await patch(task.id, {
+    status: 'pending_approval',
+    net_seconds: net,
+    work_started_at: null,
+  });
+  await logEvent(task, actorId, 'pending_approval', { seconds: net });
+  return updated;
+}
+
+// אישור מנהל — המשימה הושלמה
+export async function approveTask(task, actorId) {
+  const updated = await patch(task.id, { status: 'done' });
+  await logEvent(task, actorId, 'approved');
+  return updated;
+}
+
+// החזרה לתיקון — מנהל מחזיר, הטיימר ממשיך
+export async function returnTask(task, actorId, reason) {
+  const updated = await patch(task.id, {
+    status: 'in_progress',
+    work_started_at: new Date().toISOString(),
+  });
+  await logEvent(task, actorId, 'returned', { text: reason });
+  return updated;
+}
+
+// העברה לעובד אחר — סטטוס חוזר ל-pending, טיימר נשמר
+export async function transferTask(task, actorId, newAssigneeId, reason) {
+  const updated = await patch(task.id, {
+    status: 'pending',
+    assignee_id: newAssigneeId,
+    work_started_at: null,
+  });
+  await logEvent(task, actorId, 'transferred', {
+    text: reason,
+    from_assignee: task.assignee_id,
+    to_assignee: newAssigneeId,
+  });
   return updated;
 }
 

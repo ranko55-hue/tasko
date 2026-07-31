@@ -1,5 +1,5 @@
 // חלוקת המשימות לטורי הקנבן + חישוב ה-KPI (פונקציה טהורה)
-const ACTIVE = ['in_progress', 'paused'];
+const ACTIVE = ['in_progress', 'paused', 'pending_approval'];
 
 // משימה בחריגה פעילה (נרשם overrun והיא עדיין בעבודה)
 export function isOverrun(t) {
@@ -15,7 +15,7 @@ function toIdSet(value) {
 }
 
 export function buildDashboard(tasks, doneTodayIds) {
-  const cols = { waiting: [], working: [], alert: [], done: [] };
+  const cols = { waiting: [], working: [], alert: [], approval: [], done: [] };
   const workers = new Set();
   const doneIds = toIdSet(doneTodayIds);
 
@@ -28,12 +28,13 @@ export function buildDashboard(tasks, doneTodayIds) {
     }
     if (t.status === 'cancelled') continue;
 
+    if (t.status === 'pending_approval') { cols.approval.push(t); continue; }
     if (t.status === 'blocked' || isOverrun(t)) cols.alert.push(t);
     else if (ACTIVE.includes(t.status)) cols.working.push(t);
     else cols.waiting.push(t); // pending / scheduled
   }
 
-  const open = cols.waiting.length + cols.working.length + cols.alert.length;
+  const open = cols.waiting.length + cols.working.length + cols.alert.length + cols.approval.length;
   const kpis = {
     open,
     inField: workers.size,

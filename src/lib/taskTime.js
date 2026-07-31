@@ -4,7 +4,7 @@
 // נשאר דלוק גם אחרי שהמוקצב מוגדל בעריכה, ואז ההפרש שלילי — והמסך הציג
 // "‎180- דקות מעל". כאן ההפרש נגזם לאפס ומצב החריגה נקבע לפי הזמן בפועל.
 
-const ACTIVE = ['in_progress', 'paused'];
+const ACTIVE = ['in_progress', 'paused', 'pending_approval'];
 
 export function usedMinutes(task) {
   return Math.max(0, Math.floor((task?.net_seconds ?? 0) / 60));

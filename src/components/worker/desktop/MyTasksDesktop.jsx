@@ -3,24 +3,24 @@ import { he } from '../../../locales/he';
 import { useOrg } from '../../../lib/orgContext';
 import { isManager } from '../../../lib/roles';
 import { useMyTasksView, MY_TASKS_VIEW_OPTIONS } from '../../../hooks/useMyTasksView';
-import { startTask, finishTask, resumeTask, unblockTask } from '../../../lib/taskFlow';
+import { startTask, finishTask, finishForApproval, resumeTask, unblockTask } from '../../../lib/taskFlow';
+import { useOrgSettings } from '../../../hooks/useOrgSettings';
 import ViewToggle from '../../shared/ViewToggle';
 import TaskDrawer from '../../tasks/TaskDrawer';
 import DeskRowsView from './DeskRowsView';
 import DeskCardsView from './DeskCardsView';
 
-const RUNNERS = {
-  start: startTask,
-  finish: finishTask,
-  resume: resumeTask,
-  unblock: unblockTask,
-};
-
 // "המשימות שלי" בדסקטופ — שתי תצוגות במתג, בשפת מגדל הפיקוח.
-// ⚠️ הרכיב הזה נטען רק ב-md ומעלה. ב-390 המסך מציג את תצוגת העובד
-// הקיימת עם הכפתורים הגדולים, בלי מתג ובלי תלות בהעדפה.
 export default function MyTasksDesktop({ tasks, onUpdated }) {
   const { member } = useOrg();
+  const { settings } = useOrgSettings(member?.org_id);
+
+  const RUNNERS = {
+    start: startTask,
+    finish: settings.require_approval ? finishForApproval : finishTask,
+    resume: resumeTask,
+    unblock: unblockTask,
+  };
   const [view, choose] = useMyTasksView();
   const [openTaskId, setOpenTaskId] = useState(null);
   const [busy, setBusy] = useState(false);

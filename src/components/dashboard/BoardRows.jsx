@@ -14,16 +14,18 @@ function groupOf(task) {
   if (lateness(task)) return 'late';
   if (CLOSED.includes(task.status)) return 'done';
   if (task.status === 'blocked') return 'blocked';
+  if (task.status === 'pending_approval') return 'approval';
   if (['in_progress', 'paused'].includes(task.status)) return 'working';
   return 'waiting';
 }
 
-const ORDER = ['late', 'working', 'waiting', 'blocked', 'done'];
+const ORDER = ['late', 'working', 'waiting', 'blocked', 'approval', 'done'];
 const LABEL = {
   late: d.groupLate,
   working: d.groupWorking,
   waiting: d.groupWaiting,
   blocked: d.groupBlocked,
+  approval: d.groupApproval,
   done: d.groupDone,
 };
 
@@ -46,7 +48,7 @@ function LateTag({ task }) {
 export default function BoardRows({ tasks, membersMap, onOpenTask }) {
   const [open, setOpen] = useState({ late: true, working: true, waiting: true });
 
-  const groups = { late: [], working: [], waiting: [], blocked: [], done: [] };
+  const groups = { late: [], working: [], waiting: [], blocked: [], approval: [], done: [] };
   (tasks ?? []).forEach((t) => groups[groupOf(t)].push(t));
 
   return (

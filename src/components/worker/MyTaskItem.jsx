@@ -4,7 +4,7 @@ import { formatDateTime } from '../../lib/time';
 import StatusPill, { STATUS_TONE } from '../ui/StatusPill';
 import MyTaskCard from './MyTaskCard';
 
-const ACTIVE = ['in_progress', 'paused', 'blocked'];
+const ACTIVE = ['in_progress', 'paused', 'blocked', 'pending_approval'];
 
 // פריט משימה — פעילה נפתחת אוטומטית, אחרת מכווצת (נגיעה פותחת).
 export default function MyTaskItem({ task, onUpdated }) {

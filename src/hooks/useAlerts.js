@@ -7,7 +7,7 @@ import { lateCount } from '../lib/lateness';
 // השדה מקבל כינוי מפורש (assignee) כדי ששם המפתח בתשובה יהיה ודאי.
 const ASSIGNEE = 'assignee:org_members!tasks_assignee_id_fkey(full_name)';
 
-const EMPTY = { new_calls: 0, delayed: 0, overrun: 0, unclosed: 0, expiringDocs: 0 };
+const EMPTY = { new_calls: 0, delayed: 0, overrun: 0, unclosed: 0, expiringDocs: 0, pendingApproval: 0, returnedTasks: 0 };
 
 // מריץ שאילתה בודדת ולא נותן לה להפיל את השאר.
 // מחזיר מערך בהצלחה, או null בכישלון — כדי להבדיל בין "אין נתונים" ל"לא ידוע".
@@ -39,7 +39,7 @@ export function useAlerts(orgId) {
 
     const now = new Date().toISOString();
     const in30 = new Date(Date.now() + 30 * 86400000).toISOString();
-    const [sr, blocked, overrun, unclosed, expDocs] = await Promise.all([
+    const [sr, blocked, overrun, unclosed, expDocs, pendApproval, returned] = await Promise.all([
       runQuery(
         'service_requests',
         supabase
@@ -87,6 +87,23 @@ export function useAlerts(orgId) {
           .lte('expires_at', in30)
           .order('expires_at', { ascending: true })
       ),
+      runQuery(
+        'pending_approval',
+        supabase
+          .from('tasks')
+          .select(`id, title, assignee_id, created_at, ${ASSIGNEE}`)
+          .eq('org_id', orgId)
+          .eq('status', 'pending_approval')
+          .order('created_at', { ascending: true })
+      ),
+      runQuery(
+        'returned_tasks',
+        supabase
+          .from('task_events')
+          .select('task_id')
+          .eq('org_id', orgId)
+          .eq('type', 'returned')
+      ),
     ]);
 
     // רק שאילתה שהצליחה מעדכנת את המצב; שאילתה שנכשלה משאירה את הערך הקודם
@@ -96,12 +113,18 @@ export function useAlerts(orgId) {
     if (unclosed) setUnclosedTasks(unclosed);
     if (expDocs) setExpiringDocs(expDocs);
 
+    const returnedCount = returned
+      ? new Set(returned.filter((_, i, arr) => arr.findIndex((r) => r.task_id === arr[i].task_id) !== i).map((r) => r.task_id)).size
+      : 0;
+
     setAlerts((prev) => ({
       new_calls: sr ? sr.length : prev.new_calls,
       delayed: blocked ? blocked.length : prev.delayed,
       overrun: overrun ? overrun.length : prev.overrun,
       unclosed: unclosed ? lateCount(unclosed) : prev.unclosed,
       expiringDocs: expDocs ? expDocs.length : prev.expiringDocs,
+      pendingApproval: pendApproval ? pendApproval.length : prev.pendingApproval,
+      returnedTasks: returned ? returnedCount : prev.returnedTasks,
     }));
 
     setLoading(false);
