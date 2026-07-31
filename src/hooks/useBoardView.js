@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { readStringArray, writeJSON } from '../lib/storage';
+import { he } from '../locales/he';
 
 // העדפת תצוגת הלוח — עמודות / שורות.
 //
@@ -10,6 +11,12 @@ import { readStringArray, writeJSON } from '../lib/storage';
 const KEY = 'dashboard.boardView';
 const VALID = ['columns', 'rows'];
 export const DEFAULT_VIEW = 'rows'; // ברירת מחדל למי שטרם בחר
+
+// האפשרויות עוברות ל-ViewToggle הגנרי — התוויות מ-he.js, לא מתוך הפקד
+export const BOARD_VIEW_OPTIONS = [
+  { key: 'columns', label: he.dashboard.viewColumns },
+  { key: 'rows', label: he.dashboard.viewRows },
+];
 
 const subscribers = new Set();
 
