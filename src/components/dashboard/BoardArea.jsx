@@ -1,5 +1,5 @@
 import { he } from '../../locales/he';
-import { useBoardView } from '../../hooks/useBoardView';
+import { useBoardView, BOARD_VIEW_OPTIONS } from '../../hooks/useBoardView';
 import ViewToggle from '../shared/ViewToggle';
 import { sortByUrgency } from '../../lib/lateness';
 import DashboardTaskCard from './DashboardTaskCard';
@@ -18,7 +18,7 @@ export default function BoardArea({ cols, tasks, membersMap, blockedReasons, onO
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3 px-1">
         <h2 className="text-sm font-black text-slate-500">{d.areaTitle}</h2>
 
-        <ViewToggle view={view} onChange={choose} />
+        <ViewToggle options={BOARD_VIEW_OPTIONS} view={view} onChange={choose} />
       </div>
 
       {view === 'rows' ? (

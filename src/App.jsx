@@ -44,7 +44,6 @@ export default function App() {
             )
           }
         />
-
         {/* אזור מחובר — דורש session + חברות בארגון. AppShell אחיד לכל המסכים. */}
         <Route element={<Protected session={session} member={member} />}>
           <Route element={<AppShell />}>
