@@ -68,7 +68,7 @@ function OpenRow({ task, onOpen, onAction, busy }) {
             type="button"
             disabled={busy}
             onClick={() => onAction(task, act.key)}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-brand px-3 text-sm font-bold text-white hover:bg-brand/90 disabled:opacity-60"
+            className="inline-flex min-h-touch items-center justify-center rounded-xl bg-brand px-3 text-sm font-bold text-white hover:bg-brand/90 disabled:opacity-60"
           >
             {act.label}
           </button>
