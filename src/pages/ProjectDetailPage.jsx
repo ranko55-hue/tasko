@@ -11,6 +11,11 @@ import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Modal from '../components/shared/Modal';
 import PageHeader from '../components/ui/PageHeader';
+import RefNumber from '../components/shared/RefNumber';
+import Card from '../components/ui/Card';
+import Tabs from '../components/ui/Tabs';
+import ProjectGeneralTab from '../components/projects/ProjectGeneralTab';
+import ProjectFilesTab from '../components/projects/ProjectFilesTab';
 import TaskList from '../components/tasks/TaskList';
 import TaskForm from '../components/tasks/TaskForm';
 import TaskDrawer from '../components/tasks/TaskDrawer';
@@ -31,6 +36,15 @@ export default function ProjectDetailPage() {
   const target = useTaskTargets(member.org_id);
   const [open, setOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [tab, setTab] = useState('tasks'); // משימות היא ברירת המחדל
+
+  const manager = isManager(member);
+
+  // "קבצים" מוסתרת מעובד גם ב-UI; ההגנה עצמה ב-RLS (מיגרציה 012)
+  const tabItems = ['tasks', 'general', ...(manager ? ['files'] : [])].map((key) => ({
+    key,
+    label: he.projectDetail.tabs[key],
+  }));
 
   async function handleSubmit(fields) {
     await addTask(fields);
@@ -55,26 +69,42 @@ export default function ProjectDetailPage() {
       )}
 
       <PageHeader
-        title={project?.name ?? he.common.loading}
-        subtitle={he.tasks.title}
+        title={
+          <span className="flex items-baseline gap-2">
+            <span className="min-w-0 truncate">{project?.name ?? he.common.loading}</span>
+            <RefNumber value={project?.number} className="shrink-0 text-base font-bold" />
+          </span>
+        }
         actions={
-          <div className="w-44">
-            <Button onClick={() => setOpen(true)}>{he.tasks.add}</Button>
-          </div>
+          tab === 'tasks' ? (
+            <div className="w-44">
+              <Button onClick={() => setOpen(true)}>{he.tasks.add}</Button>
+            </div>
+          ) : null
         }
       />
 
-      {loading ? (
-        <p className="text-lg text-slate-500">{he.common.loading}</p>
-      ) : (
-        <TaskList
-          onOpenTask={setSelectedTaskId}
-          tasks={tasks}
-          members={members}
-          reasons={reasons}
-          onReturnToWork={handleReturnToWork}
-        />
-      )}
+      <Card className="overflow-hidden">
+        <Tabs tabs={tabItems} active={tab} onChange={setTab} />
+        <div className="p-4">
+          {tab === 'general' && <ProjectGeneralTab project={project} />}
+          {tab === 'files' && manager && (
+            <ProjectFilesTab project={project} memberId={member.id} />
+          )}
+          {tab === 'tasks' &&
+            (loading ? (
+              <p className="text-lg text-slate-500">{he.common.loading}</p>
+            ) : (
+              <TaskList
+                onOpenTask={setSelectedTaskId}
+                tasks={tasks}
+                members={members}
+                reasons={reasons}
+                onReturnToWork={handleReturnToWork}
+              />
+            ))}
+        </div>
+      </Card>
 
       <TaskDrawer
         taskId={selectedTaskId}

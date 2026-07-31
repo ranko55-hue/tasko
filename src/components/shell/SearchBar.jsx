@@ -4,6 +4,7 @@ import { useOrg } from '../../lib/orgContext';
 import { supabase } from '../../lib/supabase';
 import { he } from '../../locales/he';
 import Icon from '../ui/Icon';
+import RefNumber from '../shared/RefNumber';
 
 function Group({ label, items, icon, render, onPick }) {
   if (!items.length) return null;
@@ -42,16 +43,34 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
       return;
     }
     const org = member.org_id;
-    const term = `%${q.trim()}%`;
+    const raw = q.trim();
+    const term = `%${raw}%`;
+    // הקלדת מספר ("1004") מחפשת גם לפי המספר הרץ של הלקוח/הפרויקט ולפי מספר המשימה.
+    // רק ספרות — כדי ש-"12 רחוב" לא ייחשב מספר.
+    const asNumber = /^\d+$/.test(raw) ? Number(raw) : null;
     const id = setTimeout(async () => {
       const [t, c, p] = await Promise.all([
-        supabase.from('tasks').select('id,title,project_id').eq('org_id', org).ilike('title', term).limit(5),
-        supabase.from('clients').select('id,name').eq('org_id', org).ilike('name', term).limit(5),
+        supabase
+          .from('tasks')
+          .select('id,title,project_id')
+          .eq('org_id', org)
+          .or(asNumber === null ? `title.ilike.${term}` : `title.ilike.${term},id.eq.${asNumber}`)
+          .limit(5),
+        supabase
+          .from('clients')
+          .select('id,number,name')
+          .eq('org_id', org)
+          .or(asNumber === null ? `name.ilike.${term}` : `name.ilike.${term},number.eq.${asNumber}`)
+          .limit(5),
         supabase
           .from('projects')
-          .select('id,name,sku')
+          .select('id,number,name,sku')
           .eq('org_id', org)
-          .or(`name.ilike.${term},sku.ilike.${term}`)
+          .or(
+            asNumber === null
+              ? `name.ilike.${term},sku.ilike.${term}`
+              : `name.ilike.${term},sku.ilike.${term},number.eq.${asNumber}`
+          )
           .limit(5),
       ]);
       setRes({ tasks: t.data ?? [], clients: c.data ?? [], projects: p.data ?? [] });
@@ -121,9 +140,9 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
             <p className="p-3 text-center text-slate-400">{he.shell.searchEmpty}</p>
           ) : (
             <>
-              <Group label={he.shell.groupTasks} items={res.tasks} icon={<Icon name="task" />} render={(x) => x.title} onPick={(x) => go(`/projects/${x.project_id}`)} />
-              <Group label={he.shell.groupClients} items={res.clients} icon={<Icon name="client" />} render={(x) => x.name} onPick={(x) => go(`/clients/${x.id}`)} />
-              <Group label={he.shell.groupProjects} items={res.projects} icon={<Icon name="project" />} render={(x) => x.name} onPick={(x) => go(`/projects/${x.id}`)} />
+              <Group label={he.shell.groupTasks} items={res.tasks} icon={<Icon name="task" />} render={(x) => <>{x.title} <RefNumber value={x.id} className="text-xs" /></>} onPick={(x) => go(`/projects/${x.project_id}`)} />
+              <Group label={he.shell.groupClients} items={res.clients} icon={<Icon name="client" />} render={(x) => <>{x.name} <RefNumber value={x.number} className="text-xs" /></>} onPick={(x) => go(`/clients/${x.id}`)} />
+              <Group label={he.shell.groupProjects} items={res.projects} icon={<Icon name="project" />} render={(x) => <>{x.name} <RefNumber value={x.number} className="text-xs" /></>} onPick={(x) => go(`/projects/${x.id}`)} />
             </>
           )}
         </div>
