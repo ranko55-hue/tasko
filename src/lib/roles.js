@@ -2,7 +2,7 @@
 // כלל המוצר: לעובד ולראש צוות יש מסך אחד — /my — בכל מכשיר.
 // המכשיר משנה צפיפות, לא תפקיד.
 
-export const MANAGER_ROLES = ['project_manager', 'work_manager'];
+export const MANAGER_ROLES = ['admin', 'manager'];
 
 export function isManager(member) {
   return MANAGER_ROLES.includes(member?.role);
