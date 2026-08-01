@@ -1,15 +1,51 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
-import Row from '../ui/Row';
-import StatusPill, { STATUS_TONE } from '../ui/StatusPill';
+import StatusPill from '../ui/StatusPill';
 import EmptyState from '../ui/EmptyState';
-import TabSection from './TabSection';
 import Icon from '../ui/Icon';
 
 const CLOSED = ['done', 'cancelled'];
 const LOAD_SIZE = 25;
 
-// לשונית משימות — פתוחות / סגורות, lazy loading, חיפוש.
+function fmtDate(iso) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function TaskRow({ task, assigneeName, onOpen }) {
+  const urgent = task.priority === 'urgent';
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(task)}
+      className="flex w-full items-center gap-3 rounded-xl border border-line bg-white p-3 text-right transition-colors hover:bg-slate-50"
+    >
+      <span className="shrink-0 text-slate-400">
+        <Icon name="task" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span className="truncate font-bold text-slate-900">{task.title}</span>
+          {urgent && (
+            <span className="shrink-0 rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-700">
+              {he.tasks.priorityOpt.urgent}
+            </span>
+          )}
+        </div>
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-500">
+          <span>{assigneeName}</span>
+          {task.project?.name && <span>{task.project.name}</span>}
+          {fmtDate(task.ends_on) && <span>{he.tasks.due}: {fmtDate(task.ends_on)}</span>}
+        </div>
+      </div>
+      <div className="shrink-0">
+        <StatusPill status={task.status} />
+      </div>
+    </button>
+  );
+}
+
 export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
   const t = he.clientDetail.tasksTab;
   const [filter, setFilter] = useState('open');
@@ -24,7 +60,6 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
   const allOpen = tasks.filter((x) => !CLOSED.includes(x.status));
   const allClosed = tasks.filter((x) => CLOSED.includes(x.status));
 
-  // סינון לפי חיפוש
   const filteredOpen = allOpen.filter((x) =>
     x.title.toLowerCase().includes(searchText.toLowerCase())
   );
@@ -32,25 +67,17 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
     x.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  // lazy loading
   const displayOpen = filteredOpen.slice(0, loadedCount);
   const displayClosed = filteredClosed.slice(0, loadedCount);
   const hasMoreOpen = filteredOpen.length > loadedCount;
   const hasMoreClosed = filteredClosed.length > loadedCount;
 
-  const row = (x) => (
-    <Row
+  const renderRow = (x) => (
+    <TaskRow
       key={x.id}
-      icon={<Icon name="task" />}
-      title={x.title}
-      subtitle={nameOf(x.assignee_id)}
-      trailing={
-        <StatusPill
-          tone={STATUS_TONE[x.status]}
-          label={he.tasks.status[x.status] ?? x.status}
-        />
-      }
-      onClick={() => onOpenTask(x)}
+      task={x}
+      assigneeName={nameOf(x.assignee_id)}
+      onOpen={onOpenTask}
     />
   );
 
@@ -58,7 +85,6 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
 
   return (
     <div className="space-y-4">
-      {/* Toggle Open/Closed */}
       <div className="flex gap-3">
         <button
           type="button"
@@ -84,7 +110,6 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
         </button>
       </div>
 
-      {/* Search */}
       {showSearch && (
         <input
           type="text"
@@ -98,7 +123,6 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
         />
       )}
 
-      {/* Open Tasks */}
       {filter === 'open' && (
         <>
           {displayOpen.length === 0 && searchText && (
@@ -107,9 +131,7 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
           {displayOpen.length === 0 && !searchText && (
             <EmptyState icon="check" message={t.empty} />
           )}
-          <div className="space-y-3">
-            {displayOpen.map(row)}
-          </div>
+          <div className="space-y-2">{displayOpen.map(renderRow)}</div>
           {hasMoreOpen && (
             <button
               type="button"
@@ -122,7 +144,6 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
         </>
       )}
 
-      {/* Closed Tasks */}
       {filter === 'closed' && (
         <>
           {displayClosed.length === 0 && searchText && (
@@ -131,9 +152,7 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
           {displayClosed.length === 0 && !searchText && (
             <EmptyState icon="check" message={t.empty} />
           )}
-          <div className="space-y-3">
-            {displayClosed.map(row)}
-          </div>
+          <div className="space-y-2">{displayClosed.map(renderRow)}</div>
           {hasMoreClosed && (
             <button
               type="button"

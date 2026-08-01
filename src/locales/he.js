@@ -143,6 +143,8 @@ export const he = {
     aiTitle: 'תדריך AI — חי',
     collapse: 'כיווץ התדריך',
     expand: 'פתיחת התדריך',
+    pinnedTitle: 'צ׳יפים מוצמדים',
+    pinnedMax: 'ניתן להצמיד עד 3 צ׳יפים',
     detailsToggle: 'פרטים ועדכונים',
   },
 

@@ -3,6 +3,7 @@ import { useOrg } from '../lib/orgContext';
 import { useAllTasks } from '../hooks/useAllTasks';
 import { useOrgMembers } from '../hooks/useOrgMembers';
 import { he } from '../locales/he';
+import { isManager } from '../lib/roles';
 import { STATUS_DOT } from '../lib/taskMeta';
 import { dateRangeLabel } from '../lib/taskDates';
 import StatusPill from '../components/ui/StatusPill';
@@ -173,13 +174,14 @@ export default function TasksPage() {
         </div>
       )}
 
-      {openTaskId && (
-        <TaskDrawer
-          taskId={openTaskId}
-          onClose={() => setOpenTaskId(null)}
-          onUpdated={refetch}
-        />
-      )}
+      <TaskDrawer
+        taskId={openTaskId}
+        isOpen={!!openTaskId}
+        orgId={member.org_id}
+        isManager={isManager(member)}
+        onClose={() => setOpenTaskId(null)}
+        onUpdated={refetch}
+      />
     </>
   );
 }

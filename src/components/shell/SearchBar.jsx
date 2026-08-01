@@ -129,9 +129,9 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
       )}
 
       <div
-        className={`w-full items-center gap-2 border-s border-white/15
+        className={`my-1.5 items-center gap-2 border-s border-white/15
                     bg-white/[0.08] px-4 transition-colors focus-within:bg-white/15
-                    ${expanded ? 'flex' : 'hidden md:flex'}`}
+                    ${expanded ? 'flex w-full' : 'hidden md:flex'}`}
       >
         <Icon name="search" size="sm" className="text-slate-300" />
         <input
@@ -144,7 +144,7 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
             if (!q) setExpandedBoth(false);
           }}
           placeholder={he.shell.searchPlaceholder}
-          className="min-h-[44px] w-full bg-transparent text-white placeholder:text-slate-300
+          className="h-8 w-full bg-transparent text-sm text-white placeholder:text-slate-300
                      focus:outline-none"
         />
       </div>

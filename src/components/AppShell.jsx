@@ -33,9 +33,12 @@ export default function AppShell() {
             </button>
           )}
 
-          <span className="max-w-[7rem] truncate text-sm text-slate-300 sm:max-w-none">
+          <Link
+            to={`/team/${member?.id}`}
+            className="max-w-[7rem] truncate text-sm text-slate-300 hover:text-white sm:max-w-none"
+          >
             {member?.full_name}
-          </span>
+          </Link>
           <button
             type="button"
             onClick={() => supabase.auth.signOut()}

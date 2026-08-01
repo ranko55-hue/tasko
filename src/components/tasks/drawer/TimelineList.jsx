@@ -16,8 +16,13 @@ function dotTone(type) {
     : 'bg-statusGreen ring-statusGreen/25';
 }
 
-function hhmm(iso) {
-  return new Date(iso).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+function stamp(iso) {
+  const d = new Date(iso);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mi = String(d.getMinutes()).padStart(2, '0');
+  return `${dd}.${mm}, ${hh}:${mi}`;
 }
 
 // ציר זמן — קו מחבר, נקודות עם טבעת, וממוזערת אינליין לאירועי מדיה.
@@ -71,7 +76,7 @@ export default function TimelineList({ events, onPhoto }) {
               )}
 
               <div className="mt-1 text-xs text-slate-400" style={NUM}>
-                {hhmm(ev.created_at)}
+                {stamp(ev.created_at)}
                 {actor && <span className="mx-1 text-slate-300">·</span>}
                 {actor}
               </div>

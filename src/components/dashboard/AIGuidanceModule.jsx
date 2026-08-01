@@ -116,18 +116,16 @@ export default function AIGuidanceModule({
               {Math.min(alertCounter, 9)}
             </span>
           )}
-          {/* אזור לחיצה 44px, מסגרת ורקע כדי שיהיה ברור שזה כפתור */}
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
             aria-expanded={isOpen}
             aria-label={isOpen ? he.dashboard.collapse : he.dashboard.expand}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg
-                       border border-white/25 bg-white/10 text-lg font-bold text-brandYellow
-                       transition-colors hover:bg-white/20 focus:outline-none
-                       focus:ring-2 focus:ring-brandYellow/60"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl
+                       bg-white/15 text-brandYellow transition-all
+                       hover:bg-white/25 active:scale-95"
           >
-            {isOpen ? '⌃' : '⌄'}
+            <Icon name={isOpen ? 'chevronUp' : 'chevronDown'} size="md" />
           </button>
         </div>
       </div>
@@ -185,33 +183,38 @@ export default function AIGuidanceModule({
       {/* Panel — open/close */}
       {isOpen && (
         <div className="mt-3 border-t border-navy2 pt-3">
-          {/* Pinned selector */}
+          {/* Pinned selector — pill toggles */}
           <div className="mb-3">
-            <div className="mb-2 text-xs font-bold text-slate-300">צ'יפים מוצמדים</div>
-            <div className="space-y-1">
-              {pinnedOptions.map((p) => (
-                <label
-                  key={p.key}
-                  className="flex items-center gap-2 cursor-pointer hover:bg-navy2 rounded px-2 py-1"
-                >
-                  <input
-                    type="checkbox"
-                    checked={pinned.includes(p.key)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        onTogglePinned([...pinned, p.key].slice(0, 3));
-                      } else {
-                        onTogglePinned(pinned.filter((c) => c !== p.key));
-                      }
+            <div className="mb-2 text-xs font-bold text-slate-300">{he.dashboard.pinnedTitle}</div>
+            <div className="flex flex-wrap gap-2">
+              {pinnedOptions.map((p) => {
+                const active = pinned.includes(p.key);
+                const atMax = pinned.length >= 3 && !active;
+                return (
+                  <button
+                    key={p.key}
+                    type="button"
+                    disabled={atMax}
+                    onClick={() => {
+                      if (active) onTogglePinned(pinned.filter((c) => c !== p.key));
+                      else onTogglePinned([...pinned, p.key].slice(0, 3));
                     }}
-                    className="rounded"
-                  />
-                  <span className="text-sm text-white">
-                    {p.icon} {p.label}
-                  </span>
-                </label>
-              ))}
+                    className={`rounded-lg px-3 py-1.5 text-sm font-bold transition-colors ${
+                      active
+                        ? 'bg-brandYellow text-navy'
+                        : atMax
+                          ? 'bg-white/5 text-slate-500 cursor-not-allowed'
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                  >
+                    {p.label} {p.count > 0 && <span className="opacity-70">({p.count})</span>}
+                  </button>
+                );
+              })}
             </div>
+            {pinned.length >= 3 && (
+              <p className="mt-1.5 text-xs text-slate-400">{he.dashboard.pinnedMax}</p>
+            )}
           </div>
 
           {/* Alert items */}

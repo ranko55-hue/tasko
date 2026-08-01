@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
 import { isManager } from '../lib/roles';
 import { useClient } from '../hooks/useClients';
@@ -33,6 +33,7 @@ export default function ClientDetailPage() {
   const [tab, setTab] = useState('general');
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [newTaskOpen, setNewTaskOpen] = useState(false);
+  const navigate = useNavigate();
 
   const manager = isManager(member);
 
@@ -79,9 +80,7 @@ export default function ClientDetailPage() {
           openTaskCountByProject={d.openTaskCountByProject}
           members={members}
           onAddProject={d.addProject}
-          onOpenProject={(p) => {
-            // פתיחת DrawerTasksTab של פרויקט
-          }}
+          onOpenProject={(p) => navigate(`/projects/${p.id}`)}
         />
       );
     return <FinancesTab documents={d.documents} onAddDocument={d.addDocument} />;

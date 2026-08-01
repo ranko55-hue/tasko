@@ -3,7 +3,6 @@ import { he } from '../../locales/he';
 import Button from '../shared/Button';
 import Modal from '../shared/Modal';
 import ProjectForm from '../projects/ProjectForm';
-import Row from '../ui/Row';
 import StatusPill from '../ui/StatusPill';
 import EmptyState from '../ui/EmptyState';
 import Icon from '../ui/Icon';
@@ -46,25 +45,40 @@ export default function ProjectsTab({
     setFormOpen(false);
   }
 
-  const row = (x) => (
-    <Row
-      key={x.id}
-      icon={<Icon name="project" />}
-      title={x.name}
-      subtitle={x.address}
-      trailing={
-        x.status === 'open' ? (
-          <StatusPill
-            tone="green"
-            label={p.activeTag.replace('{n}', openTaskCountByProject[x.id] || 0)}
-          />
-        ) : (
-          <StatusPill tone="done" label={he.projects.status.closed} />
-        )
-      }
-      onClick={() => onOpenProject(x)}
-    />
-  );
+  const row = (x) => {
+    const openCount = openTaskCountByProject[x.id] || 0;
+    return (
+      <button
+        key={x.id}
+        type="button"
+        onClick={() => onOpenProject(x)}
+        className="flex w-full items-center gap-3 rounded-xl border border-line bg-white p-3 text-right transition-colors hover:bg-slate-50"
+      >
+        <span className="shrink-0 text-slate-400">
+          <Icon name="project" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="truncate font-bold text-slate-900">{x.name}</div>
+          <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-500">
+            {x.address && <span>{x.address}</span>}
+            {x.status === 'open' && openCount > 0 && (
+              <span>{openCount} {he.dashboard.kpi.open}</span>
+            )}
+          </div>
+        </div>
+        <div className="shrink-0">
+          {x.status === 'open' ? (
+            <StatusPill
+              tone="green"
+              label={p.activeTag.replace('{n}', openCount)}
+            />
+          ) : (
+            <StatusPill tone="done" label={he.projects.status.closed} />
+          )}
+        </div>
+      </button>
+    );
+  };
 
   const showSearch = (filteredOpen.length + filteredClosed.length) > 15;
 

@@ -25,7 +25,7 @@ export function useClientDetail(clientId, orgId) {
       // v8 §3.4: שליפה לפי client_id — כל משימות הלקוח, עם פרויקט או בלעדיו
       const { data: tkData, error: te } = await supabase
         .from('tasks')
-        .select('id, title, status, assignee_id, project_id')
+        .select('id, title, status, priority, assignee_id, project_id, starts_on, ends_on, project:projects(name)')
         .eq('client_id', clientId)
         .order('created_at', { ascending: false });
       if (te) throw te;
