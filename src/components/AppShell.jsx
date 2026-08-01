@@ -3,13 +3,10 @@ import { Outlet, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useOrg } from '../lib/orgContext';
 import { isManager, homePathFor } from '../lib/roles';
-import { useAlerts } from '../hooks/useAlerts';
-import { useRealtimeStatus } from '../hooks/useRealtimeStatus';
 import { he } from '../locales/he';
 import NavLinks from './shared/NavLinks';
 import SearchBar from './shell/SearchBar';
 import MobileDrawer from './shell/MobileDrawer';
-import BriefingBar from './shell/BriefingBar';
 import PageShell from './ui/PageShell';
 
 // מעטפת אחידה: הדר דו-שורתי — שורה 1 זהות, שורה 2 ניווט+חיפוש.
@@ -19,8 +16,6 @@ export default function AppShell() {
   const [drawer, setDrawer] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const manager = isManager(member);
-  const { alerts } = useAlerts(manager ? member?.org_id : null);
-  const live = useRealtimeStatus(member?.org_id);
 
   return (
     <div className="min-h-full">
@@ -72,7 +67,6 @@ export default function AppShell() {
           </div>
         )}
 
-        {manager && <BriefingBar alerts={alerts} live={live} />}
       </header>
 
       {manager && drawer && <MobileDrawer onClose={() => setDrawer(false)} />}

@@ -129,9 +129,9 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
       )}
 
       <div
-        className={`w-full items-center gap-2 rounded-full border border-white/20
-                    bg-white/[0.14] px-3 transition-colors focus-within:border-white/40
-                    focus-within:bg-white/25 ${expanded ? 'flex' : 'hidden md:flex'}`}
+        className={`w-full items-center gap-2 border-s border-white/15
+                    bg-white/[0.08] px-4 transition-colors focus-within:bg-white/15
+                    ${expanded ? 'flex' : 'hidden md:flex'}`}
       >
         <Icon name="search" size="sm" className="text-slate-300" />
         <input
