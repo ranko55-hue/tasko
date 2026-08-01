@@ -56,6 +56,39 @@ export default function SettingsPage() {
             />
           </div>
 
+          {/* שעות עבודה */}
+          <h2 className="mb-3 mt-8 text-sm font-black text-slate-500">
+            {t.sectionWorkHours}
+          </h2>
+          <p className="mb-3 text-sm text-slate-500">{t.workHoursHint}</p>
+          <div className="flex items-center gap-3">
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-slate-700">{t.workStart}</span>
+              <input
+                type="time"
+                value={settings.work_start_time}
+                disabled={saving}
+                onChange={(e) => update({ work_start_time: e.target.value })}
+                className="min-h-touch rounded-xl border border-line bg-white px-4 text-lg text-slate-900
+                           focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20
+                           disabled:opacity-50"
+              />
+            </label>
+            <span className="mt-6 text-slate-400">—</span>
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-slate-700">{t.workEnd}</span>
+              <input
+                type="time"
+                value={settings.work_end_time}
+                disabled={saving}
+                onChange={(e) => update({ work_end_time: e.target.value })}
+                className="min-h-touch rounded-xl border border-line bg-white px-4 text-lg text-slate-900
+                           focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20
+                           disabled:opacity-50"
+              />
+            </label>
+          </div>
+
           {/* מקטע אחד לשתי התצוגות — הלוח ו"המשימות שלי" */}
           <h2 className="mb-3 mt-8 text-sm font-black text-slate-500">
             {t.sectionBoardView}

@@ -1,10 +1,9 @@
-// חוק התאריכים של המשימה (מיגרציה 009).
+// חוק התאריכים של המשימה (מיגרציה 009 + 019).
 //
-// המשתמש מזין שלושה שדות: starts_on, ends_on, due_time.
+// המשתמש מזין ארבעה שדות: starts_on, start_time, ends_on, due_time.
+// בטופס הם מוצגים כשני שדות מורכבים: "התחלה" (תאריך+שעה) ו"סיום" (תאריך+שעה).
 // due_at אינו קלט — טריגר בשרת גוזר אותו מ-(ends_on + due_time) בשעון ישראל,
 // והוא המועד היחיד שמשמש להשוואות ולשאילתות. לכן deadlineOf מחזיר אותו.
-//
-// משימה מרובת ימים אינה סוג נפרד — היא פשוט משימה ש-starts_on שונה מ-ends_on.
 
 export function deadlineOf(task) {
   return task?.due_at ?? null;
@@ -44,23 +43,33 @@ export function todayYmd() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-export const DEFAULT_DUE_TIME = '23:59';
+export function nowHm() {
+  const d = new Date();
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
-// ערכי ברירת מחדל לטופס: היום, היום, סוף היום
+export const DEFAULT_DUE_TIME = '23:59';
+export const DEFAULT_START_TIME = '08:00';
+
+// הטופס מתחיל ריק — ברירות המחדל מוחלות רק בשליחה (datesFromForm).
 export function defaultDates() {
-  const today = todayYmd();
-  return { starts_on: today, ends_on: today, due_time: DEFAULT_DUE_TIME };
+  return { starts_on: '', start_time: '', ends_on: '', due_time: '' };
 }
 
 // הטופס לא מחייב אף שדה — ריק חוזר לברירת המחדל
-export function datesFromForm({ startsOn, endsOn, dueTime }) {
+export function datesFromForm({ startDate, startTime, endDate, endTime }) {
   const today = todayYmd();
-  const start = startsOn || today;
-  // סיום לא יכול להקדים התחלה (אילוץ tasks_dates_order בשרת)
-  const end = endsOn && endsOn >= start ? endsOn : start;
+  const now = nowHm();
+
+  const sDate = startDate || today;
+  const sTime = startTime || now;
+  const eDate = endDate && endDate >= sDate ? endDate : sDate;
+  const eTime = endTime || DEFAULT_DUE_TIME;
+
   return {
-    starts_on: start,
-    ends_on: end,
-    due_time: dueTime || DEFAULT_DUE_TIME,
+    starts_on: sDate,
+    start_time: sTime,
+    ends_on: eDate,
+    due_time: eTime,
   };
 }

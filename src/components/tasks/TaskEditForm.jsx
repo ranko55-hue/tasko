@@ -6,7 +6,7 @@ import Textarea from '../shared/Textarea';
 import Field from '../ui/Field';
 import RequirementsEditor from './RequirementsEditor';
 import TaskTargetPicker from './TaskTargetPicker';
-import { datesFromForm, DEFAULT_DUE_TIME } from '../../lib/taskDates';
+import { datesFromForm, DEFAULT_DUE_TIME, DEFAULT_START_TIME } from '../../lib/taskDates';
 
 const t = he.tasks;
 
@@ -21,9 +21,10 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
   const [address, setAddress] = useState(task.address ?? '');
   const [assigneeId, setAssigneeId] = useState(task.assignee_id ?? '');
   const [priority, setPriority] = useState(task.priority ?? 'normal');
-  const [startsOn, setStartsOn] = useState(task.starts_on ?? '');
-  const [endsOn, setEndsOn] = useState(task.ends_on ?? '');
-  const [dueTime, setDueTime] = useState((task.due_time ?? DEFAULT_DUE_TIME).slice(0, 5));
+  const [startDate, setStartDate] = useState(task.starts_on ?? '');
+  const [startTime, setStartTime] = useState((task.start_time ?? DEFAULT_START_TIME).slice(0, 5));
+  const [endDate, setEndDate] = useState(task.ends_on ?? '');
+  const [endTime, setEndTime] = useState((task.due_time ?? DEFAULT_DUE_TIME).slice(0, 5));
   const [estMinutes, setEstMinutes] = useState(task.est_minutes ?? '');
   const [requirements, setRequirements] = useState(task.requirements ?? []);
   const [error, setError] = useState('');
@@ -51,7 +52,7 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
         address: address.trim() || null,
         assignee_id: assigneeId || null,
         priority,
-        ...datesFromForm({ startsOn, endsOn, dueTime }),
+        ...datesFromForm({ startDate, startTime, endDate, endTime }),
         est_minutes: estMinutes ? parseInt(estMinutes, 10) : null,
         requirements: (requirements ?? []).map((r) => r.trim()).filter(Boolean),
       });
@@ -105,10 +106,31 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
         <option value="urgent">{t.priorityOpt.urgent}</option>
       </Select>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        <Field label={t.startsOn} type="date" value={startsOn} onChange={setStartsOn} />
-        <Field label={t.endsOn} type="date" value={endsOn} onChange={setEndsOn} />
-        <Field label={t.dueTime} type="time" value={dueTime} onChange={setDueTime} />
+      {/* שני שדות תאריך+שעה — התחלה וסיום */}
+      <div className="space-y-3">
+        <div>
+          <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+            {t.startLabel}
+          </span>
+          <div className="flex gap-2">
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
+              className="min-h-touch flex-[3] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
+            <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
+              className="min-h-touch flex-[2] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
+          </div>
+        </div>
+
+        <div>
+          <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+            {t.endLabel}
+          </span>
+          <div className="flex gap-2">
+            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
+              className="min-h-touch flex-[3] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
+            <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
+              className="min-h-touch flex-[2] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
+          </div>
+        </div>
       </div>
       <Field
         label={`${t.estMinutes} ${he.common.optional}`}

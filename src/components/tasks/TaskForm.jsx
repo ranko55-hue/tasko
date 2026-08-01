@@ -6,7 +6,7 @@ import Textarea from '../shared/Textarea';
 import Select from '../shared/Select';
 import RequirementsEditor from './RequirementsEditor';
 import TaskTargetPicker from './TaskTargetPicker';
-import { datesFromForm, defaultDates } from '../../lib/taskDates';
+import { datesFromForm } from '../../lib/taskDates';
 
 const t = he.tasks;
 
@@ -31,10 +31,10 @@ export default function TaskForm({
   const [address, setAddress] = useState('');
   const [assigneeId, setAssigneeId] = useState('');
   const [priority, setPriority] = useState('normal');
-  const d0 = defaultDates();
-  const [startsOn, setStartsOn] = useState(d0.starts_on);
-  const [endsOn, setEndsOn] = useState(d0.ends_on);
-  const [dueTime, setDueTime] = useState(d0.due_time);
+  const [startDate, setStartDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [estMinutes, setEstMinutes] = useState('');
   const [requirements, setRequirements] = useState([]);
   const [requiredWorkers, setRequiredWorkers] = useState('1');
@@ -69,7 +69,7 @@ export default function TaskForm({
         address: address.trim() || null,
         assignee_id: assigneeId || null,
         priority,
-        ...datesFromForm({ startsOn, endsOn, dueTime }),
+        ...datesFromForm({ startDate, startTime, endDate, endTime }),
         est_minutes: estMinutes ? parseInt(estMinutes, 10) : null,
         requirements: requirements.map((r) => r.trim()).filter(Boolean),
         required_workers: workers,
@@ -127,26 +127,39 @@ export default function TaskForm({
         <option value="urgent">{t.priorityOpt.urgent}</option>
       </Select>
 
-      {/* שלושת שדות התאריך — אף אחד אינו חובה, יש להם ברירות מחדל */}
-      <div className="grid gap-3 sm:grid-cols-3">
-        <Field
-          label={`${t.startsOn} ${he.common.optional}`}
-          type="date"
-          value={startsOn}
-          onChange={setStartsOn}
-        />
-        <Field
-          label={`${t.endsOn} ${he.common.optional}`}
-          type="date"
-          value={endsOn}
-          onChange={setEndsOn}
-        />
-        <Field
-          label={`${t.dueTime} ${he.common.optional}`}
-          type="time"
-          value={dueTime}
-          onChange={setDueTime}
-        />
+      {/* שני שדות תאריך+שעה — התחלה וסיום */}
+      <div className="space-y-3">
+        <div>
+          <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+            {t.startLabel}
+            <span className="text-xs text-slate-400">{he.common.optional}</span>
+          </span>
+          <div className="flex gap-2">
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
+              className="min-h-touch flex-[3] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
+            <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
+              className="min-h-touch flex-[2] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
+          </div>
+          {!startDate && !startTime && (
+            <p className="mt-1 text-xs text-slate-400">{t.startDefault}</p>
+          )}
+        </div>
+
+        <div>
+          <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+            {t.endLabel}
+            <span className="text-xs text-slate-400">{he.common.optional}</span>
+          </span>
+          <div className="flex gap-2">
+            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
+              className="min-h-touch flex-[3] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
+            <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
+              className="min-h-touch flex-[2] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
+          </div>
+          {!endDate && !endTime && (
+            <p className="mt-1 text-xs text-slate-400">{t.endDefault}</p>
+          )}
+        </div>
       </div>
 
       <Field

@@ -1,8 +1,4 @@
-// חישובי זמן למשימה — ניצול מול מוקצב, וחריגה.
-//
-// באג שתוקן: החריגה חושבה כ-(net - est) והוצגה כמו שהיא. השדה overrun_alerted
-// נשאר דלוק גם אחרי שהמוקצב מוגדל בעריכה, ואז ההפרש שלילי — והמסך הציג
-// "‎180- דקות מעל". כאן ההפרש נגזם לאפס ומצב החריגה נקבע לפי הזמן בפועל.
+// חישובי זמן למשימה — ניצול מול מוקצב, חריגה, וזמן עבודה נותר.
 
 const ACTIVE = ['in_progress', 'paused', 'pending_approval'];
 
@@ -50,4 +46,50 @@ export function isRunning(task) {
 
 export function isActiveStatus(status) {
   return ACTIVE.includes(status);
+}
+
+// ── זמן עבודה נותר עד היעד ─────────────────────────────────────────────
+// מחשב דקות עבודה בין now ל-deadline לפי חלון שעות העבודה של הארגון.
+// כל יום קלנדרי נספר (ללא חישוב שבתות/חגים).
+// workStart/workEnd — מחרוזות "HH:MM".
+function timeToMinutes(hhmm) {
+  const [h, m] = String(hhmm).split(':').map(Number);
+  return h * 60 + m;
+}
+
+export function workMinutesUntil(deadline, workStart, workEnd, now = new Date()) {
+  if (!deadline) return null;
+  const dl = new Date(deadline);
+  if (dl <= now) return 0;
+
+  const wsMin = timeToMinutes(workStart || '08:00');
+  const weMin = timeToMinutes(workEnd || '17:00');
+  const dayLen = Math.max(0, weMin - wsMin);
+  if (dayLen === 0) return 0;
+
+  const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dlDate = new Date(dl.getFullYear(), dl.getMonth(), dl.getDate());
+
+  const nowMinOfDay = now.getHours() * 60 + now.getMinutes();
+  const dlMinOfDay = dl.getHours() * 60 + dl.getMinutes();
+
+  // אותו יום
+  if (nowDate.getTime() === dlDate.getTime()) {
+    const effStart = Math.max(nowMinOfDay, wsMin);
+    const effEnd = Math.min(dlMinOfDay, weMin);
+    return Math.max(0, effEnd - effStart);
+  }
+
+  // יום ראשון — מ-now (או תחילת עבודה) עד סוף יום
+  let total = Math.max(0, weMin - Math.max(nowMinOfDay, wsMin));
+
+  // ימים מלאים בין היום ליום היעד
+  const msPerDay = 86400000;
+  const fullDays = Math.max(0, Math.round((dlDate - nowDate) / msPerDay) - 1);
+  total += fullDays * dayLen;
+
+  // יום היעד — מתחילת עבודה עד מועד היעד (או סוף עבודה)
+  total += Math.max(0, Math.min(dlMinOfDay, weMin) - wsMin);
+
+  return total;
 }
