@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { useMembership } from './hooks/useMembership';
+import { usePlatformRole } from './hooks/usePlatformRole';
 import { OrgContext } from './lib/orgContext';
 import { isManager, isAdmin, homePathFor } from './lib/roles';
 import { he } from './locales/he';
@@ -18,17 +19,19 @@ import MemberDetailPage from './pages/MemberDetailPage';
 import TasksPage from './pages/TasksPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ReportsPage from './pages/ReportsPage';
+import PlatformTicketsPage from './pages/PlatformTicketsPage';
 
 // שער כניסה: מחליט לאן לנווט לפי מצב ההתחברות והחברות בארגון.
 export default function App() {
   const { session, user, loading: authLoading } = useAuth();
   const { member, loading: memLoading, refetch } = useMembership(user?.id);
+  const { isPlatformAdmin } = usePlatformRole(user?.id);
 
   if (authLoading || (session && memLoading)) {
     return <FullScreenLoader />;
   }
 
-  const ctx = { session, user, member, refetchMember: refetch };
+  const ctx = { session, user, member, refetchMember: refetch, isPlatformAdmin };
 
   return (
     <OrgContext.Provider value={ctx}>
@@ -73,6 +76,11 @@ export default function App() {
               <Route path="/team" element={<TeamPage />} />
               <Route path="/reports" element={<ReportsPage />} />
             </Route>
+
+            {/* מסכי super-admin — מפעיל הפלטפורמה בלבד */}
+            <Route element={<PlatformOnly isPlatformAdmin={isPlatformAdmin} member={member} />}>
+              <Route path="/platform/tickets" element={<PlatformTicketsPage />} />
+            </Route>
           </Route>
         </Route>
 
@@ -97,6 +105,11 @@ function ManagerOnly({ member }) {
 
 function AdminOnly({ member }) {
   if (!isAdmin(member)) return <Navigate to={homePathFor(member)} replace />;
+  return <Outlet />;
+}
+
+function PlatformOnly({ isPlatformAdmin, member }) {
+  if (!isPlatformAdmin) return <Navigate to={homePathFor(member)} replace />;
   return <Outlet />;
 }
 

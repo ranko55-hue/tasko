@@ -4,10 +4,10 @@ import { isManager, isAdmin } from '../../lib/roles';
 import { he } from '../../locales/he';
 
 
-// סרגל ניווט: admin=7, manager=5 (בלי צוות ודוחות), worker=null.
+// סרגל ניווט: admin=7+, manager=5 (בלי צוות ודוחות), worker=null.
 // vertical=מגירת מובייל. dark=פס navy. onNavigate סוגר את המגירה בלחיצה.
 export default function NavLinks({ dark = false, vertical = false, onNavigate }) {
-  const { member } = useOrg();
+  const { member, isPlatformAdmin } = useOrg();
   const manager = isManager(member);
   const admin = isAdmin(member);
 
@@ -47,6 +47,7 @@ export default function NavLinks({ dark = false, vertical = false, onNavigate })
       {admin && link('/team', he.nav.team)}
       {admin && link('/reports', he.nav.reports)}
       {link('/settings', he.nav.settings)}
+      {isPlatformAdmin && link('/platform/tickets', he.platform.nav)}
     </nav>
   );
 }

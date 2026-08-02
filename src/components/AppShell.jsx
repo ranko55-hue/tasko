@@ -8,6 +8,7 @@ import NavLinks from './shared/NavLinks';
 import SearchBar from './shell/SearchBar';
 import MobileDrawer from './shell/MobileDrawer';
 import PageShell from './ui/PageShell';
+import SupportModal from './support/SupportModal';
 
 // מעטפת אחידה: הדר דו-שורתי — שורה 1 זהות, שורה 2 ניווט+חיפוש.
 // עובד/ראש צוות רואים רק שורה 1 (לוגו+שם+התנתקות).
@@ -15,6 +16,7 @@ export default function AppShell() {
   const { member } = useOrg();
   const [drawer, setDrawer] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [supportOpen, setSupportOpen] = useState(false);
   const manager = isManager(member);
 
   return (
@@ -39,6 +41,13 @@ export default function AppShell() {
           >
             {member?.full_name}
           </Link>
+          <button
+            type="button"
+            onClick={() => setSupportOpen(true)}
+            className="min-h-touch shrink-0 rounded-lg px-3 text-sm font-medium text-slate-300 hover:bg-white/10"
+          >
+            {he.support.trigger}
+          </button>
           <button
             type="button"
             onClick={() => supabase.auth.signOut()}
@@ -77,6 +86,8 @@ export default function AppShell() {
       <PageShell>
         <Outlet />
       </PageShell>
+
+      {supportOpen && <SupportModal onClose={() => setSupportOpen(false)} />}
     </div>
   );
 }
