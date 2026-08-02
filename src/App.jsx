@@ -20,6 +20,7 @@ import TasksPage from './pages/TasksPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ReportsPage from './pages/ReportsPage';
 import PlatformTicketsPage from './pages/PlatformTicketsPage';
+import PlatformOrgsPage from './pages/PlatformOrgsPage';
 
 // שער כניסה: מחליט לאן לנווט לפי מצב ההתחברות והחברות בארגון.
 export default function App() {
@@ -80,6 +81,7 @@ export default function App() {
             {/* מסכי super-admin — מפעיל הפלטפורמה בלבד */}
             <Route element={<PlatformOnly isPlatformAdmin={isPlatformAdmin} member={member} />}>
               <Route path="/platform/tickets" element={<PlatformTicketsPage />} />
+              <Route path="/platform/orgs" element={<PlatformOrgsPage />} />
             </Route>
           </Route>
         </Route>

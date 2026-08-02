@@ -48,6 +48,7 @@ export default function NavLinks({ dark = false, vertical = false, onNavigate })
       {admin && link('/reports', he.nav.reports)}
       {link('/settings', he.nav.settings)}
       {isPlatformAdmin && link('/platform/tickets', he.platform.nav)}
+      {isPlatformAdmin && link('/platform/orgs', he.platform.navOrgs)}
     </nav>
   );
 }
