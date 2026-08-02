@@ -150,6 +150,9 @@ export const he = {
     pinnedTitle: 'צ׳יפים מוצמדים',
     pinnedMax: 'ניתן להצמיד עד 3 צ׳יפים',
     detailsToggle: 'פרטים ועדכונים',
+    myTasksFilter: 'המשימות שלי',
+    allTasks: 'כל המשימות',
+    executionSection: 'כלי ביצוע',
   },
 
   auth: {
