@@ -7,6 +7,7 @@ import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useBlockReasons } from '../hooks/useBlockReasons';
 import { useTaskTargets } from '../hooks/useTaskTargets';
 import { unblockTask } from '../lib/taskFlow';
+import { splitCustomValues, saveCustomValues } from '../lib/customFieldHelpers';
 import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Modal from '../components/shared/Modal';
@@ -47,7 +48,11 @@ export default function ProjectDetailPage() {
   }));
 
   async function handleSubmit(fields) {
-    await addTask(fields);
+    const { taskFields, customValues } = splitCustomValues(fields);
+    const created = await addTask(taskFields);
+    if (created?.id) {
+      await saveCustomValues(member.org_id, 'task', created.id, customValues);
+    }
     setOpen(false);
   }
 
@@ -119,6 +124,7 @@ export default function ProjectDetailPage() {
           <TaskForm
             members={members}
             target={target}
+            orgId={member.org_id}
             initialClientId={client?.id ?? ''}
             initialProjectId={projectId}
             lockedClient

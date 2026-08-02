@@ -7,6 +7,7 @@ import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useClientDetail } from '../hooks/useClientDetail';
 import { useTaskTargets } from '../hooks/useTaskTargets';
 import { supabase } from '../lib/supabase';
+import { splitCustomValues, saveCustomValues } from '../lib/customFieldHelpers';
 import { he } from '../locales/he';
 import Modal from '../components/shared/Modal';
 import TaskForm from '../components/tasks/TaskForm';
@@ -39,12 +40,14 @@ export default function ClientDetailPage() {
 
   // יצירה מתוך הקשר הלקוח — הלקוח נעול, הפרויקט נבחר מבין פרויקטי הלקוח
   async function createTask(fields) {
-    const { error } = await supabase.from('tasks').insert({
-      org_id: member.org_id,
-      created_by: member.id,
-      ...fields,
-    });
+    const { taskFields, customValues } = splitCustomValues(fields);
+    const { data, error } = await supabase
+      .from('tasks')
+      .insert({ org_id: member.org_id, created_by: member.id, ...taskFields })
+      .select('id')
+      .single();
     if (error) throw error;
+    await saveCustomValues(member.org_id, 'task', data.id, customValues);
     setNewTaskOpen(false);
     d.refetch();
   }
@@ -111,6 +114,7 @@ export default function ClientDetailPage() {
           <TaskForm
             members={members}
             target={target}
+            orgId={member.org_id}
             initialClientId={clientId}
             lockedClient
             onSubmit={createTask}

@@ -6,11 +6,13 @@ import Textarea from '../shared/Textarea';
 import Select from '../shared/Select';
 import RequirementsEditor from './RequirementsEditor';
 import TaskTargetPicker from './TaskTargetPicker';
+import CustomFieldInput from './CustomFieldInput';
+import { useCustomFields } from '../../hooks/useCustomFields';
 import { datesFromForm } from '../../lib/taskDates';
 
 const t = he.tasks;
 
-const SECTIONS = [
+const BASE_SECTIONS = [
   { key: 'details', label: t.section.details },
   { key: 'dates', label: t.section.dates },
   { key: 'urgent', label: t.section.urgent },
@@ -33,11 +35,13 @@ export default function TaskForm({
   onSubmit,
   onCancel,
   target,
+  orgId,
   initialClientId = '',
   initialProjectId = '',
   lockedClient = false,
   lockedProject = false,
 }) {
+  const { fields: customFields } = useCustomFields(orgId, 'task');
   const [clientId, setClientId] = useState(initialClientId);
   const [projectId, setProjectId] = useState(initialProjectId);
   const [title, setTitle] = useState('');
@@ -53,8 +57,13 @@ export default function TaskForm({
   const [requirements, setRequirements] = useState([]);
   const [requiredWorkers, setRequiredWorkers] = useState('1');
   const [teamLeadId, setTeamLeadId] = useState('');
+  const [customValues, setCustomValues] = useState({});
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+
+  const SECTIONS = customFields.length > 0
+    ? [...BASE_SECTIONS, { key: 'custom', label: t.section.custom }]
+    : BASE_SECTIONS;
 
   const [open, setOpen] = useState(new Set());
 
@@ -97,6 +106,7 @@ export default function TaskForm({
         requirements: requirements.map((r) => r.trim()).filter(Boolean),
         required_workers: workers,
         team_lead_id: isTeam ? teamLeadId || null : null,
+        _customValues: customValues,
       });
     } catch {
       setError(he.common.saveError);
@@ -238,6 +248,19 @@ export default function TaskForm({
               ))}
             </Select>
           )}
+        </div>
+      )}
+
+      {open.has('custom') && customFields.length > 0 && (
+        <div className="space-y-4">
+          {customFields.map((f) => (
+            <CustomFieldInput
+              key={f.id}
+              def={f}
+              value={customValues[f.id] ?? ''}
+              onChange={(v) => setCustomValues((prev) => ({ ...prev, [f.id]: v }))}
+            />
+          ))}
         </div>
       )}
 

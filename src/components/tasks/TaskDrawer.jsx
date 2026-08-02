@@ -123,6 +123,7 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
                     task={task}
                     members={members}
                     target={target}
+                    orgId={orgId}
                     onSave={save}
                     onCancel={() => setMode('view')}
                   />

@@ -6,6 +6,7 @@ import { useClientOverview } from '../hooks/useClientOverview';
 import { useOrgMembers } from '../hooks/useOrgMembers';
 import { useTaskTargets } from '../hooks/useTaskTargets';
 import { supabase } from '../lib/supabase';
+import { splitCustomValues, saveCustomValues } from '../lib/customFieldHelpers';
 import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Modal from '../components/shared/Modal';
@@ -34,12 +35,14 @@ export default function ClientsPage() {
 
   // יצירה מתוך הקשר — הלקוח של השורה מוצמד ולא ניתן לשינוי
   async function createTask(fields) {
-    const { error: err } = await supabase.from('tasks').insert({
-      org_id: member.org_id,
-      created_by: member.id,
-      ...fields,
-    });
+    const { taskFields, customValues } = splitCustomValues(fields);
+    const { data, error: err } = await supabase
+      .from('tasks')
+      .insert({ org_id: member.org_id, created_by: member.id, ...taskFields })
+      .select('id')
+      .single();
     if (err) throw err;
+    await saveCustomValues(member.org_id, 'task', data.id, customValues);
     setTaskForClient(null);
     refetch();
   }
@@ -83,6 +86,7 @@ export default function ClientsPage() {
           <TaskForm
             members={members}
             target={target}
+            orgId={member.org_id}
             initialClientId={taskForClient.id}
             lockedClient
             onSubmit={createTask}

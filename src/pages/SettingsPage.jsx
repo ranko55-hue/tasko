@@ -1,10 +1,11 @@
 import { useOrg } from '../lib/orgContext';
-import { isManager } from '../lib/roles';
+import { isManager, isAdmin } from '../lib/roles';
 import { useOrgSettings } from '../hooks/useOrgSettings';
 import { he } from '../locales/he';
 import PageHeader from '../components/ui/PageHeader';
 import SettingRow from '../components/settings/SettingRow';
 import ViewToggle from '../components/shared/ViewToggle';
+import CustomFieldsManager from '../components/settings/CustomFieldsManager';
 import { useBoardView, BOARD_VIEW_OPTIONS } from '../hooks/useBoardView';
 import { useMyTasksView, MY_TASKS_VIEW_OPTIONS } from '../hooks/useMyTasksView';
 
@@ -15,6 +16,7 @@ const t = he.settings;
 export default function SettingsPage() {
   const { member } = useOrg();
   const manager = isManager(member);
+  const admin = isAdmin(member);
   const [boardView, chooseBoardView] = useBoardView();
   const [myTasksView, chooseMyTasksView] = useMyTasksView();
   const { settings, loading, saving, error, update } = useOrgSettings(
@@ -103,6 +105,12 @@ export default function SettingsPage() {
             view={myTasksView}
             onChange={chooseMyTasksView}
           />
+
+          {admin && (
+            <div className="mt-8">
+              <CustomFieldsManager orgId={member.org_id} />
+            </div>
+          )}
 
           {error && (
             <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 font-medium text-red-700">

@@ -6,11 +6,15 @@ import Textarea from '../shared/Textarea';
 import Field from '../ui/Field';
 import RequirementsEditor from './RequirementsEditor';
 import TaskTargetPicker from './TaskTargetPicker';
+import CustomFieldInput from './CustomFieldInput';
+import { useCustomFields } from '../../hooks/useCustomFields';
+import { useCustomFieldValues } from '../../hooks/useCustomFieldValues';
+import { saveCustomValues } from '../../lib/customFieldHelpers';
 import { datesFromForm, DEFAULT_DUE_TIME, DEFAULT_START_TIME } from '../../lib/taskDates';
 
 const t = he.tasks;
 
-const SECTIONS = [
+const BASE_SECTIONS = [
   { key: 'details', label: t.section.details },
   { key: 'dates', label: t.section.dates },
   { key: 'urgent', label: t.section.urgent },
@@ -35,7 +39,9 @@ function initialOpen(task) {
   return s;
 }
 
-export default function TaskEditForm({ task, members, target, onSave, onCancel }) {
+export default function TaskEditForm({ task, members, target, orgId, onSave, onCancel }) {
+  const { fields: customFields } = useCustomFields(orgId, 'task');
+  const { values: savedValues } = useCustomFieldValues(orgId, 'task', task.id);
   const [clientId, setClientId] = useState(task.client_id ?? '');
   const [projectId, setProjectId] = useState(task.project_id ?? '');
   const [title, setTitle] = useState(task.title ?? '');
@@ -49,8 +55,13 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
   const [endTime, setEndTime] = useState((task.due_time ?? DEFAULT_DUE_TIME).slice(0, 5));
   const [estMinutes, setEstMinutes] = useState(task.est_minutes ?? '');
   const [requirements, setRequirements] = useState(task.requirements ?? []);
+  const [customEdits, setCustomEdits] = useState({});
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+
+  const SECTIONS = customFields.length > 0
+    ? [...BASE_SECTIONS, { key: 'custom', label: t.section.custom }]
+    : BASE_SECTIONS;
 
   const [open, setOpen] = useState(() => initialOpen(task));
 
@@ -88,6 +99,9 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
         est_minutes: estMinutes ? parseInt(estMinutes, 10) : null,
         requirements: (requirements ?? []).map((r) => r.trim()).filter(Boolean),
       });
+      if (Object.keys(customEdits).length > 0) {
+        await saveCustomValues(orgId, 'task', task.id, customEdits);
+      }
     } catch (err) {
       setError(String(err?.message ?? '').includes('not_manager') ? t.notManager : t.saveFailed);
       setBusy(false);
@@ -196,6 +210,19 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
 
       {open.has('requirements') && (
         <RequirementsEditor items={requirements} onChange={setRequirements} />
+      )}
+
+      {open.has('custom') && customFields.length > 0 && (
+        <div className="space-y-4">
+          {customFields.map((f) => (
+            <CustomFieldInput
+              key={f.id}
+              def={f}
+              value={customEdits[f.id] ?? savedValues[f.id] ?? ''}
+              onChange={(v) => setCustomEdits((prev) => ({ ...prev, [f.id]: v }))}
+            />
+          ))}
+        </div>
       )}
 
       {error && (
