@@ -7,6 +7,7 @@ import { useOrg } from '../../lib/orgContext';
 import { approveTask, returnTask, transferTask } from '../../lib/taskFlow';
 import DrawerHeader from './drawer/DrawerHeader';
 import DrawerViewBody from './drawer/DrawerViewBody';
+import DrawerExecutionBar from './drawer/DrawerExecutionBar';
 import TaskEditForm from './TaskEditForm';
 import TaskCancelForm from './TaskCancelForm';
 import ManagerUpdateModal from './drawer/ManagerUpdateModal';
@@ -19,7 +20,7 @@ const t = he.tasks;
 // משימה בודדת: bottom sheet (מובייל) / side panel (דסקטופ). נפתחת מכל מקום.
 // המסך הוא מתאם בלבד — הכותרת, הגוף, העריכה והביטול הם רכיבים נפרדים.
 export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager = false }) {
-  const { task, loading, error, updateTask, cancelTask } = useTaskDetail(taskId);
+  const { task, loading, error, refetch, updateTask, cancelTask } = useTaskDetail(taskId);
   const { members } = useOrgMembers(orgId);
   const { member } = useOrg();
   const target = useTaskTargets(orgId);
@@ -49,6 +50,7 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
   if (!isOpen) return null;
 
   const assigneeName = members.find((m) => m.id === task?.assignee_id)?.full_name ?? null;
+  const isAssignee = !!(task && member && task.assignee_id === member.id);
   // משימה סגורה = תיעוד בלבד: אין עריכה, אין ביטול, יש סיכום
   const isClosed = ['done', 'cancelled'].includes(task?.status);
 
@@ -94,12 +96,25 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
           {task && !loading && (
             <>
               {mode === 'view' && (
-                <DrawerViewBody
-                  task={task}
-                  assigneeName={assigneeName}
-                  refreshKey={refreshKey}
-                  onEvents={setEvents}
-                />
+                <>
+                  <DrawerViewBody
+                    task={task}
+                    assigneeName={assigneeName}
+                    refreshKey={refreshKey}
+                    onEvents={setEvents}
+                  />
+                  {isAssignee && (
+                    <DrawerExecutionBar
+                      task={task}
+                      memberId={member.id}
+                      orgId={orgId}
+                      onRefresh={() => {
+                        refetch();
+                        setRefreshKey((k) => k + 1);
+                      }}
+                    />
+                  )}
+                </>
               )}
 
               {mode === 'edit' && (

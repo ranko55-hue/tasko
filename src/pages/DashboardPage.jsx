@@ -127,6 +127,7 @@ export default function DashboardPage() {
           blockedReasons={blockedReasons}
           onOpenTask={setSelectedTaskId}
           onReturnToWork={returnToWork}
+          currentMemberId={member.id}
         />
       )}
 
