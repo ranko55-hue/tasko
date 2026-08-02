@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { he } from '../../locales/he';
 import { useProjectFiles } from '../../hooks/useProjectFiles';
+import Button from '../shared/Button';
 import ProjectFileRow from './ProjectFileRow';
 
 const f = he.projectDetail.files;
@@ -40,14 +41,9 @@ export default function ProjectFilesTab({ project, memberId }) {
   return (
     <div className="space-y-3">
       <input ref={inputRef} type="file" onChange={onPick} className="hidden" />
-      <button
-        type="button"
-        disabled={percent !== null}
-        onClick={() => inputRef.current?.click()}
-        className="min-h-touch w-full rounded-lg bg-brandYellow px-4 font-bold text-navy hover:bg-brandYellow/90 disabled:opacity-60 sm:w-auto"
-      >
+      <Button variant="yellow" fullWidth={false} disabled={percent !== null} onClick={() => inputRef.current?.click()}>
         {percent === null ? f.upload : f.uploading.replace('{percent}', percent)}
-      </button>
+      </Button>
 
       {failure && (
         <p className="rounded-lg bg-red-50 px-3 py-3 font-medium text-red-700">{failure}</p>

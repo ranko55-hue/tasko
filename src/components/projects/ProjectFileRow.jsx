@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { he } from '../../locales/he';
 import { formatDate } from '../../lib/time';
 import { signedFileUrl, isImage } from '../../lib/projectFiles';
+import Button from '../shared/Button';
 import Icon from '../ui/Icon';
 
 const f = he.projectDetail.files;
@@ -51,13 +52,9 @@ export default function ProjectFileRow({ row, onRemove }) {
             {f.download}
           </a>
         )}
-        <button
-          type="button"
-          onClick={() => onRemove(row)}
-          className="flex min-h-touch items-center rounded-lg px-3 text-sm font-bold text-red-600 hover:bg-red-50"
-        >
+        <Button variant="ghostDanger" size="sm" fullWidth={false} onClick={() => onRemove(row)}>
           {f.remove}
-        </button>
+        </Button>
       </div>
     </div>
   );

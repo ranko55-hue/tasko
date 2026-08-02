@@ -1,4 +1,5 @@
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
 import EmptyState from '../ui/EmptyState';
 import RefNumber from '../shared/RefNumber';
 import ClientCounters, { WaitingDelayedCell, delayTone } from './ClientCounters';
@@ -36,13 +37,9 @@ export default function ClientTable({ rows, onOpen, onNewTask }) {
                 <ClientCounters row={r} layout="card" />
               </div>
             </button>
-            <button
-              type="button"
-              onClick={() => onNewTask(r)}
-              className="mt-3 min-h-touch w-full rounded-lg bg-brandYellow px-3 font-bold text-navy hover:bg-brandYellow/90"
-            >
+            <Button variant="yellow" className="mt-3" onClick={() => onNewTask(r)}>
               {t.newTask}
-            </button>
+            </Button>
           </div>
         ))}
       </div>
@@ -80,16 +77,18 @@ export default function ClientTable({ rows, onOpen, onNewTask }) {
                   <WaitingDelayedCell row={r} />
                 </td>
                 <td className="px-4 py-3 text-left">
-                  <button
-                    type="button"
+                  <Button
+                    variant="yellow"
+                    size="sm"
+                    fullWidth={false}
+                    className="whitespace-nowrap"
                     onClick={(e) => {
-                      e.stopPropagation(); // אחרת נכנסים גם לכרטיס הלקוח
+                      e.stopPropagation();
                       onNewTask(r);
                     }}
-                    className="min-h-touch whitespace-nowrap rounded-lg bg-brandYellow px-3 text-sm font-bold text-navy hover:bg-brandYellow/90"
                   >
                     {t.newTask}
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}

@@ -4,7 +4,6 @@ import { useAllTasks } from '../hooks/useAllTasks';
 import { useOrgMembers } from '../hooks/useOrgMembers';
 import { he } from '../locales/he';
 import { isManager } from '../lib/roles';
-import { STATUS_DOT } from '../lib/taskMeta';
 import { dateRangeLabel } from '../lib/taskDates';
 import StatusPill from '../components/ui/StatusPill';
 import RefNumber from '../components/shared/RefNumber';

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import { useCustomFields } from '../../hooks/useCustomFields';
+import Button from '../shared/Button';
 import FieldFormModal from './FieldFormModal';
+import Icon from '../ui/Icon';
 
 const cf = he.customFields;
 
@@ -18,28 +20,20 @@ function FieldRow({ field, onEdit, onDelete }) {
         </span>
       </div>
       <div className="flex shrink-0 gap-2">
-        <button
-          type="button"
-          onClick={() => onEdit(field)}
-          className="min-h-touch rounded-lg px-3 text-sm font-bold text-brand hover:bg-brand/5"
-        >
+        <Button variant="ghost" size="sm" fullWidth={false} onClick={() => onEdit(field)}>
           {he.common.edit}
-        </button>
+        </Button>
         {confirming ? (
-          <button
-            type="button"
-            onClick={() => { onDelete(field.id); setConfirming(false); }}
-            className="min-h-touch rounded-lg px-3 text-sm font-bold text-red-600 hover:bg-red-50"
-          >
+          <Button variant="ghostDanger" size="sm" fullWidth={false} onClick={() => { onDelete(field.id); setConfirming(false); }}>
             {cf.deleteField}
-          </button>
+          </Button>
         ) : (
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="min-h-touch rounded-lg px-3 text-sm font-bold text-slate-400 hover:text-red-500"
+            className="min-h-touch rounded-lg px-3 text-slate-400 hover:text-red-500"
           >
-            ×
+            <Icon name="close" size="sm" />
           </button>
         )}
       </div>
@@ -81,14 +75,9 @@ export default function CustomFieldsManager({ orgId }) {
             />
           ))}
 
-          <button
-            type="button"
-            onClick={() => setModal('new')}
-            className="min-h-touch w-full rounded-xl border-2 border-dashed border-slate-300
-                       font-bold text-slate-600 hover:border-brand hover:text-brand"
-          >
+          <Button variant="dashed" onClick={() => setModal('new')}>
             {cf.addField}
-          </button>
+          </Button>
         </div>
       )}
 

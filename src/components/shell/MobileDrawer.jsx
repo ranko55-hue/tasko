@@ -1,8 +1,10 @@
 import { supabase } from '../../lib/supabase';
 import { useOrg } from '../../lib/orgContext';
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
 import NavLinks from '../shared/NavLinks';
 import QuickActions from './QuickActions';
+import Icon from '../ui/Icon';
 
 // מגירת מובייל — אותו ניווט ואותן פעולות כמו הדסקטופ (רק במגירה).
 export default function MobileDrawer({ onClose }) {
@@ -16,8 +18,8 @@ export default function MobileDrawer({ onClose }) {
       >
         <div className="mb-4 flex items-center justify-between">
           <img src="/brand/tasko-header-dark.png" alt={he.app.name} className="h-7 w-auto" />
-          <button type="button" onClick={onClose} aria-label={he.shell.close} className="px-2 text-3xl leading-none">
-            ×
+          <button type="button" onClick={onClose} aria-label={he.shell.close} className="px-2">
+            <Icon name="close" size="md" />
           </button>
         </div>
 
@@ -29,13 +31,9 @@ export default function MobileDrawer({ onClose }) {
 
         <div className="my-4 border-t border-white/10" />
         <div className="mb-2 text-sm text-slate-300">{member?.full_name}</div>
-        <button
-          type="button"
-          onClick={() => supabase.auth.signOut()}
-          className="min-h-touch w-full rounded-lg bg-white/10 px-3 text-start font-bold text-white"
-        >
+        <Button variant="ghost" className="text-start text-white hover:bg-white/10" onClick={() => supabase.auth.signOut()}>
           {he.common.logout}
-        </button>
+        </Button>
       </div>
     </div>
   );

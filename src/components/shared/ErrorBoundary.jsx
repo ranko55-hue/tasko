@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { he } from '../../locales/he';
+import Button from './Button';
 import Icon from '../ui/Icon';
 
 // גבול שגיאה ברמת האפליקציה. כל חריגה בזמן רינדור נתפסת כאן
@@ -29,13 +30,9 @@ export default class ErrorBoundary extends Component {
           </div>
           <h1 className="mb-2 text-xl font-black text-slate-900">{he.crash.title}</h1>
           <p className="mb-6 text-slate-600">{he.crash.message}</p>
-          <button
-            type="button"
-            onClick={() => window.location.reload()}
-            className="min-h-touch w-full rounded-xl bg-brand px-6 font-bold text-white hover:bg-brand/90"
-          >
+          <Button onClick={() => window.location.reload()}>
             {he.crash.refresh}
-          </button>
+          </Button>
         </div>
       </div>
     );

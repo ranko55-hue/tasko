@@ -1,42 +1,20 @@
 import { he } from '../../../locales/he';
-import { STATUS_TONE } from '../../ui/StatusPill';
+import { STATUS_DOT, STATUS_TEXT } from '../../ui/StatusPill';
+import Card from '../../ui/Card';
 
 export const NUM = { fontVariantNumeric: 'tabular-nums' };
 
-// נקודת סטטוס — צבעים מסעיף 4 ב-DESIGN.md, דרך אותו מיפוי STATUS_TONE
-// שמשמש את StatusPill, כדי שלא ייווצר מיפוי סטטוס שני במערכת.
-const DOT = {
-  gray: 'bg-slate-400',
-  blue: 'bg-statusBlue',
-  green: 'bg-statusGreen',
-  yellow: 'bg-yellow-500',
-  red: 'bg-statusRed',
-  done: 'bg-slate-300',
-};
-
-const TEXT = {
-  gray: 'text-slate-500',
-  blue: 'text-statusBlue',
-  green: 'text-statusGreen',
-  yellow: 'text-yellow-700',
-  red: 'text-statusRed',
-  done: 'text-slate-400',
-};
-
 export function StatusDot({ status, live = false }) {
-  const tone = STATUS_TONE[status] ?? 'gray';
   return (
     <span
-      className={`h-2 w-2 shrink-0 rounded-full ${DOT[tone]} ${live ? 'animate-softPulse' : ''}`}
+      className={`h-2 w-2 shrink-0 rounded-full ${STATUS_DOT[status] ?? 'bg-slate-400'} ${live ? 'animate-softPulse' : ''}`}
     />
   );
 }
 
-// שם הסטטוס בצבע הסטטוס — כמו כרטיס הלוח (DESIGN §10ד)
 export function StatusName({ status }) {
-  const tone = STATUS_TONE[status] ?? 'gray';
   return (
-    <span className={`text-[12.5px] font-bold ${TEXT[tone]}`}>
+    <span className={`text-[12.5px] font-bold ${STATUS_TEXT[status] ?? 'text-slate-500'}`}>
       {he.tasks.status[status] ?? status}
     </span>
   );
@@ -53,7 +31,7 @@ export function TaskNumber({ id }) {
 // אזור תחום במסגרת עם כותרת ומונה — שפת מגדל הפיקוח
 export function Panel({ title, count, children, muted = false }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+    <Card className="overflow-hidden">
       <header
         className={`flex items-center gap-2 border-b border-line px-4 py-3 ${
           muted ? 'bg-slate-50' : 'bg-surfaceBar'
@@ -70,6 +48,6 @@ export function Panel({ title, count, children, muted = false }) {
         </span>
       </header>
       {children}
-    </section>
+    </Card>
   );
 }

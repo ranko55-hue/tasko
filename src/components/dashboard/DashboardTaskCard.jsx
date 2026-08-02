@@ -1,21 +1,11 @@
 import { he } from '../../locales/he';
-import { STATUS_DOT } from '../../lib/taskMeta';
+import { STATUS_DOT, STATUS_TEXT } from '../ui/StatusPill';
 import { isOverrun } from '../../lib/dashboardModel';
 import { overrunMinutes } from '../../lib/taskTime';
 import { dateRangeLabel, isMultiDay } from '../../lib/taskDates';
 import { formatDuration } from '../../lib/time';
+import Button from '../shared/Button';
 import Icon from '../ui/Icon';
-
-// צבעי סטטוס לטקסט
-const STATUS_TEXT_COLOR = {
-  pending: 'text-slate-500',
-  scheduled: 'text-statusBlue',
-  in_progress: 'text-statusGreen',
-  paused: 'text-brandYellow',
-  blocked: 'text-statusRed',
-  done: 'text-slate-500',
-  cancelled: 'text-slate-500',
-};
 
 // כרטיס משימה ב-Dashboard חדש — עיצוב 2026
 export default function DashboardTaskCard({
@@ -29,7 +19,7 @@ export default function DashboardTaskCard({
   const overrun = isOverrun(task);
   const progress = task.est_minutes ? (task.net_seconds / 60) / task.est_minutes : 0;
   const progressPct = Math.round(progress * 100);
-  const statusTextColor = STATUS_TEXT_COLOR[task.status] || 'text-slate-500';
+  const statusTextColor = STATUS_TEXT[task.status] || 'text-slate-500';
 
   // בחר צבע פס: ירוק ≤85%, כתום 85-100%, אדום >100%, אפור = paused
   let barColor = 'bg-statusGreen';
@@ -155,22 +145,14 @@ export default function DashboardTaskCard({
 
       {/* Action button (only when needed) */}
       {!task.assignee_id && (
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onOpenTask?.(task.id); }}
-          className="w-full bg-brand px-3 py-2 font-bold text-white hover:bg-brand/90 text-sm"
-        >
+        <Button size="sm" className="rounded-none" onClick={(e) => { e.stopPropagation(); onOpenTask?.(task.id); }}>
           {he.tasks.assignWorker}
-        </button>
+        </Button>
       )}
       {task.status === 'blocked' && (
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onReturnToWork?.(task); }}
-          className="w-full bg-brand px-3 py-2 font-bold text-white hover:bg-brand/90 text-sm"
-        >
+        <Button size="sm" className="rounded-none" onClick={(e) => { e.stopPropagation(); onReturnToWork?.(task); }}>
           {he.tasks.handleNow}
-        </button>
+        </Button>
       )}
 
     </div>

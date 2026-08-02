@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { he } from '../locales/he';
 import { usePlatformOrgs } from '../hooks/usePlatformOrgs';
 import PageHeader from '../components/ui/PageHeader';
+import Card from '../components/ui/Card';
 import OrgRow from '../components/platform/OrgRow';
 
 const t = he.platform.orgs;
@@ -76,9 +77,9 @@ export default function PlatformOrgsPage() {
 
 function KpiCard({ label, value }) {
   return (
-    <div className="rounded-2xl border border-line bg-white p-4 text-center shadow-sm">
+    <Card className="p-4 text-center">
       <div className="text-2xl font-black text-slate-900 tabular-nums">{value}</div>
       <div className="mt-1 text-xs font-bold text-slate-400">{label}</div>
-    </div>
+    </Card>
   );
 }

@@ -8,6 +8,7 @@ import { useAlerts } from '../hooks/useAlerts';
 import { buildDashboard } from '../lib/dashboardModel';
 import { he } from '../locales/he';
 import { readStringArray, writeJSON } from '../lib/storage';
+import Button from '../components/shared/Button';
 import EmptyState from '../components/ui/EmptyState';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
 import BoardArea from '../components/dashboard/BoardArea';
@@ -88,13 +89,9 @@ export default function DashboardPage() {
 
       {/* פס פעולות — הכפתורים היו ללא onClick ולכן לא הגיבו כלל */}
       <div className="mb-6 flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={() => setNewTaskOpen(true)}
-          className="min-h-touch rounded-lg bg-brandYellow px-4 py-2.5 font-bold text-navy hover:bg-brandYellow/90"
-        >
+        <Button variant="yellow" fullWidth={false} onClick={() => setNewTaskOpen(true)}>
           {he.dashboard.newTask}
-        </button>
+        </Button>
         <Link
           to="/my"
           className="flex min-h-touch items-center rounded-lg border-2 border-line px-4 font-bold text-slate-700 hover:bg-slate-50"
@@ -109,13 +106,9 @@ export default function DashboardPage() {
       ) : error ? (
         <div className="py-8 text-center">
           <p className="mb-4 text-lg text-slate-600">{he.dashboard.error}</p>
-          <button
-            type="button"
-            onClick={refetch}
-            className="min-h-touch rounded-xl bg-brand px-6 font-bold text-white"
-          >
+          <Button fullWidth={false} onClick={refetch}>
             {he.common.retry}
-          </button>
+          </Button>
         </div>
       ) : isEmpty ? (
         <EmptyState icon="project" message={he.dashboard.empty} />

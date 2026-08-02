@@ -89,13 +89,9 @@ export default function MemberPerformanceTab({
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-base font-bold text-slate-900">{t.evaluations}</h3>
           {canWrite && (
-            <button
-              type="button"
-              onClick={() => setAddOpen(!addOpen)}
-              className="min-h-touch rounded-lg px-3 text-sm font-bold text-brand hover:bg-brand/10"
-            >
+            <Button variant="ghost" size="sm" fullWidth={false} onClick={() => setAddOpen(!addOpen)}>
               {t.addEvaluation}
-            </button>
+            </Button>
           )}
         </div>
 

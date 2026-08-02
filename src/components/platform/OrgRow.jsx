@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { he } from '../../locales/he';
 import { usePlatformOrgMembers, useToggleMember } from '../../hooks/usePlatformOrgs';
 import Button from '../shared/Button';
+import Card from '../ui/Card';
 
 const t = he.platform.orgs;
 
@@ -45,7 +46,7 @@ export default function OrgRow({ org, onMemberChanged }) {
   }
 
   return (
-    <div className="rounded-2xl border border-line bg-white shadow-sm">
+    <Card>
       {/* Header */}
       <button
         type="button"
@@ -93,7 +94,7 @@ export default function OrgRow({ org, onMemberChanged }) {
           )}
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 

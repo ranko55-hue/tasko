@@ -2,6 +2,7 @@ import { he } from '../../../locales/he';
 import { isLocked, elapsedSeconds } from '../../../lib/taskFlow';
 import { formatDuration } from '../../../lib/time';
 import { allocatedMinutes, usagePercent } from '../../../lib/taskTime';
+import Button from '../../shared/Button';
 import { StatusDot, StatusName, TaskNumber, Panel, NUM } from './DeskBits';
 
 const w = he.worker;
@@ -69,14 +70,9 @@ function OpenCard({ task, onOpen, onAction, busy }) {
       <UsageBar task={task} />
 
       {act && (
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => onAction(task, act.key)}
-          className="mt-4 min-h-[48px] w-full rounded-xl bg-brand px-4 font-bold text-white hover:bg-brand/90 disabled:opacity-60"
-        >
+        <Button className="mt-4" disabled={busy} onClick={() => onAction(task, act.key)}>
           {act.label}
-        </button>
+        </Button>
       )}
     </article>
   );

@@ -12,6 +12,7 @@ import { he } from '../locales/he';
 import Modal from '../components/shared/Modal';
 import TaskForm from '../components/tasks/TaskForm';
 import Card from '../components/ui/Card';
+import Icon from '../components/ui/Icon';
 import Tabs from '../components/ui/Tabs';
 import ClientHeaderCard from '../components/clients/ClientHeaderCard';
 import GeneralTab from '../components/clients/GeneralTab';
@@ -95,7 +96,7 @@ export default function ClientDetailPage() {
         to="/clients"
         className="text-base font-medium text-brand hover:underline"
       >
-        ‹ {he.clients.title}
+        <Icon name="back" size="sm" className="inline-block" /> {he.clients.title}
       </Link>
 
       <Card className="mt-2 overflow-hidden">

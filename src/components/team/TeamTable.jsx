@@ -1,4 +1,5 @@
 import { he } from '../../locales/he';
+import Card from '../ui/Card';
 
 const t = he.team;
 const NUM = { fontVariantNumeric: 'tabular-nums' };
@@ -83,25 +84,26 @@ function MobileCards({ rows, managers, onOpen }) {
       {rows.map((m) => {
         const mgr = managers.get(m.manager_id);
         return (
-          <button
-            key={m.id}
-            type="button"
-            onClick={() => onOpen(m)}
-            className="flex min-h-touch w-full items-center gap-3 rounded-2xl border border-line bg-white p-4 text-start shadow-sm"
-          >
-            <Avatar name={m.full_name} active={m.is_active} />
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="truncate font-bold text-slate-900">{m.full_name}</span>
-                <StatusDot active={m.is_active} />
+          <Card key={m.id}>
+            <button
+              type="button"
+              onClick={() => onOpen(m)}
+              className="flex min-h-touch w-full items-center gap-3 p-4 text-start"
+            >
+              <Avatar name={m.full_name} active={m.is_active} />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="truncate font-bold text-slate-900">{m.full_name}</span>
+                  <StatusDot active={m.is_active} />
+                </div>
+                <div className="mt-0.5 text-xs text-slate-500">
+                  {he.roles[m.role] ?? m.role}
+                  {mgr ? ` · ${mgr.full_name}` : ''}
+                </div>
               </div>
-              <div className="mt-0.5 text-xs text-slate-500">
-                {he.roles[m.role] ?? m.role}
-                {mgr ? ` · ${mgr.full_name}` : ''}
-              </div>
-            </div>
-            <span className="text-xs text-slate-400" style={NUM}>{fmtDate(m.created_at)}</span>
-          </button>
+              <span className="text-xs text-slate-400" style={NUM}>{fmtDate(m.created_at)}</span>
+            </button>
+          </Card>
         );
       })}
     </div>

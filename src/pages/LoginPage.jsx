@@ -121,13 +121,9 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={toggleMode}
-              className="text-base font-medium text-brand hover:underline"
-            >
+            <Button variant="link" fullWidth={false} onClick={toggleMode}>
               {isSignup ? t.switchToLogin : t.switchToSignup}
-            </button>
+            </Button>
           </div>
         </Card>
       </div>

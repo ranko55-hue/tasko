@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useOrg } from '../../lib/orgContext';
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
 import { compressImage } from '../../lib/imageCompress';
 import { uploadTaskMedia } from '../../lib/media';
 import { addPhotoEvent } from '../../lib/taskFlow';
@@ -41,14 +42,9 @@ export default function PhotoCaptureButton({ task, onDone }) {
         className="hidden"
         onChange={onChange}
       />
-      <button
-        type="button"
-        disabled={progress !== null}
-        onClick={() => inputRef.current.click()}
-        className="min-h-touch w-full rounded-xl border-2 border-brand bg-white px-4 text-lg font-bold text-brand hover:bg-brand/5 disabled:opacity-50"
-      >
+      <Button variant="outline" disabled={progress !== null} onClick={() => inputRef.current.click()}>
         {progress !== null ? `${he.media.uploading} ${progress}%` : he.media.photoCapture}
-      </button>
+      </Button>
 
       {progress !== null && (
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
