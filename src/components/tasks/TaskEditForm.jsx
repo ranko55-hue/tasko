@@ -10,9 +10,31 @@ import { datesFromForm, DEFAULT_DUE_TIME, DEFAULT_START_TIME } from '../../lib/t
 
 const t = he.tasks;
 
+const SECTIONS = [
+  { key: 'details', label: t.section.details },
+  { key: 'dates', label: t.section.dates },
+  { key: 'urgent', label: t.section.urgent },
+  { key: 'requirements', label: t.section.requirements },
+];
 
-// עריכת משימה קיימת. שינוי לקוח/פרויקט מותר — האילוץ נאכף בטריגר בשרת.
-// requireProject לא נאכף כאן: ההגדרה חלה על יצירה בלבד (v8 §3.9, הכרעה 2).
+const CHIP = 'min-h-touch rounded-full px-4 text-sm font-bold transition-colors';
+const CHIP_ON = CHIP + ' bg-brand/10 text-brand';
+const CHIP_OFF = CHIP + ' bg-slate-100 text-slate-600 hover:bg-slate-200';
+
+const DATE_INPUT =
+  'min-h-touch rounded-xl border border-line bg-white px-4 text-lg text-slate-900 ' +
+  'focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20';
+
+function initialOpen(task) {
+  const s = new Set();
+  if (task.description || task.address) s.add('details');
+  // dates always have server defaults — open if not the default pair
+  if (task.starts_on || task.ends_on) s.add('dates');
+  if (task.priority === 'urgent') s.add('urgent');
+  if (task.requirements?.length) s.add('requirements');
+  return s;
+}
+
 export default function TaskEditForm({ task, members, target, onSave, onCancel }) {
   const [clientId, setClientId] = useState(task.client_id ?? '');
   const [projectId, setProjectId] = useState(task.project_id ?? '');
@@ -29,6 +51,16 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
   const [requirements, setRequirements] = useState(task.requirements ?? []);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+
+  const [open, setOpen] = useState(() => initialOpen(task));
+
+  function toggle(key) {
+    setOpen((prev) => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  }
 
   function changeClient(id) {
     setClientId(id);
@@ -57,7 +89,6 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
         requirements: (requirements ?? []).map((r) => r.trim()).filter(Boolean),
       });
     } catch (err) {
-      // הטריגר בשרת מחזיר not_manager כשעובד מנסה לערוך
       setError(String(err?.message ?? '').includes('not_manager') ? t.notManager : t.saveFailed);
       setBusy(false);
     }
@@ -65,6 +96,7 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
 
   return (
     <form onSubmit={submit} className="space-y-4">
+      {/* === שכבה ראשית — תמיד גלויה === */}
       {target && (
         <TaskTargetPicker
           clients={target.clients}
@@ -81,16 +113,6 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
       )}
 
       <Field label={t.fieldTitle} value={title} onChange={setTitle} />
-      <Textarea
-        label={`${t.description} ${he.common.optional}`}
-        value={description}
-        onChange={setDescription}
-      />
-      <Field
-        label={`${t.address} ${he.common.optional}`}
-        value={address}
-        onChange={setAddress}
-      />
 
       <Select label={t.assignee} value={assigneeId} onChange={setAssigneeId}>
         <option value="">{t.unassigned}</option>
@@ -101,46 +123,80 @@ export default function TaskEditForm({ task, members, target, onSave, onCancel }
         ))}
       </Select>
 
-      <Select label={t.priority} value={priority} onChange={setPriority}>
-        <option value="normal">{t.priorityOpt.normal}</option>
-        <option value="urgent">{t.priorityOpt.urgent}</option>
-      </Select>
-
-      {/* שני שדות תאריך+שעה — התחלה וסיום */}
-      <div className="space-y-3">
-        <div>
-          <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
-            {t.startLabel}
-          </span>
-          <div className="flex gap-2">
-            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
-              className="min-h-touch flex-[3] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
-            <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
-              className="min-h-touch flex-[2] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
-          </div>
-        </div>
-
-        <div>
-          <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
-            {t.endLabel}
-          </span>
-          <div className="flex gap-2">
-            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
-              className="min-h-touch flex-[3] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
-            <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
-              className="min-h-touch flex-[2] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
-          </div>
-        </div>
+      {/* === מתגי חשיפה מדורגת === */}
+      <div className="flex flex-wrap gap-2">
+        {SECTIONS.map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => toggle(key)}
+            className={open.has(key) ? CHIP_ON : CHIP_OFF}
+          >
+            {label}
+          </button>
+        ))}
       </div>
-      <Field
-        label={`${t.estMinutes} ${he.common.optional}`}
-        type="number"
-        inputMode="numeric"
-        value={estMinutes}
-        onChange={setEstMinutes}
-      />
 
-      <RequirementsEditor items={requirements} onChange={setRequirements} />
+      {/* === מקטעים מתרחבים === */}
+      {open.has('details') && (
+        <div className="space-y-4">
+          <Textarea
+            label={`${t.description} ${he.common.optional}`}
+            value={description}
+            onChange={setDescription}
+          />
+          <Field
+            label={`${t.address} ${he.common.optional}`}
+            value={address}
+            onChange={setAddress}
+          />
+        </div>
+      )}
+
+      {open.has('dates') && (
+        <div className="space-y-3">
+          <div>
+            <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+              {t.startLabel}
+            </span>
+            <div className="flex gap-2">
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
+                className={DATE_INPUT + ' flex-[3]'} />
+              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
+                className={DATE_INPUT + ' flex-[2]'} />
+            </div>
+          </div>
+          <div>
+            <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+              {t.endLabel}
+            </span>
+            <div className="flex gap-2">
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
+                className={DATE_INPUT + ' flex-[3]'} />
+              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
+                className={DATE_INPUT + ' flex-[2]'} />
+            </div>
+          </div>
+          <Field
+            label={`${t.estMinutes} ${he.common.optional}`}
+            type="number"
+            inputMode="numeric"
+            value={estMinutes}
+            onChange={setEstMinutes}
+          />
+        </div>
+      )}
+
+      {open.has('urgent') && (
+        <Select label={t.priority} value={priority} onChange={setPriority}>
+          <option value="normal">{t.priorityOpt.normal}</option>
+          <option value="urgent">{t.priorityOpt.urgent}</option>
+        </Select>
+      )}
+
+      {open.has('requirements') && (
+        <RequirementsEditor items={requirements} onChange={setRequirements} />
+      )}
 
       {error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">

@@ -460,6 +460,13 @@ export const he = {
     endLabel: 'סיום',
     startDefault: 'היום, עכשיו',
     endDefault: 'היום, סוף היום',
+    section: {
+      details: 'פרטים',
+      dates: 'תאריכים',
+      urgent: 'דחיפות',
+      requirements: 'דרישות',
+      team: 'צוות',
+    },
     scheduledStart: 'תחילת ביצוע (עתידי)',
     estMinutes: 'מסגרת זמן (דקות)',
     requirements: 'דרישות',

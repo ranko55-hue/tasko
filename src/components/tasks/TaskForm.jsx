@@ -10,10 +10,24 @@ import { datesFromForm } from '../../lib/taskDates';
 
 const t = he.tasks;
 
+const SECTIONS = [
+  { key: 'details', label: t.section.details },
+  { key: 'dates', label: t.section.dates },
+  { key: 'urgent', label: t.section.urgent },
+  { key: 'requirements', label: t.section.requirements },
+  { key: 'team', label: t.section.team },
+];
 
-// טופס פתיחת משימה. הלקוח הוא העוגן (v8 §3.4): לקוח חובה, פרויקט רשות.
-// target — { clients, projects, requireProject, quickCreateClient } מ-useTaskTargets.
-// lockedClient/lockedProject — יצירה מתוך הקשר (כרטיס לקוח / פרויקט).
+const CHIP = 'min-h-touch rounded-full px-4 text-sm font-bold transition-colors';
+const CHIP_ON = CHIP + ' bg-brand/10 text-brand';
+const CHIP_OFF = CHIP + ' bg-slate-100 text-slate-600 hover:bg-slate-200';
+
+const DATE_INPUT =
+  'min-h-touch rounded-xl border border-line bg-white px-4 text-lg text-slate-900 ' +
+  'focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20';
+
+// טופס פתיחת משימה — חשיפה מדורגת.
+// ברירת מחדל: כותרת + לקוח + שיוך בלבד. שאר האפשרויות מאחורי מתגים.
 export default function TaskForm({
   members,
   onSubmit,
@@ -42,10 +56,19 @@ export default function TaskForm({
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
+  const [open, setOpen] = useState(new Set());
+
   const workers = Math.max(1, parseInt(requiredWorkers, 10) || 1);
   const isTeam = workers > 1;
 
-  // בחירת לקוח אחר מאפסת פרויקט שכבר לא שייך לו
+  function toggle(key) {
+    setOpen((prev) => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  }
+
   function changeClient(id) {
     setClientId(id);
     const stillValid = target?.projects?.some((p) => p.id === projectId && p.client_id === id);
@@ -83,6 +106,7 @@ export default function TaskForm({
 
   return (
     <form onSubmit={submit} className="space-y-4">
+      {/* === שכבה ראשית — תמיד גלויה === */}
       {target && (
         <TaskTargetPicker
           clients={target.clients}
@@ -102,16 +126,6 @@ export default function TaskForm({
       )}
 
       <Field label={t.fieldTitle} value={title} onChange={setTitle} />
-      <Textarea
-        label={`${t.description} ${he.common.optional}`}
-        value={description}
-        onChange={setDescription}
-      />
-      <Field
-        label={`${t.address} ${he.common.optional}`}
-        value={address}
-        onChange={setAddress}
-      />
 
       <Select label={t.assignee} value={assigneeId} onChange={setAssigneeId}>
         <option value="">{t.unassigned}</option>
@@ -122,73 +136,109 @@ export default function TaskForm({
         ))}
       </Select>
 
-      <Select label={t.priority} value={priority} onChange={setPriority}>
-        <option value="normal">{t.priorityOpt.normal}</option>
-        <option value="urgent">{t.priorityOpt.urgent}</option>
-      </Select>
-
-      {/* שני שדות תאריך+שעה — התחלה וסיום */}
-      <div className="space-y-3">
-        <div>
-          <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
-            {t.startLabel}
-            <span className="text-xs text-slate-400">{he.common.optional}</span>
-          </span>
-          <div className="flex gap-2">
-            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
-              className="min-h-touch flex-[3] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
-            <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
-              className="min-h-touch flex-[2] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
-          </div>
-          {!startDate && !startTime && (
-            <p className="mt-1 text-xs text-slate-400">{t.startDefault}</p>
-          )}
-        </div>
-
-        <div>
-          <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
-            {t.endLabel}
-            <span className="text-xs text-slate-400">{he.common.optional}</span>
-          </span>
-          <div className="flex gap-2">
-            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
-              className="min-h-touch flex-[3] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
-            <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
-              className="min-h-touch flex-[2] rounded-xl border border-line bg-white px-4 text-lg text-slate-900 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20" />
-          </div>
-          {!endDate && !endTime && (
-            <p className="mt-1 text-xs text-slate-400">{t.endDefault}</p>
-          )}
-        </div>
+      {/* === מתגי חשיפה מדורגת === */}
+      <div className="flex flex-wrap gap-2">
+        {SECTIONS.map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => toggle(key)}
+            className={open.has(key) ? CHIP_ON : CHIP_OFF}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      <Field
-        label={`${t.estMinutes} ${he.common.optional}`}
-        type="number"
-        inputMode="numeric"
-        value={estMinutes}
-        onChange={setEstMinutes}
-      />
+      {/* === מקטעים מתרחבים === */}
+      {open.has('details') && (
+        <div className="space-y-4">
+          <Textarea
+            label={`${t.description} ${he.common.optional}`}
+            value={description}
+            onChange={setDescription}
+          />
+          <Field
+            label={`${t.address} ${he.common.optional}`}
+            value={address}
+            onChange={setAddress}
+          />
+        </div>
+      )}
 
-      <RequirementsEditor items={requirements} onChange={setRequirements} />
+      {open.has('dates') && (
+        <div className="space-y-3">
+          <div>
+            <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+              {t.startLabel}
+              <span className="text-xs text-slate-400">{he.common.optional}</span>
+            </span>
+            <div className="flex gap-2">
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
+                className={DATE_INPUT + ' flex-[3]'} />
+              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
+                className={DATE_INPUT + ' flex-[2]'} />
+            </div>
+            {!startDate && !startTime && (
+              <p className="mt-1 text-xs text-slate-400">{t.startDefault}</p>
+            )}
+          </div>
+          <div>
+            <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+              {t.endLabel}
+              <span className="text-xs text-slate-400">{he.common.optional}</span>
+            </span>
+            <div className="flex gap-2">
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
+                className={DATE_INPUT + ' flex-[3]'} />
+              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
+                className={DATE_INPUT + ' flex-[2]'} />
+            </div>
+            {!endDate && !endTime && (
+              <p className="mt-1 text-xs text-slate-400">{t.endDefault}</p>
+            )}
+          </div>
+          <Field
+            label={`${t.estMinutes} ${he.common.optional}`}
+            type="number"
+            inputMode="numeric"
+            value={estMinutes}
+            onChange={setEstMinutes}
+          />
+        </div>
+      )}
 
-      <Field
-        label={t.requiredWorkers}
-        type="number"
-        inputMode="numeric"
-        value={requiredWorkers}
-        onChange={setRequiredWorkers}
-      />
-
-      {isTeam && (
-        <Select label={t.teamLead} value={teamLeadId} onChange={setTeamLeadId}>
-          <option value="">{he.common.none}</option>
-          {members.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.full_name}
-            </option>
-          ))}
+      {open.has('urgent') && (
+        <Select label={t.priority} value={priority} onChange={setPriority}>
+          <option value="normal">{t.priorityOpt.normal}</option>
+          <option value="urgent">{t.priorityOpt.urgent}</option>
         </Select>
+      )}
+
+      {open.has('requirements') && (
+        <RequirementsEditor items={requirements} onChange={setRequirements} />
+      )}
+
+      {open.has('team') && (
+        <div className="space-y-4">
+          <Field
+            label={t.requiredWorkers}
+            type="number"
+            inputMode="numeric"
+            value={requiredWorkers}
+            onChange={setRequiredWorkers}
+          />
+          {isTeam && (
+            <Select label={t.teamLead} value={teamLeadId} onChange={setTeamLeadId}>
+              <option value="">{he.common.none}</option>
+              {members.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.full_name}
+                </option>
+              ))}
+            </Select>
+          )}
+        </div>
       )}
 
       {error && (
