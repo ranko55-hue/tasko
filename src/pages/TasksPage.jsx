@@ -179,7 +179,7 @@ export default function TasksPage() {
         orgId={member.org_id}
         isManager={isManager(member)}
         onClose={() => setOpenTaskId(null)}
-        onUpdated={refetch}
+        onActionDone={refetch}
       />
     </>
   );

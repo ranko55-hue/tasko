@@ -20,7 +20,7 @@ const t = he.tasks;
 
 // משימה בודדת: bottom sheet (מובייל) / side panel (דסקטופ). נפתחת מכל מקום.
 // המסך הוא מתאם בלבד — הכותרת, הגוף, העריכה והביטול הם רכיבים נפרדים.
-export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager = false }) {
+export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager = false, onActionDone }) {
   const { task, loading, error, refetch, updateTask, cancelTask } = useTaskDetail(taskId);
   const { members } = useOrgMembers(orgId);
   const { member } = useOrg();
@@ -159,7 +159,8 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
                   variant="success"
                   onClick={async () => {
                     await approveTask(task, member.id);
-                    setRefreshKey((k) => k + 1);
+                    onClose();
+                    onActionDone?.();
                   }}
                 >
                   {t.drawer.approveBtn}

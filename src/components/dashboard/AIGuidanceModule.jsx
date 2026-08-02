@@ -14,6 +14,7 @@ export default function AIGuidanceModule({
   onTogglePinned,
   pinnedTaskCounts,
   live = false,
+  onOpenTask,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   // תמיד מערך — הצ'יפים המוצמדים נקראים עם ‎.includes()‎ בלבד
@@ -223,9 +224,11 @@ export default function AIGuidanceModule({
               <div className="mb-2 text-xs font-bold text-slate-300">פריטים דורשי תשומת לב</div>
               <div className="max-h-[300px] space-y-2 overflow-y-auto">
                 {allAlertItems.map((item) => (
-                  <div
+                  <button
                     key={`${item.type}-${item.id}`}
-                    className="flex items-center justify-between gap-2 rounded-lg bg-navy2 px-2 py-1.5 text-xs"
+                    type="button"
+                    onClick={() => item.type === 'task' && onOpenTask?.(item.id)}
+                    className="flex w-full items-center justify-between gap-2 rounded-lg bg-navy2 px-2 py-1.5 text-xs text-start hover:bg-navy2/80 transition-colors"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="font-bold text-white truncate">
@@ -235,13 +238,10 @@ export default function AIGuidanceModule({
                         {item.reason} · {formatDateTime(item.createdAt)}
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      className="shrink-0 rounded bg-brand px-2 py-0.5 text-xs font-bold text-white hover:bg-brand/90"
-                    >
+                    <span className="shrink-0 rounded bg-brand px-2 py-0.5 text-xs font-bold text-white">
                       {item.actionLabel}
-                    </button>
-                  </div>
+                    </span>
+                  </button>
                 ))}
               </div>
             </div>
