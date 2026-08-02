@@ -127,20 +127,12 @@ export default function MemberDocumentsTab({ memberId, orgId, documents, loading
                     )}
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleDownload(doc)}
-                  className="min-h-touch rounded-lg px-3 text-sm font-bold text-brand hover:bg-brand/10"
-                >
+                <Button variant="ghost" size="sm" fullWidth={false} onClick={() => handleDownload(doc)}>
                   {he.projectDetail.files.download}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setConfirmRemove(doc)}
-                  className="min-h-touch rounded-lg px-3 text-sm font-bold text-red-600 hover:bg-red-50"
-                >
+                </Button>
+                <Button variant="ghostDanger" size="sm" fullWidth={false} onClick={() => setConfirmRemove(doc)}>
                   {he.projectDetail.files.remove}
-                </button>
+                </Button>
               </div>
             );
           })}

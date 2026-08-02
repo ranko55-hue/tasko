@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import { formatDate } from '../../lib/time';
+import Button from '../shared/Button';
 
 const g = he.clientDetail.general;
 
@@ -51,13 +52,9 @@ export default function GeneralTab({ client }) {
           <code dir="ltr" className="min-w-0 flex-1 truncate text-sm text-slate-700">
             {link}
           </code>
-          <button
-            type="button"
-            onClick={copy}
-            className="min-h-touch shrink-0 rounded-lg bg-navy px-4 text-sm font-bold text-white hover:bg-navy2"
-          >
+          <Button variant="dark" size="sm" fullWidth={false} className="shrink-0" onClick={copy}>
             {copied ? g.copied : g.copy}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,22 +1,11 @@
 import { he } from '../../../locales/he';
-import { STATUS_DOT } from '../../../lib/taskMeta';
+import { STATUS_DOT, STATUS_INK } from '../../ui/StatusPill';
 import { isActiveStatus } from '../../../lib/taskTime';
 import { taskSubtitle } from '../../../lib/taskSubtitle';
 import Icon from '../../ui/Icon';
 
 const t = he.tasks;
 const d = t.drawer;
-
-// צבע טקסט לשם הסטטוס — תואם לנקודה
-const STATUS_INK = {
-  pending: 'text-slate-300',
-  scheduled: 'text-statusBlue',
-  in_progress: 'text-statusGreen',
-  paused: 'text-brandYellow',
-  blocked: 'text-statusRed',
-  done: 'text-slate-400',
-  cancelled: 'text-slate-400',
-};
 
 const GHOST =
   'flex h-11 w-11 items-center justify-center rounded-lg bg-white/[0.08] ' +

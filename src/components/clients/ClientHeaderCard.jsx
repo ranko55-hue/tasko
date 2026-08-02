@@ -1,4 +1,5 @@
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
 import Icon from '../ui/Icon';
 import RefNumber from '../shared/RefNumber';
 
@@ -37,13 +38,9 @@ export default function ClientHeaderCard({ client, openProjects, openTasks, onNe
         </div>
       </div>
       {onNewTask && (
-        <button
-          type="button"
-          onClick={onNewTask}
-          className="min-h-touch shrink-0 rounded-lg bg-brandYellow px-4 py-2 font-bold text-navy hover:bg-brandYellow/90"
-        >
+        <Button variant="yellow" size="sm" fullWidth={false} className="shrink-0" onClick={onNewTask}>
           {he.dashboard.newTask}
-        </button>
+        </Button>
       )}
     </div>
   );

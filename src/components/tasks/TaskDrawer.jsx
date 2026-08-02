@@ -5,6 +5,7 @@ import { useOrgMembers } from '../../hooks/useOrgMembers';
 import { useTaskTargets } from '../../hooks/useTaskTargets';
 import { useOrg } from '../../lib/orgContext';
 import { approveTask, returnTask, transferTask } from '../../lib/taskFlow';
+import Button from '../shared/Button';
 import DrawerHeader from './drawer/DrawerHeader';
 import DrawerViewBody from './drawer/DrawerViewBody';
 import DrawerExecutionBar from './drawer/DrawerExecutionBar';
@@ -148,66 +149,41 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
             {isClosed ? (
               <div className="space-y-2">
                 <p className="text-center text-sm text-slate-500">{t.drawer.closedTitle}</p>
-                <button
-                  type="button"
-                  onClick={() => printTaskSummary(task, events, assigneeName)}
-                  className="min-h-touch w-full rounded-xl border-2 border-line bg-white px-4 font-bold text-slate-700 hover:bg-slate-50"
-                >
+                <Button variant="secondary" onClick={() => printTaskSummary(task, events, assigneeName)}>
                   {t.drawer.downloadPdf}
-                </button>
+                </Button>
               </div>
             ) : isManager && task.status === 'pending_approval' ? (
               <div className="space-y-2">
-                <button
-                  type="button"
+                <Button
+                  variant="success"
                   onClick={async () => {
                     await approveTask(task, member.id);
                     setRefreshKey((k) => k + 1);
                   }}
-                  className="min-h-touch w-full rounded-xl bg-green-600 px-4 font-bold text-white hover:bg-green-700"
                 >
                   {t.drawer.approveBtn}
-                </button>
+                </Button>
                 <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setReturnOpen(true)}
-                    className="min-h-touch flex-1 rounded-xl border-2 border-amber-400 px-4 font-bold text-amber-700 hover:bg-amber-50"
-                  >
+                  <Button variant="warningOutline" fullWidth={false} className="flex-1" onClick={() => setReturnOpen(true)}>
                     {t.drawer.returnBtn}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTransferOpen(true)}
-                    className="min-h-touch flex-1 rounded-xl border-2 border-line px-4 font-bold text-slate-700 hover:bg-slate-50"
-                  >
+                  </Button>
+                  <Button variant="secondary" fullWidth={false} className="flex-1" onClick={() => setTransferOpen(true)}>
                     {t.drawer.transferBtn}
-                  </button>
+                  </Button>
                 </div>
               </div>
             ) : isManager ? (
               <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => setUpdateOpen(true)}
-                  className="min-h-touch flex-1 rounded-xl bg-brand px-4 font-bold text-white hover:bg-brand-dark"
-                >
+                <Button fullWidth={false} className="flex-1" onClick={() => setUpdateOpen(true)}>
                   {t.drawer.managerUpdateTitle}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMode('edit')}
-                  className="min-h-touch rounded-xl border-2 border-line px-5 font-bold text-slate-700 hover:bg-white"
-                >
+                </Button>
+                <Button variant="secondary" fullWidth={false} onClick={() => setMode('edit')}>
                   {he.common.edit}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMode('cancel')}
-                  className="min-h-touch rounded-xl border-2 border-red-300 px-4 font-bold text-red-600 hover:bg-red-50"
-                >
+                </Button>
+                <Button variant="danger" fullWidth={false} onClick={() => setMode('cancel')}>
                   {t.cancelTask}
-                </button>
+                </Button>
               </div>
             ) : null}
           </div>

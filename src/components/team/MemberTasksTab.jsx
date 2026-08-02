@@ -1,19 +1,10 @@
 import { useState, useMemo } from 'react';
 import { he } from '../../locales/he';
+import { STATUS_DOT } from '../ui/StatusPill';
 import TaskDrawer from '../tasks/TaskDrawer';
 
 const t = he.team.detail;
 const NUM = { fontVariantNumeric: 'tabular-nums' };
-
-const STATUS_COLORS = {
-  pending: 'bg-slate-400',
-  scheduled: 'bg-blue-400',
-  in_progress: 'bg-statusGreen',
-  paused: 'bg-yellow-400',
-  blocked: 'bg-red-400',
-  done: 'bg-slate-400/60',
-  cancelled: 'bg-slate-300',
-};
 
 const FILTERS = [
   { key: 'all', label: t.tasksFilterAll },
@@ -81,7 +72,7 @@ export default function MemberTasksTab({ tasks, loading, orgId, isManager }) {
               onClick={() => setSelectedTaskId(task.id)}
               className="flex min-h-touch w-full items-center gap-3 px-1 py-3 text-start hover:bg-slate-50"
             >
-              <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${STATUS_COLORS[task.status] || 'bg-slate-400'}`} />
+              <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${STATUS_DOT[task.status] || 'bg-slate-400'}`} />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold text-slate-900">{task.title}</p>
                 <p className="truncate text-xs text-slate-500">

@@ -226,13 +226,9 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
               <p className="rounded-xl bg-green-50 p-4 text-sm font-bold text-green-800">{t.resetSuccess}</p>
               <div className="flex items-center justify-between rounded-xl border border-line bg-slate-50 px-4 py-3">
                 <span className="text-sm font-bold" dir="ltr">{resetResult}</span>
-                <button
-                  type="button"
-                  onClick={() => { navigator.clipboard.writeText(resetResult); }}
-                  className="min-h-touch rounded-lg px-3 text-sm font-bold text-brand hover:bg-brand/10"
-                >
+                <Button variant="ghost" size="sm" fullWidth={false} onClick={() => { navigator.clipboard.writeText(resetResult); }}>
                   {he.team.credentials.copy}
-                </button>
+                </Button>
               </div>
               <Button onClick={() => { setResetModal(false); setResetResult(null); }}>
                 {he.team.credentials.close}

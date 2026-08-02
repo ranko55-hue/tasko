@@ -4,11 +4,13 @@ import { supabase } from '../lib/supabase';
 import { useOrg } from '../lib/orgContext';
 import { isManager, homePathFor } from '../lib/roles';
 import { he } from '../locales/he';
+import Button from './shared/Button';
 import NavLinks from './shared/NavLinks';
 import SearchBar from './shell/SearchBar';
 import MobileDrawer from './shell/MobileDrawer';
 import PageShell from './ui/PageShell';
 import SupportModal from './support/SupportModal';
+import Icon from './ui/Icon';
 
 // מעטפת אחידה: הדר דו-שורתי — שורה 1 זהות, שורה 2 ניווט+חיפוש.
 // עובד/ראש צוות רואים רק שורה 1 (לוגו+שם+התנתקות).
@@ -29,9 +31,9 @@ export default function AppShell() {
               type="button"
               onClick={() => setDrawer(true)}
               aria-label={he.shell.menu}
-              className="min-h-touch rounded-lg px-2 text-2xl leading-none text-slate-200 hover:bg-white/10 md:hidden"
+              className="min-h-touch rounded-lg px-2 text-slate-200 hover:bg-white/10 md:hidden"
             >
-              ☰
+              <Icon name="menu" size="md" />
             </button>
           )}
 
@@ -41,20 +43,12 @@ export default function AppShell() {
           >
             {member?.full_name}
           </Link>
-          <button
-            type="button"
-            onClick={() => setSupportOpen(true)}
-            className="min-h-touch shrink-0 rounded-lg px-3 text-sm font-medium text-slate-300 hover:bg-white/10"
-          >
+          <Button variant="ghost" size="sm" fullWidth={false} className="shrink-0 text-slate-300 hover:bg-white/10 hover:text-white" onClick={() => setSupportOpen(true)}>
             {he.support.trigger}
-          </button>
-          <button
-            type="button"
-            onClick={() => supabase.auth.signOut()}
-            className="min-h-touch shrink-0 rounded-lg px-3 text-sm font-medium text-slate-300 hover:bg-white/10"
-          >
+          </Button>
+          <Button variant="ghost" size="sm" fullWidth={false} className="shrink-0 text-slate-300 hover:bg-white/10 hover:text-white" onClick={() => supabase.auth.signOut()}>
             {he.common.logout}
-          </button>
+          </Button>
 
           <Link
             to={homePathFor(member)}

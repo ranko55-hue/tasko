@@ -104,7 +104,7 @@ export default function MyTaskCard({ task, onUpdated }) {
         </div>
       ) : task.status === 'done' ? (
         <div className="rounded-xl bg-emerald-50 px-4 py-4 text-center text-lg font-bold text-emerald-800">
-          ✓ {w.doneLabel}
+          <Icon name="check" size="sm" className="inline-block" /> {w.doneLabel}
         </div>
       ) : (
         <TaskActionBar task={task} locked={locked} actions={actions} />

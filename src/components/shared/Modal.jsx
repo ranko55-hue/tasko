@@ -1,4 +1,5 @@
-// מודאל — עולה מלמטה במובייל, ממורכז בדסקטופ. עיצוב 2026, פינות מעוגלות.
+import Icon from '../ui/Icon';
+
 export default function Modal({ title, onClose, children }) {
   return (
     <div
@@ -15,9 +16,9 @@ export default function Modal({ title, onClose, children }) {
             type="button"
             onClick={onClose}
             aria-label="סגירה"
-            className="px-2 text-3xl leading-none text-slate-400 hover:text-slate-600"
+            className="px-2 text-slate-400 hover:text-slate-600"
           >
-            ×
+            <Icon name="close" size="md" />
           </button>
         </div>
         {children}

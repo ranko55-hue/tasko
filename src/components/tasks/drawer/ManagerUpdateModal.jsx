@@ -4,6 +4,7 @@ import { he } from '../../../locales/he';
 import { compressImage } from '../../../lib/imageCompress';
 import { uploadTaskMedia } from '../../../lib/media';
 import { addManagerUpdate } from '../../../lib/taskFlow';
+import Button from '../../shared/Button';
 import Modal from '../../shared/Modal';
 import Textarea from '../../shared/Textarea';
 import Icon from '../../ui/Icon';
@@ -77,13 +78,9 @@ export default function ManagerUpdateModal({ task, onClose, onSent }) {
             </button>
           </div>
         ) : (
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            className="min-h-touch w-full rounded-xl border-2 border-dashed border-line px-4 text-sm font-bold text-brand hover:bg-brand/5"
-          >
+          <Button variant="dashed" size="sm" onClick={() => fileRef.current?.click()}>
             {d.attach}
-          </button>
+          </Button>
         )}
 
         {progress !== null && (
@@ -97,21 +94,12 @@ export default function ManagerUpdateModal({ task, onClose, onSent }) {
         )}
 
         <div className="flex gap-3">
-          <button
-            type="button"
-            disabled={busy}
-            onClick={send}
-            className="min-h-touch flex-1 rounded-xl bg-brand px-4 font-bold text-white hover:bg-brand-dark disabled:opacity-60"
-          >
+          <Button disabled={busy} fullWidth={false} className="flex-1" onClick={send}>
             {busy ? he.common.loading : d.send}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="min-h-touch rounded-xl border-2 border-line px-5 font-bold text-slate-700"
-          >
+          </Button>
+          <Button variant="secondary" fullWidth={false} onClick={onClose}>
             {he.common.cancel}
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

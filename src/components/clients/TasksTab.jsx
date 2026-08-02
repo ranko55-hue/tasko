@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
 import StatusPill from '../ui/StatusPill';
 import EmptyState from '../ui/EmptyState';
 import Icon from '../ui/Icon';
@@ -133,13 +134,9 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
           )}
           <div className="space-y-2">{displayOpen.map(renderRow)}</div>
           {hasMoreOpen && (
-            <button
-              type="button"
-              onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}
-              className="mt-4 min-h-[44px] w-full rounded-lg border-2 border-line px-3 font-bold text-slate-700 hover:bg-slate-50"
-            >
+            <Button variant="secondary" className="mt-4" onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}>
               טען עוד…
-            </button>
+            </Button>
           )}
         </>
       )}
@@ -154,13 +151,9 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
           )}
           <div className="space-y-2">{displayClosed.map(renderRow)}</div>
           {hasMoreClosed && (
-            <button
-              type="button"
-              onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}
-              className="mt-4 min-h-[44px] w-full rounded-lg border-2 border-line px-3 font-bold text-slate-700 hover:bg-slate-50"
-            >
+            <Button variant="secondary" className="mt-4" onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}>
               טען עוד…
-            </button>
+            </Button>
           )}
         </>
       )}

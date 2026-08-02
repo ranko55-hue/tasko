@@ -9,7 +9,6 @@ const TONES = {
   purple: 'bg-purple-100 text-purple-700',
 };
 
-// מיפוי סטטוס משימה → tone (מקודד את סעיף 4)
 export const STATUS_TONE = {
   pending: 'gray',
   scheduled: 'blue',
@@ -19,6 +18,39 @@ export const STATUS_TONE = {
   done: 'done',
   pending_approval: 'purple',
   cancelled: 'done',
+};
+
+export const STATUS_DOT = {
+  pending: 'bg-slate-400',
+  scheduled: 'bg-statusBlue',
+  in_progress: 'bg-statusGreen',
+  paused: 'bg-brandYellow',
+  blocked: 'bg-statusRed',
+  pending_approval: 'bg-purple-500',
+  done: 'bg-slate-400',
+  cancelled: 'bg-slate-400',
+};
+
+export const STATUS_TEXT = {
+  pending: 'text-slate-500',
+  scheduled: 'text-statusBlue',
+  in_progress: 'text-statusGreen',
+  paused: 'text-brandYellow',
+  blocked: 'text-statusRed',
+  pending_approval: 'text-purple-500',
+  done: 'text-slate-500',
+  cancelled: 'text-slate-500',
+};
+
+export const STATUS_INK = {
+  pending: 'text-slate-300',
+  scheduled: 'text-statusBlue',
+  in_progress: 'text-statusGreen',
+  paused: 'text-brandYellow',
+  blocked: 'text-statusRed',
+  pending_approval: 'text-purple-500',
+  done: 'text-slate-400',
+  cancelled: 'text-slate-400',
 };
 
 export default function StatusPill({ tone, label, status, pulse = false }) {

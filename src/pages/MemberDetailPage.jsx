@@ -10,6 +10,7 @@ import { useEmployeeEvaluations } from '../hooks/useEmployeeEvaluations';
 import { useEmployeeDocuments } from '../hooks/useEmployeeDocuments';
 import { he } from '../locales/he';
 import Card from '../components/ui/Card';
+import Icon from '../components/ui/Icon';
 import Tabs from '../components/ui/Tabs';
 import MemberHeaderCard from '../components/team/MemberHeaderCard';
 import MemberDetailsTab from '../components/team/MemberDetailsTab';
@@ -93,7 +94,7 @@ export default function MemberDetailPage() {
   return (
     <>
       <Link to="/team" className="text-base font-medium text-brand hover:underline">
-        ‹ {t.back}
+        <Icon name="back" size="sm" className="inline-block" /> {t.back}
       </Link>
 
       <Card className="mt-2 overflow-hidden">

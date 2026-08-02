@@ -3,6 +3,7 @@ import { he } from '../locales/he';
 import { usePlatformTickets } from '../hooks/useSupportTickets';
 import PageHeader from '../components/ui/PageHeader';
 import Button from '../components/shared/Button';
+import Card from '../components/ui/Card';
 
 const t = he.platform.tickets;
 
@@ -97,7 +98,7 @@ export default function PlatformTicketsPage() {
 
 function TicketTable({ tickets, onSetStatus }) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
+    <Card className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-line bg-slate-50 text-right text-xs font-bold text-slate-500">
@@ -142,15 +143,13 @@ function TicketTable({ tickets, onSetStatus }) {
           ))}
         </tbody>
       </table>
-    </div>
+    </Card>
   );
 }
 
 function TicketCard({ ticket: tk, onSetStatus }) {
   return (
-    <div
-      className={`rounded-2xl border border-line bg-white p-4 shadow-sm ${tk.status === 'done' ? 'opacity-60' : ''}`}
-    >
+    <Card className={`p-4 ${tk.status === 'done' ? 'opacity-60' : ''}`}>
       <div className="mb-2 flex items-center justify-between gap-2">
         <span className="text-xs font-bold text-slate-400">{tk.org_name}</span>
         <StatusBadge status={tk.status} />
@@ -162,7 +161,7 @@ function TicketCard({ ticket: tk, onSetStatus }) {
         <span className="tabular-nums">{fmtDate(tk.created_at)} {fmtTime(tk.created_at)}</span>
       </div>
       <ToggleButton ticket={tk} onSetStatus={onSetStatus} />
-    </div>
+    </Card>
   );
 }
 

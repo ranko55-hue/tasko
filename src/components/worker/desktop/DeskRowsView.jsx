@@ -2,6 +2,7 @@ import { he } from '../../../locales/he';
 import { isLocked } from '../../../lib/taskFlow';
 import { formatDuration } from '../../../lib/time';
 import { elapsedSeconds } from '../../../lib/taskFlow';
+import Button from '../../shared/Button';
 import { StatusDot, StatusName, TaskNumber, Panel, NUM } from './DeskBits';
 
 const w = he.worker;
@@ -64,14 +65,9 @@ function OpenRow({ task, onOpen, onAction, busy }) {
 
       <div className="w-32 shrink-0 text-end">
         {act && (
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => onAction(task, act.key)}
-            className="inline-flex min-h-touch items-center justify-center rounded-xl bg-brand px-3 text-sm font-bold text-white hover:bg-brand/90 disabled:opacity-60"
-          >
+          <Button size="sm" disabled={busy} fullWidth={false} onClick={() => onAction(task, act.key)}>
             {act.label}
-          </button>
+          </Button>
         )}
       </div>
     </div>

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
+import Icon from '../ui/Icon';
 
 const cf = he.customFields;
 
@@ -34,9 +36,9 @@ export default function OptionsEditor({ options, onChange }) {
               <button
                 type="button"
                 onClick={() => remove(i)}
-                className="text-xl leading-none text-slate-400 hover:text-red-500"
+                className="text-slate-400 hover:text-red-500"
               >
-                ×
+                <Icon name="close" size="sm" />
               </button>
             </li>
           ))}
@@ -54,14 +56,9 @@ export default function OptionsEditor({ options, onChange }) {
                      text-slate-900 focus:border-brand focus:outline-none focus:ring-4
                      focus:ring-brand/20"
         />
-        <button
-          type="button"
-          onClick={add}
-          className="min-h-touch rounded-xl bg-slate-100 px-4 font-bold text-slate-700
-                     hover:bg-slate-200"
-        >
+        <Button variant="secondary" size="sm" fullWidth={false} onClick={add}>
           {cf.options.add}
-        </button>
+        </Button>
       </div>
     </div>
   );

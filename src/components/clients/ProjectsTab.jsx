@@ -146,13 +146,9 @@ export default function ProjectsTab({
                 {displayOpen.map(row)}
               </div>
               {hasMoreOpen && (
-                <button
-                  type="button"
-                  onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}
-                  className="mt-4 min-h-[44px] w-full rounded-lg border-2 border-line px-3 font-bold text-slate-700 hover:bg-slate-50"
-                >
+                <Button variant="secondary" className="mt-4" onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}>
                   טען עוד…
-                </button>
+                </Button>
               )}
             </>
           )}
@@ -170,13 +166,9 @@ export default function ProjectsTab({
                 {displayClosed.map(row)}
               </div>
               {hasMoreClosed && (
-                <button
-                  type="button"
-                  onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}
-                  className="mt-4 min-h-[44px] w-full rounded-lg border-2 border-line px-3 font-bold text-slate-700 hover:bg-slate-50"
-                >
+                <Button variant="secondary" className="mt-4" onClick={() => setLoadedCount((c) => c + LOAD_SIZE)}>
                   טען עוד…
-                </button>
+                </Button>
               )}
             </>
           )}

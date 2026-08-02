@@ -14,6 +14,7 @@ import Modal from '../components/shared/Modal';
 import PageHeader from '../components/ui/PageHeader';
 import RefNumber from '../components/shared/RefNumber';
 import Card from '../components/ui/Card';
+import Icon from '../components/ui/Icon';
 import Tabs from '../components/ui/Tabs';
 import ProjectGeneralTab from '../components/projects/ProjectGeneralTab';
 import ProjectFilesTab from '../components/projects/ProjectFilesTab';
@@ -69,7 +70,7 @@ export default function ProjectDetailPage() {
           to={`/clients/${client.id}`}
           className="text-base font-medium text-brand hover:underline"
         >
-          ‹ {client.name}
+          <Icon name="back" size="sm" className="inline-block" /> {client.name}
         </Link>
       )}
 

@@ -3,6 +3,7 @@ import { useOrg } from '../../lib/orgContext';
 import { isManager } from '../../lib/roles';
 import { supabase } from '../../lib/supabase';
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
 import Modal from '../shared/Modal';
 import ClientForm from '../clients/ClientForm';
 import NewTaskModal from './NewTaskModal';
@@ -35,13 +36,11 @@ export default function QuickActions({ vertical = false, onDone }) {
     onDone?.();
   }
 
-  const btn = 'min-h-[44px] rounded-lg px-3 text-sm font-bold whitespace-nowrap';
-
   return (
     <div className={vertical ? 'flex flex-col gap-2' : 'flex items-center gap-2'}>
-      <button type="button" onClick={() => setModal('task')} className={`${btn} bg-brandYellow text-navy hover:bg-brandYellow/90`}>
+      <Button variant="yellow" size="sm" fullWidth={false} onClick={() => setModal('task')}>
         {he.dashboard.newTask}
-      </button>
+      </Button>
 
       {modal === 'client' && (
         <Modal title={he.clients.addTitle} onClose={() => setModal(null)}>

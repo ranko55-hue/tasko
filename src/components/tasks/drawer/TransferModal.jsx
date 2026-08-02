@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../../locales/he';
 import { transferTask } from '../../../lib/taskFlow';
+import Button from '../../shared/Button';
 import Modal from '../../shared/Modal';
 import Textarea from '../../shared/Textarea';
 
@@ -69,21 +70,12 @@ export default function TransferModal({ task, actorId, members, onClose, onDone 
         )}
 
         <div className="flex gap-3">
-          <button
-            type="button"
-            disabled={busy}
-            onClick={send}
-            className="min-h-touch flex-1 rounded-xl bg-brand px-4 font-bold text-white hover:bg-brand-dark disabled:opacity-60"
-          >
+          <Button disabled={busy} fullWidth={false} className="flex-1" onClick={send}>
             {busy ? he.common.loading : d.transferBtn}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="min-h-touch rounded-xl border-2 border-line px-5 font-bold text-slate-700"
-          >
+          </Button>
+          <Button variant="secondary" fullWidth={false} onClick={onClose}>
             {he.common.cancel}
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

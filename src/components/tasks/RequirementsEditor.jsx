@@ -1,4 +1,6 @@
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
+import Icon from '../ui/Icon';
 
 // עורך דרישות דינמי — מוסיפים/מסירים שורות. הערך: מערך מחרוזות.
 export default function RequirementsEditor({ items, onChange }) {
@@ -35,21 +37,17 @@ export default function RequirementsEditor({ items, onChange }) {
               type="button"
               onClick={() => remove(i)}
               aria-label="הסרה"
-              className="min-h-touch shrink-0 rounded-xl border border-slate-300 px-4 text-2xl leading-none text-slate-400 hover:text-red-600"
+              className="min-h-touch shrink-0 rounded-xl border border-slate-300 px-4 text-slate-400 hover:text-red-600"
             >
-              ×
+              <Icon name="close" size="md" />
             </button>
           </div>
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={add}
-        className="mt-2 min-h-touch rounded-xl px-2 text-base font-bold text-brand hover:underline"
-      >
+      <Button variant="link" fullWidth={false} className="mt-2" onClick={add}>
         + {he.tasks.addRequirement}
-      </button>
+      </Button>
     </div>
   );
 }

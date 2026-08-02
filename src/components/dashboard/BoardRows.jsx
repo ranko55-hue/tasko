@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import { lateness, sortByUrgency } from '../../lib/lateness';
-import { STATUS_DOT } from '../../lib/taskMeta';
+import { STATUS_DOT } from '../ui/StatusPill';
 import { dateRangeLabel, isMultiDay } from '../../lib/taskDates';
 import Icon from '../ui/Icon';
 

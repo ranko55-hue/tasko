@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
+import Button from '../shared/Button';
 import Field from '../ui/Field';
 import Select from '../shared/Select';
 
@@ -64,13 +65,9 @@ export default function TaskTargetPicker({
           </Select>
 
           {!adding && (
-            <button
-              type="button"
-              onClick={() => setAdding(true)}
-              className="min-h-touch w-full rounded-lg border-2 border-dashed border-line px-3 text-sm font-bold text-brand hover:bg-white"
-            >
+            <Button variant="dashed" size="sm" onClick={() => setAdding(true)}>
               {t.quickClient}
-            </button>
+            </Button>
           )}
 
           {adding && (
@@ -89,24 +86,12 @@ export default function TaskTargetPicker({
                 </p>
               )}
               <div className="flex gap-2">
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={createClient}
-                  className="min-h-touch flex-1 rounded-lg bg-brand px-3 text-sm font-bold text-white disabled:opacity-60"
-                >
+                <Button size="sm" disabled={busy} fullWidth={false} className="flex-1" onClick={createClient}>
                   {busy ? he.common.loading : t.quickClientCreate}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAdding(false);
-                    setError('');
-                  }}
-                  className="min-h-touch rounded-lg border border-line px-3 text-sm font-bold text-slate-700"
-                >
+                </Button>
+                <Button variant="secondary" size="sm" fullWidth={false} onClick={() => { setAdding(false); setError(''); }}>
                   {he.common.cancel}
-                </button>
+                </Button>
               </div>
             </div>
           )}
