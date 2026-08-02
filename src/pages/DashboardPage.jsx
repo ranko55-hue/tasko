@@ -84,6 +84,7 @@ export default function DashboardPage() {
           onTogglePinned={handleTogglePinned}
           pinnedTaskCounts={pinnedTaskCounts}
           live={connection === 'live'}
+          onOpenTask={setSelectedTaskId}
         />
       )}
 
@@ -141,6 +142,7 @@ export default function DashboardPage() {
         onClose={() => setSelectedTaskId(null)}
         orgId={member.org_id}
         isManager={manager}
+        onActionDone={refetch}
       />
     </>
   );
