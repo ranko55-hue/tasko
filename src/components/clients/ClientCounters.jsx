@@ -5,7 +5,7 @@ const t = he.clients.table;
 // צבע למונה העיכוב — נצבע רק כשהוא גדול מ-0, ברוח צ'יפי התדריך.
 // 1-2 = כתום, 3+ = אדום. אפס נשאר אפור ולא מושך תשומת לב.
 export function delayTone(n) {
-  if (!n) return 'text-slate-400';
+  if (!n) return 'text-grayLight';
   return n >= 3 ? 'text-statusRed' : 'text-amber-600';
 }
 
@@ -18,7 +18,7 @@ export default function ClientCounters({ row, layout = 'row' }) {
 
   if (layout === 'card') {
     return (
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-grayDark">
         <span>
           {t.projects}: <span className={NUM}>{row.active_projects ?? 0}</span>
         </span>
@@ -44,8 +44,8 @@ export function WaitingDelayedCell({ row }) {
   const delayed = row.delayed_tasks ?? 0;
   return (
     <span className="whitespace-nowrap">
-      <span className={`${NUM} text-slate-700`}>{waiting}</span>
-      <span className="mx-1 text-slate-300">/</span>
+      <span className={`${NUM} text-inkSoft`}>{waiting}</span>
+      <span className="mx-1 text-lineDark">/</span>
       <span className={`${NUM} ${delayTone(delayed)}`}>{delayed}</span>
     </span>
   );

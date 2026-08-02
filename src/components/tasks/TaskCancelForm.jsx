@@ -28,13 +28,13 @@ export default function TaskCancelForm({ onConfirm, onBack }) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4 rounded-xl bg-red-50 p-4">
-      <p className="text-sm text-slate-600">{t.cancelHint}</p>
+    <form onSubmit={submit} className="space-y-4 rounded-xl bg-urgentSoft p-4">
+      <p className="text-sm text-grayDark">{t.cancelHint}</p>
 
       <Textarea label={t.cancelReason} value={reason} onChange={setReason} />
 
       {error && (
-        <p className="rounded-lg bg-white px-3 py-2 text-sm font-medium text-red-700">
+        <p className="rounded-lg bg-white px-3 py-2 text-sm font-medium text-urgentInk">
           {error}
         </p>
       )}

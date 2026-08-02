@@ -31,20 +31,20 @@ export default function TimeBox({ task }) {
 
   return (
     <div
-      className={`mx-4 mb-4 rounded-xl border p-3 sm:mx-5 ${
+      className={`mx-4 mb-4 rounded-xl border p-3 sm:mx-6 ${
         over ? 'border-overrunLine bg-overrunSoft' : 'border-line bg-white'
       }`}
     >
       <div className="flex items-baseline justify-between gap-3">
-        <span className={`text-sm font-bold ${over ? 'text-urgentInk' : 'text-slate-700'}`}>
+        <span className={`text-sm font-bold ${over ? 'text-urgentInk' : 'text-inkSoft'}`}>
           {title}
         </span>
-        <span className="text-xs text-slate-500" style={NUM}>
+        <span className="text-xs text-grayMid" style={NUM}>
           {used} / {est} {he.time.minutes}
         </span>
       </div>
 
-      <div className="relative mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
+      <div className="relative mt-2 h-2 overflow-hidden rounded-full bg-line">
         <div
           className="h-full rounded-full transition-all"
           style={{
@@ -57,13 +57,13 @@ export default function TimeBox({ task }) {
         {markerAt !== null && markerAt < 100 && (
           // סמן דק בנקודה שבה נגמר המוקצב
           <span
-            className="absolute top-0 h-full w-0.5 bg-white/90"
+            className="absolute top-0 h-full w-1 bg-white/90"
             style={{ insetInlineStart: `${markerAt}%` }}
           />
         )}
       </div>
 
-      <div className="mt-1.5 text-[11px] text-slate-500">{d.usedOfAllocated}</div>
+      <div className="mt-2 text-xs text-grayMid">{d.usedOfAllocated}</div>
     </div>
   );
 }

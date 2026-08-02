@@ -7,9 +7,9 @@ const g = he.clientDetail.general;
 
 function Tile({ label, value }) {
   return (
-    <div className="rounded-xl bg-slate-50 p-3">
-      <div className="text-xs text-slate-400">{label}</div>
-      <div className="mt-0.5 font-bold text-slate-900">{value || he.common.none}</div>
+    <div className="rounded-xl bg-surface p-3">
+      <div className="text-xs text-grayLight">{label}</div>
+      <div className="mt-1 font-bold text-navy">{value || he.common.none}</div>
     </div>
   );
 }
@@ -41,15 +41,15 @@ export default function GeneralTab({ client }) {
       </div>
 
       {client?.created_at && (
-        <p className="px-1 text-sm text-slate-400">
+        <p className="px-1 text-sm text-grayLight">
           {g.addedOn.replace('{date}', formatDate(client.created_at))}
         </p>
       )}
 
-      <div className="rounded-xl bg-slate-50 p-3">
-        <div className="text-xs text-slate-400">{g.serviceLink}</div>
+      <div className="rounded-xl bg-surface p-3">
+        <div className="text-xs text-grayLight">{g.serviceLink}</div>
         <div className="mt-1 flex items-center gap-2">
-          <code dir="ltr" className="min-w-0 flex-1 truncate text-sm text-slate-700">
+          <code dir="ltr" className="min-w-0 flex-1 truncate text-sm text-inkSoft">
             {link}
           </code>
           <Button variant="dark" size="sm" fullWidth={false} className="shrink-0" onClick={copy}>

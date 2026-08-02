@@ -28,11 +28,11 @@ function stamp(iso) {
 // ציר זמן — קו מחבר, נקודות עם טבעת, וממוזערת אינליין לאירועי מדיה.
 export default function TimelineList({ events, onPhoto }) {
   if (!events.length) {
-    return <p className="px-4 pb-4 text-sm text-slate-400 sm:px-5">{m.timelineEmpty}</p>;
+    return <p className="px-4 pb-4 text-sm text-grayLight sm:px-6">{m.timelineEmpty}</p>;
   }
 
   return (
-    <ol className="relative px-4 pb-2 sm:px-5">
+    <ol className="relative px-4 pb-2 sm:px-6">
       {/* הקו המחבר — מאחורי הנקודות */}
       <span
         className="absolute top-2 bottom-6 w-px bg-line"
@@ -47,17 +47,17 @@ export default function TimelineList({ events, onPhoto }) {
         const actor = ev.actor?.full_name;
 
         return (
-          <li key={ev.id} className="relative flex gap-3 py-2.5">
+          <li key={ev.id} className="relative flex gap-3 py-3">
             <span
-              className={`relative z-10 mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ring-4 ${dotTone(ev.type)}`}
+              className={`relative z-10 mt-2 h-3 w-3 shrink-0 rounded-full ring-4 ${dotTone(ev.type)}`}
             />
 
             <div className="min-w-0 flex-1">
-              <div className="text-sm font-bold text-slate-800">{label}</div>
+              <div className="text-sm font-bold text-navy2">{label}</div>
 
               {text && (
                 <p
-                  className={`mt-0.5 text-sm text-slate-700 ${
+                  className={`mt-1 text-sm text-inkSoft ${
                     QUOTED.includes(ev.type) ? 'italic' : ''
                   }`}
                 >
@@ -66,18 +66,18 @@ export default function TimelineList({ events, onPhoto }) {
               )}
 
               {edits.length > 0 && (
-                <ul className="mt-0.5 space-y-0.5">
+                <ul className="mt-1 space-y-1">
                   {edits.map((line, i) => (
-                    <li key={i} className="text-sm text-slate-700">
+                    <li key={i} className="text-sm text-inkSoft">
                       {line}
                     </li>
                   ))}
                 </ul>
               )}
 
-              <div className="mt-1 text-xs text-slate-400" style={NUM}>
+              <div className="mt-1 text-xs text-grayLight" style={NUM}>
                 {stamp(ev.created_at)}
-                {actor && <span className="mx-1 text-slate-300">·</span>}
+                {actor && <span className="mx-1 text-lineDark">·</span>}
                 {actor}
               </div>
             </div>

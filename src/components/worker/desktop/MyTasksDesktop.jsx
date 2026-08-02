@@ -44,7 +44,7 @@ export default function MyTasksDesktop({ tasks, onUpdated }) {
   return (
     <>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-black text-slate-900">{he.worker.title}</h1>
+        <h1 className="text-xl font-black text-navy">{he.worker.title}</h1>
         <ViewToggle options={MY_TASKS_VIEW_OPTIONS} view={view} onChange={choose} />
       </div>
 

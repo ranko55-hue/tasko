@@ -22,13 +22,13 @@ export default function NavLinks({ dark = false, vertical = false, onNavigate })
       return `${base} ${
         isActive
           ? 'border-b-brandYellow text-white'
-          : 'text-slate-300 hover:text-white border-b-transparent'
+          : 'text-lineDark hover:text-white border-b-transparent'
       }`;
     }
     return `${base} ${
       isActive
         ? 'border-b-brandYellow text-brand'
-        : 'text-slate-600 hover:text-slate-900 border-b-transparent'
+        : 'text-grayDark hover:text-navy border-b-transparent'
     }`;
   };
 

@@ -9,11 +9,11 @@ const t = he.team.detail;
 function MetricCard({ label, value, sub }) {
   return (
     <div className="rounded-xl border border-line bg-white p-4">
-      <p className="text-xs font-medium text-slate-500">{label}</p>
-      <p className="mt-1 text-2xl font-black text-slate-900" style={{ fontVariantNumeric: 'tabular-nums' }}>
+      <p className="text-xs font-medium text-grayMid">{label}</p>
+      <p className="mt-1 text-2xl font-black text-navy" style={{ fontVariantNumeric: 'tabular-nums' }}>
         {value}
       </p>
-      {sub && <p className="mt-0.5 text-xs text-slate-400">{sub}</p>}
+      {sub && <p className="mt-1 text-xs text-grayLight">{sub}</p>}
     </div>
   );
 }
@@ -26,7 +26,7 @@ function Stars({ rating, onChange }) {
           key={n}
           type="button"
           onClick={() => onChange?.(n)}
-          className={`h-8 w-8 text-lg ${n <= rating ? 'text-brandYellow' : 'text-slate-300'}`}
+          className={`h-8 w-8 text-lg ${n <= rating ? 'text-brandYellow' : 'text-lineDark'}`}
         >
           {n <= rating ? '★' : '☆'}
         </button>
@@ -69,7 +69,7 @@ export default function MemberPerformanceTab({
     setBusy(false);
   }
 
-  if (loading) return <p className="py-8 text-center text-slate-500">{he.common.loading}</p>;
+  if (loading) return <p className="py-8 text-center text-grayMid">{he.common.loading}</p>;
 
   return (
     <div className="space-y-6">
@@ -87,7 +87,7 @@ export default function MemberPerformanceTab({
       {/* הערכות */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-base font-bold text-slate-900">{t.evaluations}</h3>
+          <h3 className="text-base font-bold text-navy">{t.evaluations}</h3>
           {canWrite && (
             <Button variant="ghost" size="sm" fullWidth={false} onClick={() => setAddOpen(!addOpen)}>
               {t.addEvaluation}
@@ -96,13 +96,13 @@ export default function MemberPerformanceTab({
         </div>
 
         {addOpen && canWrite && (
-          <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-line bg-slate-50 p-4">
+          <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-line bg-surface p-4">
             <div>
-              <p className="mb-1 text-sm font-medium text-slate-700">{t.evalRating}</p>
+              <p className="mb-1 text-sm font-medium text-inkSoft">{t.evalRating}</p>
               <Stars rating={rating} onChange={setRating} />
             </div>
             <Field as="textarea" placeholder={t.evalPlaceholder} value={body} onChange={setBody} />
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-danger">{error}</p>}
             <div className="flex gap-3">
               <div className="w-32">
                 <Button type="submit" disabled={busy || !body.trim()}>
@@ -119,19 +119,19 @@ export default function MemberPerformanceTab({
         )}
 
         {evaluations.length === 0 ? (
-          <p className="py-6 text-center text-sm text-slate-400">{t.evalEmpty}</p>
+          <p className="py-6 text-center text-sm text-grayLight">{t.evalEmpty}</p>
         ) : (
           <div className="space-y-3">
             {evaluations.map((ev) => (
               <div key={ev.id} className="rounded-xl border border-line bg-white p-4">
                 <div className="flex items-center justify-between">
                   <Stars rating={ev.rating} />
-                  <span className="text-xs text-slate-400" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  <span className="text-xs text-grayLight" style={{ fontVariantNumeric: 'tabular-nums' }}>
                     {fmtDate(ev.created_at)}
                   </span>
                 </div>
-                <p className="mt-2 text-sm text-slate-700">{ev.body}</p>
-                <p className="mt-1 text-xs text-slate-400">{ev.author?.full_name}</p>
+                <p className="mt-2 text-sm text-inkSoft">{ev.body}</p>
+                <p className="mt-1 text-xs text-grayLight">{ev.author?.full_name}</p>
               </div>
             ))}
           </div>

@@ -135,7 +135,7 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
   const showManager = f.role !== 'admin';
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <Field label={t.fullName} value={f.full_name} onChange={set('full_name')} />
 
       <div className="grid grid-cols-2 gap-3">
@@ -151,7 +151,7 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
 
       {showManager && canEdit && (
         <div>
-          <p className="mb-1 text-sm font-bold text-slate-700">{t.manager}</p>
+          <p className="mb-1 text-sm font-bold text-inkSoft">{t.manager}</p>
           <ManagerPicker
             managers={managers.filter((m) => m.id !== member.id)}
             value={f.manager_id}
@@ -161,12 +161,12 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
         </div>
       )}
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-grayMid">
         {t.joined}: {fmtDate(member.created_at)}
       </p>
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">{error}</p>
+        <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">{error}</p>
       )}
 
       {dirty && canEdit && (
@@ -180,8 +180,8 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
       {/* כניסה למערכת */}
       {admin && (
         <div className="border-t border-line pt-4">
-          <p className="mb-1 text-sm font-bold text-slate-700">{t.login}</p>
-          <p className="mb-3 text-sm text-slate-500" dir="ltr">{member.email || '—'}</p>
+          <p className="mb-1 text-sm font-bold text-inkSoft">{t.login}</p>
+          <p className="mb-3 text-sm text-grayMid" dir="ltr">{member.email || '—'}</p>
           <div className="w-48">
             <Button variant="secondary" onClick={() => setResetModal(true)}>{t.resetPassword}</Button>
           </div>
@@ -210,7 +210,7 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
       {/* שינוי תפקיד — אישור */}
       {roleConfirm && (
         <Modal title={t.roleChangeTitle} onClose={() => setRoleConfirm(null)}>
-          <p className="mb-4 text-sm text-slate-700">{t.roleChangeConfirm}</p>
+          <p className="mb-4 text-sm text-inkSoft">{t.roleChangeConfirm}</p>
           <div className="flex gap-3">
             <Button onClick={confirmRole}>{he.common.save}</Button>
             <Button variant="ghost" onClick={() => setRoleConfirm(null)}>{he.common.cancel}</Button>
@@ -224,7 +224,7 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
           {resetResult ? (
             <div className="space-y-4">
               <p className="rounded-xl bg-green-50 p-4 text-sm font-bold text-green-800">{t.resetSuccess}</p>
-              <div className="flex items-center justify-between rounded-xl border border-line bg-slate-50 px-4 py-3">
+              <div className="flex items-center justify-between rounded-xl border border-line bg-surface px-4 py-3">
                 <span className="text-sm font-bold" dir="ltr">{resetResult}</span>
                 <Button variant="ghost" size="sm" fullWidth={false} onClick={() => { navigator.clipboard.writeText(resetResult); }}>
                   {he.team.credentials.copy}
@@ -236,7 +236,7 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
             </div>
           ) : (
             <form onSubmit={resetPassword} className="space-y-4">
-              <p className="text-sm text-slate-500">{t.resetPasswordHint}</p>
+              <p className="text-sm text-grayMid">{t.resetPasswordHint}</p>
               <Field label={t.newPassword} type="text" value={newPassword} onChange={setNewPassword} autoComplete="off" />
               <div className="flex gap-3">
                 <Button type="submit" disabled={resetBusy || newPassword.length < 6}>
@@ -257,7 +257,7 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
           title={member.is_active ? t.deactivate : t.reactivate}
           onClose={() => setToggleConfirm(false)}
         >
-          <p className="mb-4 text-sm text-slate-700">
+          <p className="mb-4 text-sm text-inkSoft">
             {member.is_active ? t.deactivateConfirm : t.reactivateConfirm}
           </p>
           <div className="flex gap-3">

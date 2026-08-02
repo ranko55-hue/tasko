@@ -2,7 +2,7 @@ import { he } from '../../../locales/he';
 import { dateRangeLabel, dueTimeLabel } from '../../../lib/taskDates';
 
 const d = he.tasks.drawer;
-const BASE = 'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold';
+const BASE = 'inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold';
 const NUM = { fontVariantNumeric: 'tabular-nums' };
 
 // שורת צ'יפים — מציגה רק מה שקיים בפועל. צ'יפ ריק לא מוצג.
@@ -25,7 +25,7 @@ export default function TaskChips({ task }) {
   if (task?.est_minutes) {
     chips.push({
       key: 'est',
-      cls: 'bg-slate-100 text-slate-600',
+      cls: 'bg-appBg text-grayDark',
       label: `${d.chipAllocated} ${task.est_minutes} ${he.time.minutes}`,
       num: true,
     });
@@ -42,7 +42,7 @@ export default function TaskChips({ task }) {
   if (!chips.length) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 px-4 py-3 sm:px-5">
+    <div className="flex flex-wrap gap-2 px-4 py-3 sm:px-6">
       {chips.map((c) => (
         <span key={c.key} className={`${BASE} ${c.cls}`} style={c.num ? NUM : undefined}>
           {c.label}

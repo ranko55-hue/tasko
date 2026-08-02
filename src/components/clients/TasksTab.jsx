@@ -20,21 +20,21 @@ function TaskRow({ task, assigneeName, onOpen }) {
     <button
       type="button"
       onClick={() => onOpen(task)}
-      className="flex w-full items-center gap-3 rounded-xl border border-line bg-white p-3 text-right transition-colors hover:bg-slate-50"
+      className="flex w-full items-center gap-3 rounded-xl border border-line bg-white p-3 text-right transition-colors hover:bg-surface"
     >
-      <span className="shrink-0 text-slate-400">
+      <span className="shrink-0 text-grayLight">
         <Icon name="task" />
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="truncate font-bold text-slate-900">{task.title}</span>
+          <span className="truncate font-bold text-navy">{task.title}</span>
           {urgent && (
-            <span className="shrink-0 rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-700">
+            <span className="shrink-0 rounded bg-dangerLight px-2 py-1 text-xs font-bold text-urgentInk">
               {he.tasks.priorityOpt.urgent}
             </span>
           )}
         </div>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-500">
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-grayMid">
           <span>{assigneeName}</span>
           {task.project?.name && <span>{task.project.name}</span>}
           {fmtDate(task.ends_on) && <span>{he.tasks.due}: {fmtDate(task.ends_on)}</span>}
@@ -93,7 +93,7 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
           className={`flex-1 rounded-lg px-3 py-2 font-bold transition-colors ${
             filter === 'open'
               ? 'bg-brand text-white'
-              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              : 'bg-appBg text-inkSoft hover:bg-line'
           }`}
         >
           {t.open.replace('{n}', allOpen.length)}
@@ -104,7 +104,7 @@ export default function TasksTab({ tasks, members, onOpenTask, onNewTask }) {
           className={`flex-1 rounded-lg px-3 py-2 font-bold transition-colors ${
             filter === 'closed'
               ? 'bg-brand text-white'
-              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              : 'bg-appBg text-inkSoft hover:bg-line'
           }`}
         >
           {t.closed.replace('{n}', allClosed.length)}

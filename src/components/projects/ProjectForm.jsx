@@ -78,7 +78,7 @@ export default function ProjectForm({ onSubmit, onCancel, members = [] }) {
       </Select>
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+        <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
           {error}
         </p>
       )}

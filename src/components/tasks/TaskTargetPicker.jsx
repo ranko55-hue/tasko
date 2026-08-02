@@ -49,7 +49,7 @@ export default function TaskTargetPicker({
   }
 
   return (
-    <div className="space-y-4 rounded-xl bg-slate-50 p-3">
+    <div className="space-y-4 rounded-xl bg-surface p-3">
       {/* לקוח — חובה */}
       {lockedClient ? (
         <LockedRow label={t.client} value={selectedClient?.name} />
@@ -81,7 +81,7 @@ export default function TaskTargetPicker({
                 onChange={setPhone}
               />
               {error && (
-                <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+                <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
                   {error}
                 </p>
               )}
@@ -118,7 +118,7 @@ export default function TaskTargetPicker({
       )}
 
       {!lockedProject && clientId && clientProjects.length === 0 && (
-        <p className="text-sm text-slate-500">{t.noProjectsForClient}</p>
+        <p className="text-sm text-grayMid">{t.noProjectsForClient}</p>
       )}
     </div>
   );
@@ -128,8 +128,8 @@ export default function TaskTargetPicker({
 function LockedRow({ label, value }) {
   return (
     <div>
-      <div className="mb-1 text-sm font-bold text-slate-600">{label}</div>
-      <div className="rounded-lg border border-line bg-white px-3 py-2.5 font-medium text-slate-900">
+      <div className="mb-1 text-sm font-bold text-grayDark">{label}</div>
+      <div className="rounded-lg border border-line bg-white px-3 py-3 font-medium text-navy">
         {value ?? he.common.none}
       </div>
     </div>

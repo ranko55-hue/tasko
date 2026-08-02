@@ -16,7 +16,7 @@ export default function MemberHeaderCard({ member, stats, managerName }) {
       <div className="flex items-center gap-4">
         <div
           className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-xl font-black ${
-            active ? 'bg-navy text-brandYellow' : 'bg-slate-300 text-white'
+            active ? 'bg-navy text-brandYellow' : 'bg-lineDark text-white'
           }`}
         >
           {letter}
@@ -24,12 +24,12 @@ export default function MemberHeaderCard({ member, stats, managerName }) {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h2 className="truncate text-xl font-black text-slate-900">{member.full_name}</h2>
+            <h2 className="truncate text-xl font-black text-navy">{member.full_name}</h2>
             <span
-              className={`inline-block h-2.5 w-2.5 rounded-full ${active ? 'bg-statusGreen' : 'bg-slate-300'}`}
+              className={`inline-block h-3 w-3 rounded-full ${active ? 'bg-statusGreen' : 'bg-lineDark'}`}
             />
           </div>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-grayMid">
             {he.roles[member.role] ?? member.role}
             {managerName ? ` · ${managerName}` : ''}
           </p>
@@ -37,7 +37,7 @@ export default function MemberHeaderCard({ member, stats, managerName }) {
       </div>
 
       {stats && (
-        <p className="mt-3 text-sm text-slate-500" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        <p className="mt-3 text-sm text-grayMid" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {t.taskCount.replace('{n}', stats.total)}
           {' · '}
           {t.onTime.replace('{pct}', stats.onTimePct)}

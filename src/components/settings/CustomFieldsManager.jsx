@@ -12,8 +12,8 @@ function FieldRow({ field, onEdit, onDelete }) {
   return (
     <div className="flex items-center justify-between rounded-xl border border-line p-4">
       <div className="min-w-0">
-        <span className="block font-bold text-slate-900">{field.label}</span>
-        <span className="mt-0.5 block text-sm text-slate-500">
+        <span className="block font-bold text-navy">{field.label}</span>
+        <span className="mt-1 block text-sm text-grayMid">
           {cf.entities[field.entity]} · {cf.types[field.field_type]}
           {field.is_required ? ` · ${he.common.required}` : ''}
           {field.min_role !== 'everyone' ? ` · ${cf.permissions[field.min_role]}` : ''}
@@ -31,7 +31,7 @@ function FieldRow({ field, onEdit, onDelete }) {
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="min-h-touch rounded-lg px-3 text-slate-400 hover:text-red-500"
+            className="min-h-touch rounded-lg px-3 text-grayLight hover:text-statusRed"
           >
             <Icon name="close" size="sm" />
           </button>
@@ -56,15 +56,15 @@ export default function CustomFieldsManager({ orgId }) {
 
   return (
     <section>
-      <h2 className="mb-1 text-sm font-black text-slate-500">{cf.sectionTitle}</h2>
-      <p className="mb-3 text-sm text-slate-500">{cf.sectionHint}</p>
+      <h2 className="mb-1 text-sm font-black text-grayMid">{cf.sectionTitle}</h2>
+      <p className="mb-3 text-sm text-grayMid">{cf.sectionHint}</p>
 
       {loading ? (
-        <p className="py-4 text-center text-slate-500">{he.common.loading}</p>
+        <p className="py-4 text-center text-grayMid">{he.common.loading}</p>
       ) : (
         <div className="space-y-3">
           {fields.length === 0 && (
-            <p className="py-4 text-center text-sm text-slate-400">{cf.noFields}</p>
+            <p className="py-4 text-center text-sm text-grayLight">{cf.noFields}</p>
           )}
           {fields.map((f) => (
             <FieldRow

@@ -35,16 +35,16 @@ export default function TransferModal({ task, actorId, members, onClose, onDone 
   return (
     <Modal title={d.transferTitle} onClose={onClose}>
       <div className="space-y-4">
-        <p className="text-sm text-slate-500">{d.transferHint}</p>
+        <p className="text-sm text-grayMid">{d.transferHint}</p>
 
         <div>
-          <label className="mb-1 block text-sm font-bold text-slate-700">
+          <label className="mb-1 block text-sm font-bold text-inkSoft">
             {d.transferWorker}
           </label>
           <select
             value={targetId}
             onChange={(e) => setTargetId(e.target.value)}
-            className="min-h-touch w-full rounded-xl border border-line bg-white px-3 text-slate-900"
+            className="min-h-touch w-full rounded-xl border border-line bg-white px-3 text-navy"
           >
             <option value="">{he.common.none}</option>
             {workers.map((m) => (
@@ -64,7 +64,7 @@ export default function TransferModal({ task, actorId, members, onClose, onDone 
         />
 
         {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+          <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
             {error}
           </p>
         )}

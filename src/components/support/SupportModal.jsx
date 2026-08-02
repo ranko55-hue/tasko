@@ -32,7 +32,7 @@ export default function SupportModal({ onClose }) {
     return (
       <Modal title={t.title} onClose={onClose}>
         <p className="mb-2 text-lg font-bold text-green-700">{t.sent}</p>
-        <p className="mb-6 text-sm text-slate-500">{t.sentHint}</p>
+        <p className="mb-6 text-sm text-grayMid">{t.sentHint}</p>
         <Button type="button" onClick={onClose} className="w-full">
           {he.common.cancel}
         </Button>
@@ -42,7 +42,7 @@ export default function SupportModal({ onClose }) {
 
   return (
     <Modal title={t.title} onClose={onClose}>
-      <p className="mb-4 text-sm text-slate-500">{t.subtitle}</p>
+      <p className="mb-4 text-sm text-grayMid">{t.subtitle}</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <Field
           label={t.subject}
@@ -59,7 +59,7 @@ export default function SupportModal({ onClose }) {
         />
 
         {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+          <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
             {t.sendError}
           </p>
         )}

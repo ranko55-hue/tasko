@@ -9,14 +9,14 @@ export default function Row({ icon, title, subtitle, trailing, onClick }) {
       onClick={onClick}
       className={
         'flex min-h-touch w-full items-center gap-3 rounded-xl border border-line bg-white p-3 text-right ' +
-        (onClick ? 'transition-colors hover:bg-slate-50' : '')
+        (onClick ? 'transition-colors hover:bg-surface' : '')
       }
     >
       {icon && <span className="shrink-0 text-xl">{icon}</span>}
       <div className="min-w-0 flex-1">
-        <div className="truncate font-bold text-slate-900">{title}</div>
+        <div className="truncate font-bold text-navy">{title}</div>
         {subtitle && (
-          <div className="truncate text-sm text-slate-500">{subtitle}</div>
+          <div className="truncate text-sm text-grayMid">{subtitle}</div>
         )}
       </div>
       {trailing && <div className="shrink-0">{trailing}</div>}

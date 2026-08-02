@@ -62,12 +62,12 @@ export default function ClientDetailPage() {
     if (tab === 'general') return <GeneralTab client={client} />;
     if (d.error)
       return (
-        <p className="py-8 text-center text-red-600">
+        <p className="py-8 text-center text-danger">
           {he.clientDetail.loadError}
         </p>
       );
     if (d.loading)
-      return <p className="py-8 text-center text-slate-500">{he.common.loading}</p>;
+      return <p className="py-8 text-center text-grayMid">{he.common.loading}</p>;
     if (tab === 'tasks')
       return (
         <TasksTab

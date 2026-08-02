@@ -18,18 +18,18 @@ function Row({ ev, onPhoto }) {
   const edits = ev.type === 'edited' ? describeEdit(ev.payload) : [];
 
   return (
-    <li className="rounded-xl bg-slate-50 p-3">
-      <div className="flex items-center justify-between text-xs text-slate-400">
-        <span className="font-bold text-slate-600">{label}</span>
+    <li className="rounded-xl bg-surface p-3">
+      <div className="flex items-center justify-between text-xs text-grayLight">
+        <span className="font-bold text-grayDark">{label}</span>
         <span>{formatDateTime(ev.created_at)}</span>
       </div>
 
-      {text && <p className="mt-1 whitespace-pre-wrap text-slate-800">{text}</p>}
+      {text && <p className="mt-1 whitespace-pre-wrap text-navy2">{text}</p>}
 
       {edits.length > 0 && (
-        <ul className="mt-1 space-y-0.5">
+        <ul className="mt-1 space-y-1">
           {edits.map((line, i) => (
-            <li key={i} className="text-slate-800">
+            <li key={i} className="text-navy2">
               {line}
             </li>
           ))}
@@ -47,11 +47,11 @@ export default function TaskTimeline({ taskId }) {
   const [lightbox, setLightbox] = useState(null);
 
   if (loading)
-    return <p className="py-4 text-center text-slate-500">{he.common.loading}</p>;
+    return <p className="py-4 text-center text-grayMid">{he.common.loading}</p>;
   if (error)
-    return <p className="py-4 text-center text-red-600">{t.errors.timeline}</p>;
+    return <p className="py-4 text-center text-danger">{t.errors.timeline}</p>;
   if (!events.length)
-    return <p className="py-4 text-center text-slate-400">{t.timelineEmpty}</p>;
+    return <p className="py-4 text-center text-grayLight">{t.timelineEmpty}</p>;
 
   return (
     <>

@@ -31,7 +31,7 @@ export default function AppShell() {
               type="button"
               onClick={() => setDrawer(true)}
               aria-label={he.shell.menu}
-              className="min-h-touch rounded-lg px-2 text-slate-200 hover:bg-white/10 md:hidden"
+              className="min-h-touch rounded-lg px-2 text-line hover:bg-white/10 md:hidden"
             >
               <Icon name="menu" size="md" />
             </button>
@@ -39,14 +39,14 @@ export default function AppShell() {
 
           <Link
             to={`/team/${member?.id}`}
-            className="max-w-[7rem] truncate text-sm text-slate-300 hover:text-white sm:max-w-none"
+            className="max-w-28 truncate text-sm text-lineDark hover:text-white sm:max-w-none"
           >
             {member?.full_name}
           </Link>
-          <Button variant="ghost" size="sm" fullWidth={false} className="shrink-0 text-slate-300 hover:bg-white/10 hover:text-white" onClick={() => setSupportOpen(true)}>
+          <Button variant="ghost" size="sm" fullWidth={false} className="shrink-0 text-lineDark hover:bg-white/10 hover:text-white" onClick={() => setSupportOpen(true)}>
             {he.support.trigger}
           </Button>
-          <Button variant="ghost" size="sm" fullWidth={false} className="shrink-0 text-slate-300 hover:bg-white/10 hover:text-white" onClick={() => supabase.auth.signOut()}>
+          <Button variant="ghost" size="sm" fullWidth={false} className="shrink-0 text-lineDark hover:bg-white/10 hover:text-white" onClick={() => supabase.auth.signOut()}>
             {he.common.logout}
           </Button>
 

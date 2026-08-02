@@ -10,14 +10,14 @@ function Group({ label, items, icon, render, onPick }) {
   if (!items.length) return null;
   return (
     <div className="mb-2">
-      <div className="px-2 py-1 text-xs font-bold text-slate-400">{label}</div>
+      <div className="px-2 py-1 text-xs font-bold text-grayLight">{label}</div>
       {items.map((x) => (
         <button
           key={x.id}
           type="button"
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => onPick(x)}
-          className="flex min-h-touch w-full items-center gap-2 rounded-lg px-2 text-right hover:bg-slate-100"
+          className="flex min-h-touch w-full items-center gap-2 rounded-lg px-2 text-right hover:bg-appBg"
         >
           <span>{icon}</span>
           <span className="truncate">{render(x)}</span>
@@ -121,7 +121,7 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
           type="button"
           onClick={openField}
           aria-label={he.shell.search}
-          className="flex h-11 w-11 items-center justify-center rounded-full text-slate-300
+          className="flex h-11 w-11 items-center justify-center rounded-full text-lineDark
                      hover:bg-white/10 md:hidden"
         >
           <Icon name="search" />
@@ -129,11 +129,11 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
       )}
 
       <div
-        className={`my-1.5 items-center gap-2 border-s border-white/15
+        className={`my-2 items-center gap-2 border-s border-white/15
                     bg-white/[0.08] px-4 transition-colors focus-within:bg-white/15
                     ${expanded ? 'flex w-full' : 'hidden md:flex'}`}
       >
-        <Icon name="search" size="sm" className="text-slate-300" />
+        <Icon name="search" size="sm" className="text-lineDark" />
         <input
           ref={inputRef}
           value={q}
@@ -144,14 +144,14 @@ export default function SearchBar({ onNavigate, onExpandedChange }) {
             if (!q) setExpandedBoth(false);
           }}
           placeholder={he.shell.searchPlaceholder}
-          className="h-8 w-full bg-transparent text-sm text-white placeholder:text-slate-300
+          className="h-8 w-full bg-transparent text-sm text-white placeholder:text-lineDark
                      focus:outline-none"
         />
       </div>
       {open && res && (
-        <div className="absolute z-50 mt-1 max-h-80 w-full overflow-y-auto rounded-xl bg-white p-2 text-slate-900 shadow-xl">
+        <div className="absolute z-50 mt-1 max-h-80 w-full overflow-y-auto rounded-xl bg-white p-2 text-navy shadow-xl">
           {total === 0 ? (
-            <p className="p-3 text-center text-slate-400">{he.shell.searchEmpty}</p>
+            <p className="p-3 text-center text-grayLight">{he.shell.searchEmpty}</p>
           ) : (
             <>
               <Group label={he.shell.groupTasks} items={res.tasks} icon={<Icon name="task" />} render={(x) => <>{x.title} <RefNumber value={x.id} className="text-xs" /></>} onPick={(x) => go(`/projects/${x.project_id}`)} />

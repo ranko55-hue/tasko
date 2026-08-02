@@ -9,7 +9,7 @@
 // כדי שיישאר פרימיטיב מתג אחד במערכת ולא ייווצר מתג נפרד לכל מסך.
 export default function ViewToggle({ options, view, onChange }) {
   return (
-    <div className="inline-flex items-center gap-0.5 rounded-lg bg-white p-0.5 ring-1 ring-line">
+    <div className="inline-flex items-center gap-1 rounded-lg bg-white p-1 ring-1 ring-line">
       {options.map((opt) => (
         <button
           key={opt.key}
@@ -19,8 +19,8 @@ export default function ViewToggle({ options, view, onChange }) {
           className="-my-2 flex min-h-touch items-center"
         >
           <span
-            className={`flex h-7 items-center rounded-md px-3 text-[13px] font-bold transition-colors ${
-              view === opt.key ? 'bg-navy text-white' : 'text-slate-600 hover:bg-slate-100'
+            className={`flex h-7 items-center rounded-md px-3 text-sm font-bold transition-colors ${
+              view === opt.key ? 'bg-navy text-white' : 'text-grayDark hover:bg-appBg'
             }`}
           >
             {opt.label}

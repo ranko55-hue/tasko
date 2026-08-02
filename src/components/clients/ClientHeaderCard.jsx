@@ -22,19 +22,19 @@ export default function ClientHeaderCard({ client, openProjects, openTasks, onNe
     .replace('{tasks}', openTasks);
 
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-line p-5">
+    <div className="flex items-center justify-between gap-4 border-b border-line p-6">
       <div className="flex min-w-0 flex-1 items-center gap-4">
         <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-navy text-2xl font-black text-white">
           {initials(client?.name) || <Icon name="client" size="lg" />}
         </div>
         <div className="min-w-0">
           <div className="flex items-baseline gap-2">
-            <h1 className="min-w-0 truncate text-2xl font-black text-slate-900">
+            <h1 className="min-w-0 truncate text-2xl font-black text-navy">
               {client?.name ?? he.common.loading}
             </h1>
             <RefNumber value={client?.number} className="shrink-0 text-base font-bold" />
           </div>
-          <p className="mt-1 text-sm text-slate-500">{statusLine}</p>
+          <p className="mt-1 text-sm text-grayMid">{statusLine}</p>
         </div>
       </div>
       {onNewTask && (

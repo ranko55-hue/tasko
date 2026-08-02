@@ -26,11 +26,11 @@ export default function MobileDrawer({ onClose }) {
         <NavLinks dark vertical onNavigate={onClose} />
 
         <div className="my-4 border-t border-white/10" />
-        <div className="mb-2 text-xs font-bold text-slate-400">{he.shell.quickActions}</div>
+        <div className="mb-2 text-xs font-bold text-grayLight">{he.shell.quickActions}</div>
         <QuickActions vertical onDone={onClose} />
 
         <div className="my-4 border-t border-white/10" />
-        <div className="mb-2 text-sm text-slate-300">{member?.full_name}</div>
+        <div className="mb-2 text-sm text-lineDark">{member?.full_name}</div>
         <Button variant="ghost" className="text-start text-white hover:bg-white/10" onClick={() => supabase.auth.signOut()}>
           {he.common.logout}
         </Button>

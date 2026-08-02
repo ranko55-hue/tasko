@@ -7,14 +7,14 @@ export const NUM = { fontVariantNumeric: 'tabular-nums' };
 export function StatusDot({ status, live = false }) {
   return (
     <span
-      className={`h-2 w-2 shrink-0 rounded-full ${STATUS_DOT[status] ?? 'bg-slate-400'} ${live ? 'animate-softPulse' : ''}`}
+      className={`h-2 w-2 shrink-0 rounded-full ${STATUS_DOT[status] ?? 'bg-grayLight'} ${live ? 'animate-softPulse' : ''}`}
     />
   );
 }
 
 export function StatusName({ status }) {
   return (
-    <span className={`text-[12.5px] font-bold ${STATUS_TEXT[status] ?? 'text-slate-500'}`}>
+    <span className={`text-xs font-bold ${STATUS_TEXT[status] ?? 'text-grayMid'}`}>
       {he.tasks.status[status] ?? status}
     </span>
   );
@@ -22,7 +22,7 @@ export function StatusName({ status }) {
 
 export function TaskNumber({ id }) {
   return (
-    <span dir="ltr" className="shrink-0 text-xs text-slate-400" style={NUM}>
+    <span dir="ltr" className="shrink-0 text-xs text-grayLight" style={NUM}>
       #{id}
     </span>
   );
@@ -34,14 +34,14 @@ export function Panel({ title, count, children, muted = false }) {
     <Card className="overflow-hidden">
       <header
         className={`flex items-center gap-2 border-b border-line px-4 py-3 ${
-          muted ? 'bg-slate-50' : 'bg-surfaceBar'
+          muted ? 'bg-surface' : 'bg-surfaceBar'
         }`}
       >
-        <h2 className={`text-sm font-black ${muted ? 'text-slate-500' : 'text-slate-900'}`}>
+        <h2 className={`text-sm font-black ${muted ? 'text-grayMid' : 'text-navy'}`}>
           {title}
         </h2>
         <span
-          className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600"
+          className="rounded-full bg-appBg px-2 py-1 text-xs font-bold text-grayDark"
           style={NUM}
         >
           {count}

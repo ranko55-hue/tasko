@@ -20,7 +20,7 @@ export default function MyTasksPage() {
     return (
       <>
         <PageHeader title={he.worker.title} />
-        <p className="text-lg text-slate-500">{he.common.loading}</p>
+        <p className="text-lg text-grayMid">{he.common.loading}</p>
       </>
     );
   }

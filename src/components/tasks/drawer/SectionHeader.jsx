@@ -3,15 +3,15 @@ import { he } from '../../../locales/he';
 // כותרת מקטע — תווית אפורה מרווחת + מונה, ופעולה אופציונלית בקצה.
 export default function SectionHeader({ label, count, onShowAll }) {
   return (
-    <div className="mb-2 flex items-baseline justify-between gap-3 px-4 sm:px-5">
+    <div className="mb-2 flex items-baseline justify-between gap-3 px-4 sm:px-6">
       <h3
-        className="text-[11px] font-bold uppercase text-slate-400"
+        className="text-xs font-bold uppercase text-grayLight"
         style={{ letterSpacing: '0.08em' }}
       >
         {label}
         {count != null && (
           <>
-            <span className="mx-1.5 text-slate-300">·</span>
+            <span className="mx-2 text-lineDark">·</span>
             <span style={{ fontVariantNumeric: 'tabular-nums' }}>{count}</span>
           </>
         )}

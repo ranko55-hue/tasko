@@ -10,8 +10,8 @@ export default function ReportsPage() {
       <PageHeader title={r.title} subtitle={r.subtitle} />
 
       <div className="flex flex-col items-center justify-center gap-4 py-20">
-        <Icon name="report" size="xl" className="text-slate-300" />
-        <p className="text-lg font-bold text-slate-400">{r.placeholder}</p>
+        <Icon name="report" size="xl" className="text-lineDark" />
+        <p className="text-lg font-bold text-grayLight">{r.placeholder}</p>
       </div>
     </>
   );

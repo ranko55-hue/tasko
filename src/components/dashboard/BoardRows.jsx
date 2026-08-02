@@ -35,8 +35,8 @@ function LateTag({ task }) {
   const severe = late === 'unassigned';
   return (
     <span
-      className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${
-        severe ? 'bg-statusRed text-white' : 'border border-statusRed/40 bg-red-50 text-urgentInk'
+      className={`shrink-0 rounded-full px-2 py-1 text-xs font-bold ${
+        severe ? 'bg-statusRed text-white' : 'border border-statusRed/40 bg-urgentSoft text-urgentInk'
       }`}
     >
       {severe ? d.lateUnassigned : d.lateWorking}
@@ -70,19 +70,19 @@ export default function BoardRows({ tasks, membersMap, onOpenTask }) {
               onClick={() => setOpen((o) => ({ ...o, [key]: !o[key] }))}
               aria-expanded={isOpen}
               className={`flex min-h-touch w-full items-center gap-2 px-3 text-start ${
-                hot ? 'bg-red-50' : 'bg-slate-50'
+                hot ? 'bg-urgentSoft' : 'bg-surface'
               }`}
             >
               <Icon
                 name={isOpen ? 'chevronUp' : 'chevronDown'}
                 size="sm"
-                className="text-slate-400"
+                className="text-grayLight"
               />
-              <span className={`text-sm font-bold ${hot ? 'text-urgentInk' : 'text-slate-900'}`}>
+              <span className={`text-sm font-bold ${hot ? 'text-urgentInk' : 'text-navy'}`}>
                 {LABEL[key]}
               </span>
               <span
-                className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600"
+                className="rounded-full bg-appBg px-2 py-1 text-xs font-bold text-grayDark"
                 style={NUM}
               >
                 {list.length}
@@ -92,34 +92,34 @@ export default function BoardRows({ tasks, membersMap, onOpenTask }) {
             {isOpen && (
               <div>
                 {list.length === 0 ? (
-                  <p className="px-3 py-3 text-xs text-slate-400">{d.groupEmpty}</p>
+                  <p className="px-3 py-3 text-xs text-grayLight">{d.groupEmpty}</p>
                 ) : (
                   list.map((task) => (
                     <button
                       key={task.id}
                       type="button"
                       onClick={() => onOpenTask?.(task.id)}
-                      className={`flex min-h-touch w-full items-center gap-2.5 border-b border-line px-3 py-2 text-start transition-colors last:border-0 ${
-                        lateness(task) ? 'bg-red-50/60 hover:bg-red-50' : 'hover:bg-slate-50'
+                      className={`flex min-h-touch w-full items-center gap-3 border-b border-line px-3 py-2 text-start transition-colors last:border-0 ${
+                        lateness(task) ? 'bg-urgentSoft/60 hover:bg-urgentSoft' : 'hover:bg-surface'
                       }`}
                     >
                       <span
                         className={`h-2 w-2 shrink-0 rounded-full ${
-                          STATUS_DOT[task.status] ?? 'bg-slate-400'
+                          STATUS_DOT[task.status] ?? 'bg-grayLight'
                         }`}
                       />
-                      <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">
+                      <span className="min-w-0 flex-1 truncate text-sm font-bold text-navy">
                         {task.title}
                       </span>
-                      <span className="hidden max-w-[9rem] truncate text-xs text-slate-500 sm:block">
+                      <span className="hidden max-w-36 truncate text-xs text-grayMid sm:block">
                         {task.client?.name ?? he.common.none}
                       </span>
-                      <span className="hidden w-24 shrink-0 truncate text-xs text-slate-500 md:block">
+                      <span className="hidden w-24 shrink-0 truncate text-xs text-grayMid md:block">
                         {membersMap?.[task.assignee_id] ?? he.tasks.unassigned}
                       </span>
                       <span
                         className={`w-20 shrink-0 text-end text-xs ${
-                          isMultiDay(task) ? 'text-slate-700' : 'text-slate-500'
+                          isMultiDay(task) ? 'text-inkSoft' : 'text-grayMid'
                         }`}
                         style={NUM}
                       >

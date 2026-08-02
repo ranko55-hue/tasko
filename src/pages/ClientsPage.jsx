@@ -59,10 +59,10 @@ export default function ClientsPage() {
       />
 
       {loading ? (
-        <p className="text-lg text-slate-500">{he.common.loading}</p>
+        <p className="text-lg text-grayMid">{he.common.loading}</p>
       ) : error ? (
         <div className="py-8 text-center">
-          <p className="mb-4 text-lg text-slate-600">{he.clients.loadError}</p>
+          <p className="mb-4 text-lg text-grayDark">{he.clients.loadError}</p>
           <div className="mx-auto w-40">
             <Button onClick={refetch}>{he.common.retry}</Button>
           </div>

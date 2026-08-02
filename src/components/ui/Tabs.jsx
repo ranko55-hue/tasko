@@ -13,8 +13,8 @@ export default function Tabs({ tabs, active, onChange }) {
             className={
               'min-h-touch whitespace-nowrap border-b-2 px-4 text-base font-bold transition-colors ' +
               (on
-                ? 'border-brandYellow text-slate-900'
-                : 'border-transparent text-slate-400 hover:text-slate-600')
+                ? 'border-brandYellow text-navy'
+                : 'border-transparent text-grayLight hover:text-grayDark')
             }
           >
             {t.label}

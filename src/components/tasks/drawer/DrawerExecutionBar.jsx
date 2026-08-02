@@ -63,8 +63,8 @@ export default function DrawerExecutionBar({ task, memberId, orgId, onRefresh })
   }
 
   return (
-    <div className="space-y-3 border-b border-line bg-slate-50/60 px-4 py-3 sm:px-5">
-      <h4 className="text-xs font-black text-slate-400">{d.executionSection}</h4>
+    <div className="space-y-3 border-b border-line bg-surface/60 px-4 py-3 sm:px-6">
+      <h4 className="text-xs font-black text-grayLight">{d.executionSection}</h4>
 
       {showTimer && <TaskTimer task={task} />}
 
@@ -75,14 +75,14 @@ export default function DrawerExecutionBar({ task, memberId, orgId, onRefresh })
       )}
 
       {locked && (
-        <div className="rounded-xl bg-slate-100 px-4 py-3 text-center text-sm font-bold text-slate-600">
+        <div className="rounded-xl bg-appBg px-4 py-3 text-center text-sm font-bold text-grayDark">
           {w.lockedUntil.replace('{date}', '')}
         </div>
       )}
 
       {modal === 'finish' && (
         <Modal title={w.finishTitle} onClose={() => setModal(null)}>
-          <p className="mb-5 text-lg text-slate-700">
+          <p className="mb-6 text-lg text-inkSoft">
             {w.finishBody.replace('{time}', formatDuration(elapsedSeconds(task)))}
           </p>
           <div className="space-y-3">

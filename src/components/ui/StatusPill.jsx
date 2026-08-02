@@ -1,11 +1,11 @@
 import { he } from '../../locales/he';
 const TONES = {
-  gray: 'bg-slate-100 text-slate-700',
+  gray: 'bg-appBg text-inkSoft',
   blue: 'bg-blue-100 text-blue-700',
   green: 'bg-green-100 text-green-700',
   yellow: 'bg-yellow-100 text-yellow-800',
-  red: 'bg-red-100 text-red-700',
-  done: 'bg-slate-200 text-slate-500',
+  red: 'bg-dangerLight text-urgentInk',
+  done: 'bg-line text-grayMid',
   purple: 'bg-purple-100 text-purple-700',
 };
 
@@ -21,36 +21,36 @@ export const STATUS_TONE = {
 };
 
 export const STATUS_DOT = {
-  pending: 'bg-slate-400',
+  pending: 'bg-grayLight',
   scheduled: 'bg-statusBlue',
   in_progress: 'bg-statusGreen',
   paused: 'bg-brandYellow',
   blocked: 'bg-statusRed',
   pending_approval: 'bg-purple-500',
-  done: 'bg-slate-400',
-  cancelled: 'bg-slate-400',
+  done: 'bg-grayLight',
+  cancelled: 'bg-grayLight',
 };
 
 export const STATUS_TEXT = {
-  pending: 'text-slate-500',
+  pending: 'text-grayMid',
   scheduled: 'text-statusBlue',
   in_progress: 'text-statusGreen',
   paused: 'text-brandYellow',
   blocked: 'text-statusRed',
   pending_approval: 'text-purple-500',
-  done: 'text-slate-500',
-  cancelled: 'text-slate-500',
+  done: 'text-grayMid',
+  cancelled: 'text-grayMid',
 };
 
 export const STATUS_INK = {
-  pending: 'text-slate-300',
+  pending: 'text-lineDark',
   scheduled: 'text-statusBlue',
   in_progress: 'text-statusGreen',
   paused: 'text-brandYellow',
   blocked: 'text-statusRed',
   pending_approval: 'text-purple-500',
-  done: 'text-slate-400',
-  cancelled: 'text-slate-400',
+  done: 'text-grayLight',
+  cancelled: 'text-grayLight',
 };
 
 export default function StatusPill({ tone, label, status, pulse = false }) {

@@ -22,7 +22,7 @@ export default function ManagerPicker({
   }
 
   if (!managers.length) {
-    return <p className="rounded-lg bg-slate-50 px-3 py-3 text-sm text-slate-500">{t.noManagers}</p>;
+    return <p className="rounded-lg bg-surface px-3 py-3 text-sm text-grayMid">{t.noManagers}</p>;
   }
 
   return (
@@ -36,7 +36,7 @@ export default function ManagerPicker({
           className={`flex min-h-touch w-full items-center rounded-xl border px-3 text-start text-sm font-bold transition-colors ${
             selected === null
               ? 'border-brand bg-brand/5 text-brand'
-              : 'border-line bg-white text-slate-700 hover:bg-slate-50'
+              : 'border-line bg-white text-inkSoft hover:bg-surface'
           }`}
         >
           {emptyLabel ?? t.noManagerOption}
@@ -54,11 +54,11 @@ export default function ManagerPicker({
             className={`flex min-h-touch w-full items-center justify-between gap-2 rounded-xl border px-3 text-start transition-colors ${
               on
                 ? 'border-brand bg-brand/5'
-                : 'border-line bg-white hover:bg-slate-50'
+                : 'border-line bg-white hover:bg-surface'
             }`}
           >
-            <span className="min-w-0 truncate text-sm font-bold text-slate-900">{m.full_name}</span>
-            <span className="shrink-0 text-xs text-slate-500">{he.roles[m.role] ?? m.role}</span>
+            <span className="min-w-0 truncate text-sm font-bold text-navy">{m.full_name}</span>
+            <span className="shrink-0 text-xs text-grayMid">{he.roles[m.role] ?? m.role}</span>
           </button>
         );
       })}

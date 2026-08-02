@@ -58,8 +58,8 @@ export default function OrgSetupPage({ onCreated }) {
   return (
     <div className="mx-auto flex min-h-full max-w-md items-center justify-center p-4">
       <Card className="w-full p-6 sm:p-8">
-        <h1 className="text-2xl font-extrabold text-slate-900">{t.title}</h1>
-        <p className="mb-6 mt-1 text-slate-500">{t.subtitle}</p>
+        <h1 className="text-2xl font-extrabold text-navy">{t.title}</h1>
+        <p className="mb-6 mt-1 text-grayMid">{t.subtitle}</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Field
             label={t.orgName}
@@ -84,7 +84,7 @@ export default function OrgSetupPage({ onCreated }) {
           />
 
           <fieldset>
-            <legend className="mb-2 block text-base font-medium text-slate-700">
+            <legend className="mb-2 block text-base font-medium text-inkSoft">
               {t.gender}
             </legend>
             <div className="grid grid-cols-2 gap-3">
@@ -104,7 +104,7 @@ export default function OrgSetupPage({ onCreated }) {
           </fieldset>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+            <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
               {error}
             </p>
           )}
@@ -129,7 +129,7 @@ function GenderOption({ value, current, onSelect, label }) {
         'min-h-touch rounded-xl border px-4 text-lg font-medium transition-colors ' +
         (active
           ? 'border-brand bg-brand text-white'
-          : 'border-slate-300 bg-white text-slate-700 hover:border-brand')
+          : 'border-lineDark bg-white text-inkSoft hover:border-brand')
       }
     >
       {label}

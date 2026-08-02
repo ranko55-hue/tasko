@@ -95,8 +95,8 @@ export default function VoiceRecorder({ task, onDone, onCancel }) {
   if (phase === 'error') {
     return (
       <div className="space-y-3">
-        <p className="rounded-lg bg-red-50 px-3 py-3 font-medium text-red-700">{error}</p>
-        {hint && <p className="px-1 text-sm text-slate-600">{hint}</p>}
+        <p className="rounded-lg bg-urgentSoft px-3 py-3 font-medium text-urgentInk">{error}</p>
+        {hint && <p className="px-1 text-sm text-grayDark">{hint}</p>}
         {canRetry && <Button onClick={start}>{he.common.retry}</Button>}
         <Button variant="ghost" onClick={onCancel}>
           {he.common.cancel}
@@ -107,7 +107,7 @@ export default function VoiceRecorder({ task, onDone, onCancel }) {
 
   if (phase === 'uploading') {
     return (
-      <p className="py-8 text-center text-lg text-slate-500">{he.media.uploading}</p>
+      <p className="py-8 text-center text-lg text-grayMid">{he.media.uploading}</p>
     );
   }
 
@@ -115,8 +115,8 @@ export default function VoiceRecorder({ task, onDone, onCancel }) {
   if (phase === 'starting') {
     return (
       <div className="space-y-4 py-8 text-center">
-        <p className="text-lg font-bold text-slate-700">{he.media.waitingMic}</p>
-        <p className="text-sm text-slate-500">{he.media.waitingMicHint}</p>
+        <p className="text-lg font-bold text-inkSoft">{he.media.waitingMic}</p>
+        <p className="text-sm text-grayMid">{he.media.waitingMicHint}</p>
         <Button variant="ghost" onClick={onCancel}>
           {he.common.cancel}
         </Button>
@@ -128,11 +128,11 @@ export default function VoiceRecorder({ task, onDone, onCancel }) {
     <div className="space-y-6 py-4 text-center">
       <div className="flex items-center justify-center gap-3">
         <span className="h-4 w-4 animate-pulse rounded-full bg-statusRed" />
-        <span className="font-mono text-4xl font-bold tabular-nums text-slate-900">
+        <span className="font-mono text-4xl font-bold tabular-nums text-navy">
           {formatDuration(secs)}
         </span>
       </div>
-      <p className="text-slate-500">{he.media.recording}</p>
+      <p className="text-grayMid">{he.media.recording}</p>
       <Button size="lg" variant="danger" onClick={stop}>
         {he.media.stopSave}
       </Button>

@@ -39,11 +39,11 @@ export default function TaskList({ tasks, members, reasons = {}, onReturnToWork,
           />
 
           {task.status === 'blocked' && (
-            <div className="rounded-xl bg-red-50 p-3">
-              <div className="text-sm font-bold text-red-700">
+            <div className="rounded-xl bg-urgentSoft p-3">
+              <div className="text-sm font-bold text-urgentInk">
                 {he.tasks.blockReason}
               </div>
-              <div className="mb-3 text-red-900">
+              <div className="mb-3 text-dangerDark">
                 {reasons[task.id] || he.common.none}
               </div>
               {onReturnToWork && (

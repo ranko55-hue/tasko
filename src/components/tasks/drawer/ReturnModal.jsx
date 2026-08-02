@@ -29,7 +29,7 @@ export default function ReturnModal({ task, actorId, onClose, onDone }) {
   return (
     <Modal title={d.returnTitle} onClose={onClose}>
       <div className="space-y-4">
-        <p className="text-sm text-slate-500">{d.returnHint}</p>
+        <p className="text-sm text-grayMid">{d.returnHint}</p>
 
         <Textarea
           label=""
@@ -40,7 +40,7 @@ export default function ReturnModal({ task, actorId, onClose, onDone }) {
         />
 
         {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+          <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
             {error}
           </p>
         )}

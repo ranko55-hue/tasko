@@ -95,7 +95,7 @@ export default function DashboardPage() {
         </Button>
         <Link
           to="/my"
-          className="flex min-h-touch items-center rounded-lg border-2 border-line px-4 font-bold text-slate-700 hover:bg-slate-50"
+          className="flex min-h-touch items-center rounded-lg border-2 border-line px-4 font-bold text-inkSoft hover:bg-surface"
         >
           {he.nav.myTasks}
         </Link>
@@ -103,10 +103,10 @@ export default function DashboardPage() {
 
       {/* Main content */}
       {loading ? (
-        <p className="py-8 text-center text-lg text-slate-500">{he.dashboard.loading}</p>
+        <p className="py-8 text-center text-lg text-grayMid">{he.dashboard.loading}</p>
       ) : error ? (
         <div className="py-8 text-center">
-          <p className="mb-4 text-lg text-slate-600">{he.dashboard.error}</p>
+          <p className="mb-4 text-lg text-grayDark">{he.dashboard.error}</p>
           <Button fullWidth={false} onClick={refetch}>
             {he.common.retry}
           </Button>

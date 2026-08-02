@@ -5,7 +5,7 @@ import Select from '../shared/Select';
 const cf = he.customFields;
 
 const DATE_INPUT =
-  'min-h-touch rounded-xl border border-line bg-white px-4 text-lg text-slate-900 ' +
+  'min-h-touch rounded-xl border border-line bg-white px-4 text-lg text-navy ' +
   'focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20';
 
 export default function CustomFieldInput({ def, value, onChange }) {
@@ -30,7 +30,7 @@ export default function CustomFieldInput({ def, value, onChange }) {
   if (def.field_type === 'date') {
     return (
       <label className="block">
-        <span className="mb-1.5 block text-base font-medium text-slate-700">{label}</span>
+        <span className="mb-2 block text-base font-medium text-inkSoft">{label}</span>
         <input
           type="date"
           value={value ?? ''}

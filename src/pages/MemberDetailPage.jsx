@@ -41,10 +41,10 @@ export default function MemberDetailPage() {
 
   const tabItems = TABS.map((key) => ({ key, label: t.tabs[key] }));
 
-  if (loading) return <p className="py-12 text-center text-lg text-slate-500">{he.common.loading}</p>;
+  if (loading) return <p className="py-12 text-center text-lg text-grayMid">{he.common.loading}</p>;
   if (error || !member) {
     return (
-      <p className="py-12 text-center text-lg text-slate-500">{he.team.loadError}</p>
+      <p className="py-12 text-center text-lg text-grayMid">{he.team.loadError}</p>
     );
   }
 

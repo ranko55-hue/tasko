@@ -15,7 +15,7 @@ const FILTERS = [
 
 const CHIP = 'min-h-touch rounded-full px-4 text-sm font-bold transition-colors';
 const CHIP_ON = CHIP + ' bg-brand/10 text-brand';
-const CHIP_OFF = CHIP + ' bg-slate-100 text-slate-600 hover:bg-slate-200';
+const CHIP_OFF = CHIP + ' bg-appBg text-grayDark hover:bg-line';
 
 function fmtDate(iso) {
   if (!iso) return '';
@@ -40,7 +40,7 @@ export default function PlatformTicketsPage() {
     return (
       <>
         <PageHeader title={t.title} subtitle={t.subtitle} />
-        <p className="text-slate-500">{he.common.loading}</p>
+        <p className="text-grayMid">{he.common.loading}</p>
       </>
     );
   }
@@ -49,7 +49,7 @@ export default function PlatformTicketsPage() {
     return (
       <>
         <PageHeader title={t.title} subtitle={t.subtitle} />
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <p className="rounded-lg bg-urgentSoft px-4 py-3 text-sm font-medium text-urgentInk">
           {t.loadError}
         </p>
       </>
@@ -77,7 +77,7 @@ export default function PlatformTicketsPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="py-12 text-center text-slate-400">{t.empty}</p>
+        <p className="py-12 text-center text-grayLight">{t.empty}</p>
       ) : (
         <>
           {/* דסקטופ — טבלה */}
@@ -101,7 +101,7 @@ function TicketTable({ tickets, onSetStatus }) {
     <Card className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-line bg-slate-50 text-right text-xs font-bold text-slate-500">
+          <tr className="border-b border-line bg-surface text-right text-xs font-bold text-grayMid">
             <th className="px-4 py-3">{t.org}</th>
             <th className="px-4 py-3">{t.author}</th>
             <th className="px-4 py-3">{t.subject}</th>
@@ -120,18 +120,18 @@ function TicketTable({ tickets, onSetStatus }) {
               <td className="px-4 py-3">
                 <div>{tk.author_name}</div>
                 {tk.author_email && (
-                  <div className="text-xs text-slate-400">{tk.author_email}</div>
+                  <div className="text-xs text-grayLight">{tk.author_email}</div>
                 )}
               </td>
               <td className="px-4 py-3">
                 <div className="font-bold">{tk.subject}</div>
-                <div className="mt-1 whitespace-pre-wrap text-xs text-slate-500">
+                <div className="mt-1 whitespace-pre-wrap text-xs text-grayMid">
                   {tk.message}
                 </div>
               </td>
               <td className="px-4 py-3 whitespace-nowrap tabular-nums">
                 <div>{fmtDate(tk.created_at)}</div>
-                <div className="text-xs text-slate-400">{fmtTime(tk.created_at)}</div>
+                <div className="text-xs text-grayLight">{fmtTime(tk.created_at)}</div>
               </td>
               <td className="px-4 py-3">
                 <StatusBadge status={tk.status} />
@@ -151,12 +151,12 @@ function TicketCard({ ticket: tk, onSetStatus }) {
   return (
     <Card className={`p-4 ${tk.status === 'done' ? 'opacity-60' : ''}`}>
       <div className="mb-2 flex items-center justify-between gap-2">
-        <span className="text-xs font-bold text-slate-400">{tk.org_name}</span>
+        <span className="text-xs font-bold text-grayLight">{tk.org_name}</span>
         <StatusBadge status={tk.status} />
       </div>
-      <h3 className="mb-1 text-base font-bold text-slate-900">{tk.subject}</h3>
-      <p className="mb-3 whitespace-pre-wrap text-sm text-slate-600">{tk.message}</p>
-      <div className="mb-3 flex items-center gap-3 text-xs text-slate-400">
+      <h3 className="mb-1 text-base font-bold text-navy">{tk.subject}</h3>
+      <p className="mb-3 whitespace-pre-wrap text-sm text-grayDark">{tk.message}</p>
+      <div className="mb-3 flex items-center gap-3 text-xs text-grayLight">
         <span>{tk.author_name}</span>
         <span className="tabular-nums">{fmtDate(tk.created_at)} {fmtTime(tk.created_at)}</span>
       </div>
@@ -170,7 +170,7 @@ function StatusBadge({ status }) {
   return (
     <span
       className={`inline-block rounded-full px-3 py-1 text-xs font-bold ${
-        isOpen ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
+        isOpen ? 'bg-urgentSoft text-urgentInk' : 'bg-green-50 text-green-700'
       }`}
     >
       {isOpen ? t.statusOpen : t.statusDone}

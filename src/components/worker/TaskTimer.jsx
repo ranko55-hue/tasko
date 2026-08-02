@@ -15,8 +15,8 @@ export default function TaskTimer({ task }) {
   }, [running]);
 
   return (
-    <div className="flex items-baseline justify-between rounded-xl bg-slate-900 px-4 py-3 text-white">
-      <span className="text-base text-slate-300">{he.worker.netTime}</span>
+    <div className="flex items-baseline justify-between rounded-xl bg-navy px-4 py-3 text-white">
+      <span className="text-base text-lineDark">{he.worker.netTime}</span>
       <span
         className={`font-mono text-3xl font-bold tabular-nums ${running ? 'text-emerald-400' : ''}`}
       >

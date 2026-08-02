@@ -24,7 +24,7 @@ export default function PlatformOrgsPage() {
     return (
       <>
         <PageHeader title={t.title} subtitle={t.subtitle} />
-        <p className="text-slate-500">{he.common.loading}</p>
+        <p className="text-grayMid">{he.common.loading}</p>
       </>
     );
   }
@@ -33,7 +33,7 @@ export default function PlatformOrgsPage() {
     return (
       <>
         <PageHeader title={t.title} subtitle={t.subtitle} />
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <p className="rounded-lg bg-urgentSoft px-4 py-3 text-sm font-medium text-urgentInk">
           {t.loadError}
         </p>
       </>
@@ -58,12 +58,12 @@ export default function PlatformOrgsPage() {
           placeholder={t.search}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand md:max-w-sm"
+          className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm placeholder:text-grayLight focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand md:max-w-sm"
         />
       </div>
 
       {filtered.length === 0 ? (
-        <p className="py-12 text-center text-slate-400">{t.empty}</p>
+        <p className="py-12 text-center text-grayLight">{t.empty}</p>
       ) : (
         <div className="flex flex-col gap-3">
           {filtered.map((org) => (
@@ -78,8 +78,8 @@ export default function PlatformOrgsPage() {
 function KpiCard({ label, value }) {
   return (
     <Card className="p-4 text-center">
-      <div className="text-2xl font-black text-slate-900 tabular-nums">{value}</div>
-      <div className="mt-1 text-xs font-bold text-slate-400">{label}</div>
+      <div className="text-2xl font-black text-navy tabular-nums">{value}</div>
+      <div className="mt-1 text-xs font-bold text-grayLight">{label}</div>
     </Card>
   );
 }

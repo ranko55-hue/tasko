@@ -27,9 +27,9 @@ export default function NewTaskModal({ onClose, onDone }) {
   return (
     <Modal title={he.shell.newTaskTitle} onClose={onClose}>
       {target.loading ? (
-        <p className="py-6 text-center text-slate-500">{he.common.loading}</p>
+        <p className="py-6 text-center text-grayMid">{he.common.loading}</p>
       ) : target.clients.length === 0 ? (
-        <p className="py-6 text-center text-slate-500">{he.tasks.noClients}</p>
+        <p className="py-6 text-center text-grayMid">{he.tasks.noClients}</p>
       ) : (
         <TaskForm
           members={members}

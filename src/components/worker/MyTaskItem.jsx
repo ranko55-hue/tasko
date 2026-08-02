@@ -18,8 +18,8 @@ export default function MyTaskItem({ task, onUpdated }) {
         className="flex w-full items-start justify-between gap-3 p-4 text-right"
       >
         <div>
-          <div className="text-lg font-bold text-slate-900">{task.title}</div>
-          <div className="mt-1 text-slate-500">
+          <div className="text-lg font-bold text-navy">{task.title}</div>
+          <div className="mt-1 text-grayMid">
             {formatDateTime(task.due_at) ?? he.worker.noDue}
             {task.project?.name ? ` · ${task.project.name}` : ''}
           </div>

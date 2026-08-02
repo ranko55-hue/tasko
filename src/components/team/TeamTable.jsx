@@ -14,7 +14,7 @@ function Avatar({ name, active }) {
   return (
     <div
       className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-black ${
-        active ? 'bg-navy text-brandYellow' : 'bg-slate-300 text-white'
+        active ? 'bg-navy text-brandYellow' : 'bg-lineDark text-white'
       }`}
     >
       {letter}
@@ -24,7 +24,7 @@ function Avatar({ name, active }) {
 
 function StatusDot({ active }) {
   return (
-    <span className={`inline-block h-2.5 w-2.5 rounded-full ${active ? 'bg-statusGreen' : 'bg-slate-300'}`} />
+    <span className={`inline-block h-3 w-3 rounded-full ${active ? 'bg-statusGreen' : 'bg-lineDark'}`} />
   );
 }
 
@@ -33,7 +33,7 @@ function DesktopTable({ rows, managers, onOpen }) {
     <div className="hidden overflow-x-auto md:block">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-line text-start text-xs font-bold text-slate-500">
+          <tr className="border-b border-line text-start text-xs font-bold text-grayMid">
             <th className="px-4 py-3">{t.table.name}</th>
             <th className="px-4 py-3">{t.table.role}</th>
             <th className="px-4 py-3">{t.table.manager}</th>
@@ -49,22 +49,22 @@ function DesktopTable({ rows, managers, onOpen }) {
               <tr
                 key={m.id}
                 onClick={() => onOpen(m)}
-                className="cursor-pointer border-b border-line last:border-0 hover:bg-slate-50"
+                className="cursor-pointer border-b border-line last:border-0 hover:bg-surface"
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <Avatar name={m.full_name} active={m.is_active} />
-                    <span className="font-bold text-slate-900">{m.full_name}</span>
+                    <span className="font-bold text-navy">{m.full_name}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-slate-700">{he.roles[m.role] ?? m.role}</td>
-                <td className="px-4 py-3 text-slate-500">{mgr?.full_name ?? t.noManager}</td>
-                <td className="px-4 py-3 text-slate-500" dir="ltr">{m.phone || '—'}</td>
-                <td className="px-4 py-3 text-slate-500" style={NUM}>{fmtDate(m.created_at)}</td>
+                <td className="px-4 py-3 text-inkSoft">{he.roles[m.role] ?? m.role}</td>
+                <td className="px-4 py-3 text-grayMid">{mgr?.full_name ?? t.noManager}</td>
+                <td className="px-4 py-3 text-grayMid" dir="ltr">{m.phone || '—'}</td>
+                <td className="px-4 py-3 text-grayMid" style={NUM}>{fmtDate(m.created_at)}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <StatusDot active={m.is_active} />
-                    <span className={m.is_active ? 'text-slate-700' : 'text-slate-400'}>
+                    <span className={m.is_active ? 'text-inkSoft' : 'text-grayLight'}>
                       {m.is_active ? t.active : t.inactive}
                     </span>
                   </div>
@@ -93,15 +93,15 @@ function MobileCards({ rows, managers, onOpen }) {
               <Avatar name={m.full_name} active={m.is_active} />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="truncate font-bold text-slate-900">{m.full_name}</span>
+                  <span className="truncate font-bold text-navy">{m.full_name}</span>
                   <StatusDot active={m.is_active} />
                 </div>
-                <div className="mt-0.5 text-xs text-slate-500">
+                <div className="mt-1 text-xs text-grayMid">
                   {he.roles[m.role] ?? m.role}
                   {mgr ? ` · ${mgr.full_name}` : ''}
                 </div>
               </div>
-              <span className="text-xs text-slate-400" style={NUM}>{fmtDate(m.created_at)}</span>
+              <span className="text-xs text-grayLight" style={NUM}>{fmtDate(m.created_at)}</span>
             </button>
           </Card>
         );

@@ -118,7 +118,7 @@ function PlatformOnly({ isPlatformAdmin, member }) {
 function FullScreenLoader() {
   return (
     <div className="flex min-h-full items-center justify-center">
-      <p className="text-lg text-slate-500">{he.common.loading}</p>
+      <p className="text-lg text-grayMid">{he.common.loading}</p>
     </div>
   );
 }

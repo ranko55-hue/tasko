@@ -99,7 +99,7 @@ export default function ProjectDetailPage() {
           )}
           {tab === 'tasks' &&
             (loading ? (
-              <p className="text-lg text-slate-500">{he.common.loading}</p>
+              <p className="text-lg text-grayMid">{he.common.loading}</p>
             ) : (
               <TaskList
                 onOpenTask={setSelectedTaskId}

@@ -86,9 +86,9 @@ export default function FieldFormModal({ initial, onSave, onClose }) {
             type="checkbox"
             checked={isRequired}
             onChange={(e) => setIsRequired(e.target.checked)}
-            className="h-5 w-5 rounded border-slate-300 text-brand focus:ring-2 focus:ring-brand/30"
+            className="h-5 w-5 rounded border-lineDark text-brand focus:ring-2 focus:ring-brand/30"
           />
-          <span className="font-bold text-slate-900">{cf.fieldRequired}</span>
+          <span className="font-bold text-navy">{cf.fieldRequired}</span>
         </label>
 
         {fieldType === 'select' && (
@@ -96,7 +96,7 @@ export default function FieldFormModal({ initial, onSave, onClose }) {
         )}
 
         {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+          <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
             {error}
           </p>
         )}

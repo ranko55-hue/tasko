@@ -46,15 +46,15 @@ export default function ProjectFilesTab({ project, memberId }) {
       </Button>
 
       {failure && (
-        <p className="rounded-lg bg-red-50 px-3 py-3 font-medium text-red-700">{failure}</p>
+        <p className="rounded-lg bg-urgentSoft px-3 py-3 font-medium text-urgentInk">{failure}</p>
       )}
 
       {error ? (
-        <p className="py-8 text-center text-red-600">{f.loadError}</p>
+        <p className="py-8 text-center text-danger">{f.loadError}</p>
       ) : loading ? (
-        <p className="py-8 text-center text-slate-500">{he.common.loading}</p>
+        <p className="py-8 text-center text-grayMid">{he.common.loading}</p>
       ) : files.length === 0 ? (
-        <p className="py-8 text-center text-slate-400">{f.empty}</p>
+        <p className="py-8 text-center text-grayLight">{f.empty}</p>
       ) : (
         <div className="space-y-2">
           {files.map((row) => (

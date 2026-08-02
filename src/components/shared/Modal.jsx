@@ -10,13 +10,13 @@ export default function Modal({ title, onClose, children }) {
         className="max-h-[92vh] w-full overflow-y-auto rounded-t-2xl bg-white p-6 shadow-xl sm:max-w-lg sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-extrabold text-slate-900">{title}</h2>
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-xl font-extrabold text-navy">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="סגירה"
-            className="px-2 text-slate-400 hover:text-slate-600"
+            className="px-2 text-grayLight hover:text-grayDark"
           >
             <Icon name="close" size="md" />
           </button>

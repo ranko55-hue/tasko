@@ -2,7 +2,7 @@
 // תמיכה: input (ברירת מחדל), textarea, select. העבירו options לתמונת בחירה.
 const INPUT =
   'w-full min-h-touch rounded-xl border border-line bg-white px-4 text-lg ' +
-  'text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none ' +
+  'text-navy placeholder:text-grayLight focus:border-brand focus:outline-none ' +
   'focus:ring-4 focus:ring-brand/20';
 
 export default function Field({
@@ -21,7 +21,7 @@ export default function Field({
   return (
     <label className="block">
       {label && (
-        <span className="mb-2 block text-base font-medium text-slate-700">
+        <span className="mb-2 block text-base font-medium text-inkSoft">
           {label}
         </span>
       )}
@@ -62,7 +62,7 @@ export default function Field({
         </>
       )}
       {error && (
-        <span className="mt-1 block text-sm font-medium text-red-600">{error}</span>
+        <span className="mt-1 block text-sm font-medium text-danger">{error}</span>
       )}
     </label>
   );

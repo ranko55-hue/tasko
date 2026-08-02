@@ -22,10 +22,10 @@ const BASE_SECTIONS = [
 
 const CHIP = 'min-h-touch rounded-full px-4 text-sm font-bold transition-colors';
 const CHIP_ON = CHIP + ' bg-brand/10 text-brand';
-const CHIP_OFF = CHIP + ' bg-slate-100 text-slate-600 hover:bg-slate-200';
+const CHIP_OFF = CHIP + ' bg-appBg text-grayDark hover:bg-line';
 
 const DATE_INPUT =
-  'min-h-touch rounded-xl border border-line bg-white px-4 text-lg text-slate-900 ' +
+  'min-h-touch rounded-xl border border-line bg-white px-4 text-lg text-navy ' +
   'focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20';
 
 // טופס פתיחת משימה — חשיפה מדורגת.
@@ -179,9 +179,9 @@ export default function TaskForm({
       {open.has('dates') && (
         <div className="space-y-3">
           <div>
-            <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+            <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-inkSoft">
               {t.startLabel}
-              <span className="text-xs text-slate-400">{he.common.optional}</span>
+              <span className="text-xs text-grayLight">{he.common.optional}</span>
             </span>
             <div className="flex gap-2">
               <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
@@ -190,13 +190,13 @@ export default function TaskForm({
                 className={DATE_INPUT + ' flex-[2]'} />
             </div>
             {!startDate && !startTime && (
-              <p className="mt-1 text-xs text-slate-400">{t.startDefault}</p>
+              <p className="mt-1 text-xs text-grayLight">{t.startDefault}</p>
             )}
           </div>
           <div>
-            <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-slate-700">
+            <span className="mb-2 flex items-baseline gap-2 text-base font-medium text-inkSoft">
               {t.endLabel}
-              <span className="text-xs text-slate-400">{he.common.optional}</span>
+              <span className="text-xs text-grayLight">{he.common.optional}</span>
             </span>
             <div className="flex gap-2">
               <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
@@ -205,7 +205,7 @@ export default function TaskForm({
                 className={DATE_INPUT + ' flex-[2]'} />
             </div>
             {!endDate && !endTime && (
-              <p className="mt-1 text-xs text-slate-400">{t.endDefault}</p>
+              <p className="mt-1 text-xs text-grayLight">{t.endDefault}</p>
             )}
           </div>
           <Field
@@ -265,7 +265,7 @@ export default function TaskForm({
       )}
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+        <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
           {error}
         </p>
       )}

@@ -26,7 +26,7 @@ function OpenRow({ task, onOpen, onAction, busy }) {
   return (
     <div
       className={`flex items-center gap-3 border-b border-line px-4 py-3 last:border-0 ${
-        task.status === 'blocked' ? 'bg-red-50/60' : 'hover:bg-slate-50'
+        task.status === 'blocked' ? 'bg-urgentSoft/60' : 'hover:bg-surface'
       }`}
     >
       <StatusDot status={task.status} live={running} />
@@ -41,14 +41,14 @@ function OpenRow({ task, onOpen, onAction, busy }) {
         className="min-h-touch min-w-0 flex-1 text-start"
       >
         <div className="flex items-baseline gap-2">
-          <span className="truncate text-sm font-bold text-slate-900">{task.title}</span>
+          <span className="truncate text-sm font-bold text-navy">{task.title}</span>
           {task.priority === 'urgent' && (
-            <span className="shrink-0 rounded-full bg-urgentSoft px-2 py-0.5 text-[11px] font-bold text-urgentInk">
+            <span className="shrink-0 rounded-full bg-urgentSoft px-2 py-1 text-xs font-bold text-urgentInk">
               {he.tasks.priorityOpt.urgent}
             </span>
           )}
         </div>
-        <div className="mt-0.5 truncate text-xs text-slate-500">
+        <div className="mt-1 truncate text-xs text-grayMid">
           {[task.client?.name, task.project?.name].filter(Boolean).join(' · ')}
         </div>
       </button>
@@ -57,7 +57,7 @@ function OpenRow({ task, onOpen, onAction, busy }) {
         {running ? (
           <span className="font-bold text-statusGreen">{formatDuration(elapsedSeconds(task))}</span>
         ) : (
-          <span className="text-slate-400">{formatDuration(elapsedSeconds(task))}</span>
+          <span className="text-grayLight">{formatDuration(elapsedSeconds(task))}</span>
         )}
       </div>
 
@@ -80,11 +80,11 @@ function DoneRow({ task, onOpen }) {
     <button
       type="button"
       onClick={() => onOpen(task.id)}
-      className="flex min-h-touch w-full items-center gap-3 border-b border-line px-4 py-2 text-start last:border-0 hover:bg-slate-50"
+      className="flex min-h-touch w-full items-center gap-3 border-b border-line px-4 py-2 text-start last:border-0 hover:bg-surface"
     >
       <StatusDot status="done" />
-      <span className="min-w-0 flex-1 truncate text-sm text-slate-500">{task.title}</span>
-      <span className="hidden truncate text-xs text-slate-400 lg:block">
+      <span className="min-w-0 flex-1 truncate text-sm text-grayMid">{task.title}</span>
+      <span className="hidden truncate text-xs text-grayLight lg:block">
         {task.client?.name}
       </span>
       <TaskNumber id={task.id} />
@@ -97,7 +97,7 @@ export default function DeskRowsView({ open, done, onOpen, onAction, busy }) {
     <div className="space-y-4">
       <Panel title={w.openPanel} count={open.length}>
         {open.length === 0 ? (
-          <p className="px-4 py-6 text-center text-sm text-slate-400">{w.empty}</p>
+          <p className="px-4 py-6 text-center text-sm text-grayLight">{w.empty}</p>
         ) : (
           open.map((t) => (
             <OpenRow key={t.id} task={t} onOpen={onOpen} onAction={onAction} busy={busy} />
@@ -113,7 +113,7 @@ export default function DeskRowsView({ open, done, onOpen, onAction, busy }) {
         </Panel>
       )}
 
-      <p className="px-1 text-xs text-slate-400">{w.drawerHint}</p>
+      <p className="px-1 text-xs text-grayLight">{w.drawerHint}</p>
     </div>
   );
 }

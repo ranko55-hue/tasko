@@ -88,10 +88,10 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
 
         <div className="min-h-0 flex-1 overflow-y-auto">
           {error && (
-            <p className="py-6 text-center text-red-600">{he.clientDetail.loadError}</p>
+            <p className="py-6 text-center text-danger">{he.clientDetail.loadError}</p>
           )}
           {loading && (
-            <p className="py-6 text-center text-slate-500">{he.common.loading}</p>
+            <p className="py-6 text-center text-grayMid">{he.common.loading}</p>
           )}
 
           {task && !loading && (
@@ -119,7 +119,7 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
               )}
 
               {mode === 'edit' && (
-                <div className="p-4 sm:p-5">
+                <div className="p-4 sm:p-6">
                   <TaskEditForm
                     task={task}
                     members={members}
@@ -132,7 +132,7 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
               )}
 
               {mode === 'cancel' && (
-                <div className="p-4 sm:p-5">
+                <div className="p-4 sm:p-6">
                   <TaskCancelForm
                     onConfirm={confirmCancel}
                     onBack={() => setMode('view')}
@@ -145,10 +145,10 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
 
         {/* שורת פעולות תחתונה — נשארת מוצמדת מתחת לתוכן הנגלל */}
         {task && !loading && mode === 'view' && (
-          <div className="shrink-0 border-t border-line bg-surfaceBar px-4 py-3 sm:px-5">
+          <div className="shrink-0 border-t border-line bg-surfaceBar px-4 py-3 sm:px-6">
             {isClosed ? (
               <div className="space-y-2">
-                <p className="text-center text-sm text-slate-500">{t.drawer.closedTitle}</p>
+                <p className="text-center text-sm text-grayMid">{t.drawer.closedTitle}</p>
                 <Button variant="secondary" onClick={() => printTaskSummary(task, events, assigneeName)}>
                   {t.drawer.downloadPdf}
                 </Button>

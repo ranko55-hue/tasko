@@ -5,7 +5,7 @@ import RefNumber from '../shared/RefNumber';
 import ClientCounters, { WaitingDelayedCell, delayTone } from './ClientCounters';
 
 const t = he.clients.table;
-const NUM = 'tabular-nums font-bold text-slate-700';
+const NUM = 'tabular-nums font-bold text-inkSoft';
 
 // מסך הלקוחות: טבלה בדסקטופ, כרטיסים דחוסים ב-390.
 // אין טבלה גולשת אופקית — במסך צר הטבלה מתחלפת ולא נגללת.
@@ -29,10 +29,10 @@ export default function ClientTable({ rows, onOpen, onNewTask }) {
               className="block w-full text-right"
             >
               <div className="flex items-baseline gap-2">
-                <span className="min-w-0 truncate font-bold text-slate-900">{r.name}</span>
+                <span className="min-w-0 truncate font-bold text-navy">{r.name}</span>
                 <RefNumber value={r.number} className="shrink-0 text-sm" />
               </div>
-              <div className="mt-0.5 truncate text-sm text-slate-500">{contactOf(r)}</div>
+              <div className="mt-1 truncate text-sm text-grayMid">{contactOf(r)}</div>
               <div className="mt-2">
                 <ClientCounters row={r} layout="card" />
               </div>
@@ -47,7 +47,7 @@ export default function ClientTable({ rows, onOpen, onNewTask }) {
       {/* ── דסקטופ: טבלה ── */}
       <div className="hidden overflow-hidden rounded-xl border border-line bg-white md:block">
         <table className="w-full text-right">
-          <thead className="border-b border-line bg-slate-50 text-sm text-slate-500">
+          <thead className="border-b border-line bg-surface text-sm text-grayMid">
             <tr>
               <th scope="col" className="px-4 py-3 font-medium">{t.name}</th>
               <th scope="col" className="px-4 py-3 font-medium">{t.contact}</th>
@@ -62,15 +62,15 @@ export default function ClientTable({ rows, onOpen, onNewTask }) {
               <tr
                 key={r.id}
                 onClick={() => onOpen(r)}
-                className="cursor-pointer border-b border-line last:border-0 hover:bg-slate-50"
+                className="cursor-pointer border-b border-line last:border-0 hover:bg-surface"
               >
-                <td className="px-4 py-3 font-bold text-slate-900">
+                <td className="px-4 py-3 font-bold text-navy">
                   <span className="flex items-baseline gap-2">
                     <span className="min-w-0 truncate">{r.name}</span>
                     <RefNumber value={r.number} className="shrink-0 text-sm font-normal" />
                   </span>
                 </td>
-                <td className="px-4 py-3 text-slate-600">{contactOf(r)}</td>
+                <td className="px-4 py-3 text-grayDark">{contactOf(r)}</td>
                 <td className={`px-4 py-3 ${NUM}`}>{r.active_projects ?? 0}</td>
                 <td className={`px-4 py-3 ${NUM}`}>{r.open_tasks ?? 0}</td>
                 <td className="px-4 py-3">

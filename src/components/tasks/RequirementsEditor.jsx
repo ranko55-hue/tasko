@@ -18,7 +18,7 @@ export default function RequirementsEditor({ items, onChange }) {
 
   return (
     <div>
-      <span className="mb-1.5 block text-base font-medium text-slate-700">
+      <span className="mb-2 block text-base font-medium text-inkSoft">
         {he.tasks.requirements}
       </span>
 
@@ -29,15 +29,15 @@ export default function RequirementsEditor({ items, onChange }) {
               value={item}
               onChange={(e) => update(i, e.target.value)}
               placeholder={he.tasks.requirementPlaceholder}
-              className="w-full min-h-touch rounded-xl border border-slate-300 bg-white px-4
-                         text-lg text-slate-900 placeholder:text-slate-400
+              className="w-full min-h-touch rounded-xl border border-lineDark bg-white px-4
+                         text-lg text-navy placeholder:text-grayLight
                          focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20"
             />
             <button
               type="button"
               onClick={() => remove(i)}
               aria-label="הסרה"
-              className="min-h-touch shrink-0 rounded-xl border border-slate-300 px-4 text-slate-400 hover:text-red-600"
+              className="min-h-touch shrink-0 rounded-xl border border-lineDark px-4 text-grayLight hover:text-danger"
             >
               <Icon name="close" size="md" />
             </button>

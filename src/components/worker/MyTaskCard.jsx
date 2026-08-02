@@ -67,7 +67,7 @@ export default function MyTaskCard({ task, onUpdated }) {
   }
 
   return (
-    <div className="space-y-4 border-t border-slate-100 p-4">
+    <div className="space-y-4 border-t border-appBg p-4">
       {/* יעד לסיום — בולט */}
       <div className="rounded-xl bg-amber-50 px-4 py-3">
         <div className="text-sm text-amber-700">{w.due}</div>
@@ -83,11 +83,11 @@ export default function MyTaskCard({ task, onUpdated }) {
       )}
 
       {task.description && (
-        <p className="whitespace-pre-wrap text-lg text-slate-700">
+        <p className="whitespace-pre-wrap text-lg text-inkSoft">
           {task.description}
         </p>
       )}
-      {task.address && <p className="text-slate-500">{task.address}</p>}
+      {task.address && <p className="text-grayMid">{task.address}</p>}
 
       {(task.requirements?.length ?? 0) > 0 && (
         <Button variant="outline" onClick={() => setModal('reqs')}>
@@ -98,7 +98,7 @@ export default function MyTaskCard({ task, onUpdated }) {
       {showTimer && <TaskTimer task={task} />}
 
       {locked ? (
-        <div className="rounded-xl bg-slate-100 px-4 py-4 text-center text-lg font-bold text-slate-600">
+        <div className="rounded-xl bg-appBg px-4 py-4 text-center text-lg font-bold text-grayDark">
           <Icon name="lock" size="sm" />
           {w.lockedUntil.replace('{date}', formatDateTime(task.scheduled_start_at))}
         </div>
@@ -131,7 +131,7 @@ export default function MyTaskCard({ task, onUpdated }) {
             {task.requirements.map((r, i) => (
               <li
                 key={i}
-                className="rounded-xl bg-slate-50 px-4 py-3 text-lg text-slate-800"
+                className="rounded-xl bg-surface px-4 py-3 text-lg text-navy2"
               >
                 {r}
               </li>
@@ -142,7 +142,7 @@ export default function MyTaskCard({ task, onUpdated }) {
 
       {modal === 'finish' && (
         <Modal title={w.finishTitle} onClose={() => setModal(null)}>
-          <p className="mb-5 text-lg text-slate-700">
+          <p className="mb-6 text-lg text-inkSoft">
             {w.finishBody.replace('{time}', formatDuration(elapsedSeconds(task)))}
           </p>
           <div className="space-y-3">

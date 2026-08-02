@@ -9,7 +9,7 @@ const d = t.drawer;
 
 const GHOST =
   'flex h-11 w-11 items-center justify-center rounded-lg bg-white/[0.08] ' +
-  'text-slate-200 transition-colors hover:bg-white/[0.16]';
+  'text-line transition-colors hover:bg-white/[0.16]';
 
 // כותרת המגירה — פס navy עם מדרג, סטטוס, זהות המשימה ופעולות חלון.
 export default function DrawerHeader({ task, onClose, onFullScreen }) {
@@ -18,31 +18,31 @@ export default function DrawerHeader({ task, onClose, onFullScreen }) {
 
   return (
     <div
-      className="sticky top-0 z-10 px-4 py-3 sm:px-5"
+      className="sticky top-0 z-10 px-4 py-3 sm:px-6"
       style={{ backgroundImage: 'linear-gradient(135deg, #0F172A, #1E293B)' }}
     >
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span
-              className={`h-2 w-2 rounded-full ${STATUS_DOT[status] ?? 'bg-slate-400'} ${
+              className={`h-2 w-2 rounded-full ${STATUS_DOT[status] ?? 'bg-grayLight'} ${
                 isActiveStatus(status) ? 'animate-softPulse' : ''
               }`}
             />
-            <span className={`text-[12.5px] font-bold ${STATUS_INK[status] ?? 'text-slate-300'}`}>
+            <span className={`text-xs font-bold ${STATUS_INK[status] ?? 'text-lineDark'}`}>
               {t.status[status] ?? status}
             </span>
-            <span className="text-xs text-slate-400" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            <span className="text-xs text-grayLight" style={{ fontVariantNumeric: 'tabular-nums' }}>
               #{task?.id}
             </span>
           </div>
 
-          <h2 className="mt-1.5 text-[16.5px] font-bold leading-snug text-white">
+          <h2 className="mt-2 text-base font-bold leading-snug text-white">
             {task?.title}
           </h2>
 
           {subtitle && (
-            <p className="mt-1 truncate text-[13px] text-slate-400">{subtitle}</p>
+            <p className="mt-1 truncate text-sm text-grayLight">{subtitle}</p>
           )}
         </div>
 

@@ -47,7 +47,7 @@ export default function PhotoCaptureButton({ task, onDone }) {
       </Button>
 
       {progress !== null && (
-        <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-line">
           <div
             className="h-full bg-brand transition-all"
             style={{ width: `${progress}%` }}
@@ -55,7 +55,7 @@ export default function PhotoCaptureButton({ task, onDone }) {
         </div>
       )}
       {error && (
-        <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+        <p className="mt-2 rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
           {error}
         </p>
       )}

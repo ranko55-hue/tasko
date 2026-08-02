@@ -2,7 +2,7 @@
 export default function Textarea({ label, value, onChange, placeholder, rows = 3 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-base font-medium text-slate-700">
+      <span className="mb-2 block text-base font-medium text-inkSoft">
         {label}
       </span>
       <textarea
@@ -10,8 +10,8 @@ export default function Textarea({ label, value, onChange, placeholder, rows = 3
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3
-                   text-lg text-slate-900 placeholder:text-slate-400
+        className="w-full rounded-xl border border-lineDark bg-white px-4 py-3
+                   text-lg text-navy placeholder:text-grayLight
                    focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20"
       />
     </label>

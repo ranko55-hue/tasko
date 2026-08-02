@@ -76,7 +76,7 @@ export default function TeamPage() {
               className={`min-h-touch rounded-lg px-3 text-sm font-bold transition-colors ${
                 filter === f.key
                   ? 'bg-navy text-white'
-                  : 'text-slate-600 hover:bg-slate-100'
+                  : 'text-grayDark hover:bg-appBg'
               }`}
             >
               {f.label}
@@ -88,21 +88,21 @@ export default function TeamPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t.searchPlaceholder}
-          className="min-h-touch w-full rounded-xl border border-line bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20 sm:w-72"
+          className="min-h-touch w-full rounded-xl border border-line bg-white px-4 text-sm text-navy placeholder:text-grayLight focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20 sm:w-72"
         />
       </div>
 
       {loading ? (
-        <p className="text-lg text-slate-500">{he.common.loading}</p>
+        <p className="text-lg text-grayMid">{he.common.loading}</p>
       ) : error ? (
         <div className="py-8 text-center">
-          <p className="mb-4 text-lg text-slate-600">{t.loadError}</p>
+          <p className="mb-4 text-lg text-grayDark">{t.loadError}</p>
           <div className="mx-auto w-40">
             <Button onClick={refetch}>{he.common.retry}</Button>
           </div>
         </div>
       ) : filtered.length === 0 ? (
-        <p className="py-12 text-center text-lg text-slate-400">
+        <p className="py-12 text-center text-lg text-grayLight">
           {search ? he.shell.searchEmpty : t.empty}
         </p>
       ) : (

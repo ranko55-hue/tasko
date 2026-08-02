@@ -76,11 +76,11 @@ export default function LoginPage() {
             alt={he.app.name}
             className="mx-auto h-10 w-auto"
           />
-          <p className="mt-3 text-slate-500">{he.app.tagline}</p>
+          <p className="mt-3 text-grayMid">{he.app.tagline}</p>
         </div>
 
         <Card className="p-6 sm:p-8">
-          <h2 className="mb-6 text-2xl font-extrabold text-slate-900">
+          <h2 className="mb-6 text-2xl font-extrabold text-navy">
             {isSignup ? t.signupTitle : t.loginTitle}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -101,7 +101,7 @@ export default function LoginPage() {
             />
 
             {error && (
-              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+              <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
                 {error}
               </p>
             )}

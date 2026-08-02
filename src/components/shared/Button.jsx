@@ -15,17 +15,17 @@ export default function Button({
 
   const sizes = {
     sm: 'min-h-touch px-3 text-sm',
-    md: 'min-h-touch px-5 text-lg',
-    lg: 'min-h-[64px] px-5 text-2xl',
+    md: 'min-h-touch px-4 text-lg',
+    lg: 'min-h-[64px] px-6 text-2xl',
   };
 
   const variants = {
     primary: 'bg-brand text-white hover:bg-brand-dark active:bg-brand-dark',
-    secondary: 'border-2 border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100',
+    secondary: 'border-2 border-lineDark bg-surface text-inkSoft hover:bg-appBg',
     ghost: 'bg-transparent text-brand hover:bg-brand/10',
-    ghostDanger: 'bg-transparent text-red-600 hover:bg-red-50',
+    ghostDanger: 'bg-transparent text-danger hover:bg-urgentSoft',
     outline: 'border-2 border-brand bg-white text-brand hover:bg-brand/5',
-    danger: 'border-2 border-red-300 bg-white text-red-600 hover:bg-red-50',
+    danger: 'border-2 border-dangerLine bg-white text-danger hover:bg-urgentSoft',
     yellow: 'bg-brandYellow text-navy hover:bg-brandYellow/90',
     success: 'bg-green-600 text-white hover:bg-green-700',
     warning: 'bg-amber-500 text-white hover:bg-amber-600',
@@ -33,7 +33,7 @@ export default function Button({
     dark: 'bg-navy text-white hover:bg-navy2',
     link: 'bg-transparent text-brand hover:underline',
     dashed:
-      'border-2 border-dashed border-slate-300 text-slate-600 ' +
+      'border-2 border-dashed border-lineDark text-grayDark ' +
       'hover:border-brand hover:text-brand',
   };
 

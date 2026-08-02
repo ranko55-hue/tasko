@@ -24,7 +24,7 @@ function FilterChip({ label, active, onClick }) {
       type="button"
       onClick={onClick}
       className={`min-h-touch rounded-lg px-3 text-sm font-bold transition-colors ${
-        active ? 'bg-navy text-white' : 'text-slate-600 hover:bg-slate-100'
+        active ? 'bg-navy text-white' : 'text-grayDark hover:bg-appBg'
       }`}
     >
       {label}
@@ -91,7 +91,7 @@ export default function TasksPage() {
         <select
           value={assigneeFilter}
           onChange={(e) => setAssigneeFilter(e.target.value)}
-          className="min-h-touch rounded-xl border border-line bg-white px-3 text-sm text-slate-900"
+          className="min-h-touch rounded-xl border border-line bg-white px-3 text-sm text-navy"
         >
           <option value="all">{t.filterAssignee}: {t.filterAll}</option>
           {activeWorkers.map((m) => (
@@ -103,7 +103,7 @@ export default function TasksPage() {
         <select
           value={priorityFilter}
           onChange={(e) => setPriorityFilter(e.target.value)}
-          className="min-h-touch rounded-xl border border-line bg-white px-3 text-sm text-slate-900"
+          className="min-h-touch rounded-xl border border-line bg-white px-3 text-sm text-navy"
         >
           <option value="all">{t.filterPriority}: {t.filterAll}</option>
           <option value="normal">{t.priorityOpt.normal}</option>
@@ -116,14 +116,14 @@ export default function TasksPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={he.shell.search}
-          className="min-h-touch w-full rounded-xl border border-line bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20 sm:w-56"
+          className="min-h-touch w-full rounded-xl border border-line bg-white px-4 text-sm text-navy placeholder:text-grayLight focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/20 sm:w-56"
         />
       </div>
 
       {loading ? (
-        <p className="text-lg text-slate-500">{he.common.loading}</p>
+        <p className="text-lg text-grayMid">{he.common.loading}</p>
       ) : filtered.length === 0 ? (
-        <p className="py-12 text-center text-lg text-slate-400">
+        <p className="py-12 text-center text-lg text-grayLight">
           {search || statusFilter !== 'all' || assigneeFilter !== 'all'
             ? he.shell.searchEmpty
             : t.emptyAll}
@@ -132,7 +132,7 @@ export default function TasksPage() {
         <div className="overflow-x-auto rounded-xl border border-line bg-white">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-line bg-slate-50 text-right text-xs font-bold text-slate-500">
+              <tr className="border-b border-line bg-surface text-right text-xs font-bold text-grayMid">
                 <th className="px-3 py-2">#</th>
                 <th className="px-3 py-2">{t.fieldTitle}</th>
                 <th className="hidden px-3 py-2 sm:table-cell">{t.client}</th>
@@ -146,24 +146,24 @@ export default function TasksPage() {
                 <tr
                   key={task.id}
                   onClick={() => setOpenTaskId(task.id)}
-                  className="cursor-pointer border-b border-line last:border-0 hover:bg-slate-50"
+                  className="cursor-pointer border-b border-line last:border-0 hover:bg-surface"
                 >
                   <td className="px-3 py-2" style={NUM}>
                     <RefNumber value={task.id} />
                   </td>
-                  <td className="max-w-[14rem] truncate px-3 py-2 font-bold text-slate-900">
+                  <td className="max-w-[14rem] truncate px-3 py-2 font-bold text-navy">
                     {task.title}
                   </td>
-                  <td className="hidden max-w-[8rem] truncate px-3 py-2 text-slate-600 sm:table-cell">
+                  <td className="hidden max-w-[8rem] truncate px-3 py-2 text-grayDark sm:table-cell">
                     {task.client?.name ?? he.common.none}
                   </td>
-                  <td className="hidden max-w-[8rem] truncate px-3 py-2 text-slate-600 md:table-cell">
+                  <td className="hidden max-w-[8rem] truncate px-3 py-2 text-grayDark md:table-cell">
                     {task.assignee?.full_name ?? t.unassigned}
                   </td>
                   <td className="px-3 py-2">
                     <StatusPill status={task.status} />
                   </td>
-                  <td className="hidden px-3 py-2 text-slate-500 md:table-cell" style={NUM}>
+                  <td className="hidden px-3 py-2 text-grayMid md:table-cell" style={NUM}>
                     {dateRangeLabel(task) ?? he.common.none}
                   </td>
                 </tr>

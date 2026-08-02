@@ -52,14 +52,14 @@ export default function ProjectsTab({
         key={x.id}
         type="button"
         onClick={() => onOpenProject(x)}
-        className="flex w-full items-center gap-3 rounded-xl border border-line bg-white p-3 text-right transition-colors hover:bg-slate-50"
+        className="flex w-full items-center gap-3 rounded-xl border border-line bg-white p-3 text-right transition-colors hover:bg-surface"
       >
-        <span className="shrink-0 text-slate-400">
+        <span className="shrink-0 text-grayLight">
           <Icon name="project" />
         </span>
         <div className="min-w-0 flex-1">
-          <div className="truncate font-bold text-slate-900">{x.name}</div>
-          <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-500">
+          <div className="truncate font-bold text-navy">{x.name}</div>
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-grayMid">
             {x.address && <span>{x.address}</span>}
             {x.status === 'open' && openCount > 0 && (
               <span>{openCount} {he.dashboard.kpi.open}</span>
@@ -101,7 +101,7 @@ export default function ProjectsTab({
               className={`flex-1 rounded-lg px-3 py-2 font-bold transition-colors ${
                 filter === 'open'
                   ? 'bg-brand text-white'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  : 'bg-appBg text-inkSoft hover:bg-line'
               }`}
             >
               {p.open.replace('{n}', allOpen.length)}
@@ -112,7 +112,7 @@ export default function ProjectsTab({
               className={`flex-1 rounded-lg px-3 py-2 font-bold transition-colors ${
                 filter === 'closed'
                   ? 'bg-brand text-white'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  : 'bg-appBg text-inkSoft hover:bg-line'
               }`}
             >
               {p.closed.replace('{n}', allClosed.length)}

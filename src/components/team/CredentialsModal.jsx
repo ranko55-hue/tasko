@@ -21,20 +21,20 @@ export default function CredentialsModal({ email, password, onClose }) {
       </div>
 
       <div className="space-y-3">
-        <div className="flex items-center justify-between rounded-xl border border-line bg-slate-50 px-4 py-3">
+        <div className="flex items-center justify-between rounded-xl border border-line bg-surface px-4 py-3">
           <div>
-            <p className="text-xs font-medium text-slate-500">{t.email}</p>
-            <p className="text-sm font-bold text-slate-900" dir="ltr">{email}</p>
+            <p className="text-xs font-medium text-grayMid">{t.email}</p>
+            <p className="text-sm font-bold text-navy" dir="ltr">{email}</p>
           </div>
           <Button variant="ghost" size="sm" fullWidth={false} onClick={() => copy(email, 'email')}>
             {copiedField === 'email' ? t.copied : t.copy}
           </Button>
         </div>
 
-        <div className="flex items-center justify-between rounded-xl border border-line bg-slate-50 px-4 py-3">
+        <div className="flex items-center justify-between rounded-xl border border-line bg-surface px-4 py-3">
           <div>
-            <p className="text-xs font-medium text-slate-500">{t.password}</p>
-            <p className="text-sm font-bold text-slate-900" dir="ltr">{password}</p>
+            <p className="text-xs font-medium text-grayMid">{t.password}</p>
+            <p className="text-sm font-bold text-navy" dir="ltr">{password}</p>
           </div>
           <Button variant="ghost" size="sm" fullWidth={false} onClick={() => copy(password, 'password')}>
             {copiedField === 'password' ? t.copied : t.copy}

@@ -60,14 +60,14 @@ export default function ClientForm({ onSubmit, onCancel }) {
 
       {admin && (
         <div>
-          <p className="mb-1 text-sm font-bold text-slate-700">{he.assignments.clientManagers}</p>
-          <p className="mb-2 text-xs text-slate-500">{he.assignments.clientManagersHint}</p>
+          <p className="mb-1 text-sm font-bold text-inkSoft">{he.assignments.clientManagers}</p>
+          <p className="mb-2 text-xs text-grayMid">{he.assignments.clientManagersHint}</p>
           <ManagerPicker managers={managers} value={managerIds} onChange={setManagerIds} />
         </div>
       )}
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+        <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">
           {error}
         </p>
       )}

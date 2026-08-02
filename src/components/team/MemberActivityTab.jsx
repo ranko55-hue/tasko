@@ -42,35 +42,35 @@ export default function MemberActivityTab({ memberId, orgId }) {
       });
   }, [memberId, orgId]);
 
-  if (loading) return <p className="py-8 text-center text-slate-500">{he.common.loading}</p>;
+  if (loading) return <p className="py-8 text-center text-grayMid">{he.common.loading}</p>;
 
   const lastSeen = events[0]?.created_at;
 
   return (
     <div>
-      <p className="mb-4 text-sm text-slate-500">
+      <p className="mb-4 text-sm text-grayMid">
         {t.lastSeen}: <span className="font-bold">{timeAgo(lastSeen)}</span>
       </p>
 
       {events.length === 0 ? (
-        <p className="py-8 text-center text-sm text-slate-400">{t.activityEmpty}</p>
+        <p className="py-8 text-center text-sm text-grayLight">{t.activityEmpty}</p>
       ) : (
         <div className="divide-y divide-line">
           {events.map((ev) => (
             <div key={ev.id} className="flex items-start gap-3 py-3">
-              <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-slate-400" />
+              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-grayLight" />
               <div className="min-w-0 flex-1">
-                <p className="text-sm text-slate-700">
+                <p className="text-sm text-inkSoft">
                   <span className="font-bold">{eventLabels[ev.type] ?? ev.type}</span>
                   {ev.task?.title && (
-                    <span className="text-slate-500"> — {ev.task.title}</span>
+                    <span className="text-grayMid"> — {ev.task.title}</span>
                   )}
                 </p>
                 {ev.payload?.text && (
-                  <p className="mt-0.5 text-xs text-slate-500">{ev.payload.text}</p>
+                  <p className="mt-1 text-xs text-grayMid">{ev.payload.text}</p>
                 )}
               </div>
-              <span className="shrink-0 text-xs text-slate-400" style={{ fontVariantNumeric: 'tabular-nums' }}>
+              <span className="shrink-0 text-xs text-grayLight" style={{ fontVariantNumeric: 'tabular-nums' }}>
                 {fmtDateTime(ev.created_at)}
               </span>
             </div>

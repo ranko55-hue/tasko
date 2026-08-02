@@ -23,13 +23,13 @@ export default class ErrorBoundary extends Component {
     if (!this.state.hasError) return this.props.children;
 
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <div className="flex min-h-screen items-center justify-center bg-surface px-6">
         <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-sm">
           <div className="mb-3 flex justify-center text-statusRed">
             <Icon name="alert" size="xl" />
           </div>
-          <h1 className="mb-2 text-xl font-black text-slate-900">{he.crash.title}</h1>
-          <p className="mb-6 text-slate-600">{he.crash.message}</p>
+          <h1 className="mb-2 text-xl font-black text-navy">{he.crash.title}</h1>
+          <p className="mb-6 text-grayDark">{he.crash.message}</p>
           <Button onClick={() => window.location.reload()}>
             {he.crash.refresh}
           </Button>

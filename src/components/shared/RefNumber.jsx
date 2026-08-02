@@ -3,7 +3,7 @@
 export default function RefNumber({ value, className = '' }) {
   if (value === null || value === undefined) return null;
   return (
-    <span dir="ltr" className={`tabular-nums text-slate-400 ${className}`}>
+    <span dir="ltr" className={`tabular-nums text-grayLight ${className}`}>
       #{value}
     </span>
   );

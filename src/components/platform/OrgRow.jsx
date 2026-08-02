@@ -54,8 +54,8 @@ export default function OrgRow({ org, onMemberChanged }) {
         className="flex w-full items-center gap-4 px-4 py-4 text-right"
       >
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-bold text-slate-900">{org.name}</h3>
-          <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
+          <h3 className="text-base font-bold text-navy">{org.name}</h3>
+          <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-grayLight">
             <span>{t.members}: {org.member_count}</span>
             {org.inactive_count > 0 && (
               <span className="text-amber-600">({org.inactive_count} {t.inactive})</span>
@@ -75,9 +75,9 @@ export default function OrgRow({ org, onMemberChanged }) {
       {open && (
         <div className="border-t border-line">
           {loading ? (
-            <p className="px-4 py-4 text-sm text-slate-400">{he.common.loading}</p>
+            <p className="px-4 py-4 text-sm text-grayLight">{he.common.loading}</p>
           ) : members.length === 0 ? (
-            <p className="px-4 py-4 text-sm text-slate-400">{t.noMembers}</p>
+            <p className="px-4 py-4 text-sm text-grayLight">{t.noMembers}</p>
           ) : (
             <>
               {/* Desktop table */}
@@ -102,7 +102,7 @@ function MemberTable({ members, onToggle, busy }) {
   return (
     <table className="w-full text-sm">
       <thead>
-        <tr className="border-b border-line bg-slate-50 text-right text-xs font-bold text-slate-500">
+        <tr className="border-b border-line bg-surface text-right text-xs font-bold text-grayMid">
           <th className="px-4 py-2">{t.memberName}</th>
           <th className="px-4 py-2">{t.memberRole}</th>
           <th className="px-4 py-2">{t.memberPhone}</th>
@@ -123,11 +123,11 @@ function MemberTable({ members, onToggle, busy }) {
               <RoleBadge role={m.role} />
             </td>
             <td className="px-4 py-2 tabular-nums">{m.phone || '—'}</td>
-            <td className="px-4 py-2 text-slate-500">{m.email || '—'}</td>
+            <td className="px-4 py-2 text-grayMid">{m.email || '—'}</td>
             <td className="px-4 py-2">
               <StatusBadge active={m.is_active} />
             </td>
-            <td className="px-4 py-2 text-slate-400">{relativeDate(m.last_sign_in_at)}</td>
+            <td className="px-4 py-2 text-grayLight">{relativeDate(m.last_sign_in_at)}</td>
             <td className="px-4 py-2">
               <Button
                 size="sm"
@@ -149,10 +149,10 @@ function MemberCard({ member: m, onToggle, busy }) {
   return (
     <div className={`rounded-xl border border-line bg-white p-3 ${!m.is_active ? 'opacity-50' : ''}`}>
       <div className="mb-2 flex items-center justify-between gap-2">
-        <span className="font-bold text-slate-900">{m.full_name}</span>
+        <span className="font-bold text-navy">{m.full_name}</span>
         <StatusBadge active={m.is_active} />
       </div>
-      <div className="mb-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">
+      <div className="mb-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-grayMid">
         <RoleBadge role={m.role} />
         {m.phone && <span className="tabular-nums">{m.phone}</span>}
         {m.email && <span>{m.email}</span>}
@@ -175,10 +175,10 @@ function RoleBadge({ role }) {
   const colors = {
     admin: 'bg-indigo-50 text-indigo-700',
     manager: 'bg-sky-50 text-sky-700',
-    worker: 'bg-slate-100 text-slate-600',
+    worker: 'bg-appBg text-grayDark',
   };
   return (
-    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ${colors[role] || colors.worker}`}>
+    <span className={`inline-block rounded-full px-3 py-1 text-xs font-bold ${colors[role] || colors.worker}`}>
       {ROLE_LABEL[role] || role}
     </span>
   );
@@ -187,8 +187,8 @@ function RoleBadge({ role }) {
 function StatusBadge({ active }) {
   return (
     <span
-      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ${
-        active ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+      className={`inline-block rounded-full px-3 py-1 text-xs font-bold ${
+        active ? 'bg-green-50 text-green-700' : 'bg-urgentSoft text-urgentInk'
       }`}
     >
       {active ? t.statusActive : t.statusInactive}

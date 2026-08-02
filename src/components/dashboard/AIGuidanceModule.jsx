@@ -107,7 +107,7 @@ export default function AIGuidanceModule({
             title={live ? he.dashboard.live : he.dashboard.polling}
             aria-label={live ? he.dashboard.live : he.dashboard.polling}
             className={`h-2 w-2 rounded-full ${
-              live ? 'animate-pulse bg-statusGreen' : 'bg-slate-500'
+              live ? 'animate-pulse bg-statusGreen' : 'bg-grayMid'
             }`}
           />
         </h2>
@@ -157,7 +157,7 @@ export default function AIGuidanceModule({
           {pinnedDisplay.map((p) => (
             <span
               key={p.key}
-              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-slate-400 px-3 py-1 text-xs font-bold text-slate-900"
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-grayLight px-3 py-1 text-xs font-bold text-navy"
             >
               {p.label}
             </span>
@@ -165,7 +165,7 @@ export default function AIGuidanceModule({
 
           {/* "+N" overflow or "+" button */}
           {overflowCount > 0 && (
-            <span className="inline-flex shrink-0 items-center rounded-full bg-slate-400 px-3 py-1 text-xs font-bold text-slate-900">
+            <span className="inline-flex shrink-0 items-center rounded-full bg-grayLight px-3 py-1 text-xs font-bold text-navy">
               +{overflowCount}
             </span>
           )}
@@ -173,7 +173,7 @@ export default function AIGuidanceModule({
             <button
               type="button"
               onClick={() => setIsOpen(true)}
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-transparent text-lg font-bold text-slate-300 hover:bg-slate-300/20"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-lineDark bg-transparent text-lg font-bold text-lineDark hover:bg-lineDark/20"
             >
               ＋
             </button>
@@ -186,7 +186,7 @@ export default function AIGuidanceModule({
         <div className="mt-3 border-t border-navy2 pt-3">
           {/* Pinned selector — pill toggles */}
           <div className="mb-3">
-            <div className="mb-2 text-xs font-bold text-slate-300">{he.dashboard.pinnedTitle}</div>
+            <div className="mb-2 text-xs font-bold text-lineDark">{he.dashboard.pinnedTitle}</div>
             <div className="flex flex-wrap gap-2">
               {pinnedOptions.map((p) => {
                 const active = pinned.includes(p.key);
@@ -200,11 +200,11 @@ export default function AIGuidanceModule({
                       if (active) onTogglePinned(pinned.filter((c) => c !== p.key));
                       else onTogglePinned([...pinned, p.key].slice(0, 3));
                     }}
-                    className={`rounded-lg px-3 py-1.5 text-sm font-bold transition-colors ${
+                    className={`rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
                       active
                         ? 'bg-brandYellow text-navy'
                         : atMax
-                          ? 'bg-white/5 text-slate-500 cursor-not-allowed'
+                          ? 'bg-white/5 text-grayMid cursor-not-allowed'
                           : 'bg-white/10 text-white hover:bg-white/20'
                     }`}
                   >
@@ -214,31 +214,31 @@ export default function AIGuidanceModule({
               })}
             </div>
             {pinned.length >= 3 && (
-              <p className="mt-1.5 text-xs text-slate-400">{he.dashboard.pinnedMax}</p>
+              <p className="mt-2 text-xs text-grayLight">{he.dashboard.pinnedMax}</p>
             )}
           </div>
 
           {/* Alert items */}
           {hasAlerts && allAlertItems.length > 0 && (
             <div>
-              <div className="mb-2 text-xs font-bold text-slate-300">פריטים דורשי תשומת לב</div>
+              <div className="mb-2 text-xs font-bold text-lineDark">פריטים דורשי תשומת לב</div>
               <div className="max-h-[300px] space-y-2 overflow-y-auto">
                 {allAlertItems.map((item) => (
                   <button
                     key={`${item.type}-${item.id}`}
                     type="button"
                     onClick={() => item.type === 'task' && onOpenTask?.(item.id)}
-                    className="flex w-full items-center justify-between gap-2 rounded-lg bg-navy2 px-2 py-1.5 text-xs text-start hover:bg-navy2/80 transition-colors"
+                    className="flex w-full items-center justify-between gap-2 rounded-lg bg-navy2 px-2 py-2 text-xs text-start hover:bg-navy2/80 transition-colors"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="font-bold text-white truncate">
                         {item.title} — {item.subtitle}
                       </div>
-                      <div className="text-slate-400 text-xs">
+                      <div className="text-grayLight text-xs">
                         {item.reason} · {formatDateTime(item.createdAt)}
                       </div>
                     </div>
-                    <span className="shrink-0 rounded bg-brand px-2 py-0.5 text-xs font-bold text-white">
+                    <span className="shrink-0 rounded bg-brand px-2 py-1 text-xs font-bold text-white">
                       {item.actionLabel}
                     </span>
                   </button>

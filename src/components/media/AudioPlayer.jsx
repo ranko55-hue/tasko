@@ -57,7 +57,7 @@ export default function AudioPlayer({ src }) {
   const pct = dur > 0 ? (cur / dur) * 100 : 0;
 
   return (
-    <div className="mt-2 flex items-center gap-3 rounded-xl bg-navy px-3 py-2.5">
+    <div className="mt-2 flex items-center gap-3 rounded-xl bg-navy px-3 py-3">
       <audio ref={ref} src={src} preload="metadata" className="hidden" />
 
       <button
@@ -69,13 +69,13 @@ export default function AudioPlayer({ src }) {
         <Icon name={playing ? 'pauseBars' : 'play'} size="sm" />
       </button>
 
-      <div className="flex h-8 min-w-0 flex-1 items-center gap-[3px]" aria-hidden="true">
+      <div className="flex h-8 min-w-0 flex-1 items-center gap-1" aria-hidden="true">
         {BARS.map((h, i) => {
           const on = (i / BARS.length) * 100 <= pct;
           return (
             <span
               key={i}
-              className={`w-[3px] shrink-0 rounded-full ${on ? 'bg-brandYellow' : 'bg-white/20'}`}
+              className={`w-1 shrink-0 rounded-full ${on ? 'bg-brandYellow' : 'bg-white/20'}`}
               style={{ height: `${h}%` }}
             />
           );
@@ -83,7 +83,7 @@ export default function AudioPlayer({ src }) {
       </div>
 
       <span
-        className="shrink-0 text-xs text-slate-300"
+        className="shrink-0 text-xs text-lineDark"
         style={{ fontVariantNumeric: 'tabular-nums' }}
       >
         {mmss(dur > 0 ? (playing || cur > 0 ? cur : dur) : 0)}

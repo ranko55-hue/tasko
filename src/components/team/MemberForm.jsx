@@ -90,7 +90,7 @@ export default function MemberForm({ onCreated, onCancel }) {
       <Field label={t.fullName} value={f.full_name} onChange={set('full_name')} />
       <Field label={t.email} type="email" inputMode="email" value={f.email} onChange={set('email')} />
       <Field label={t.password} type="text" value={f.password} onChange={set('password')} autoComplete="off" />
-      <p className="!mt-1 text-xs text-slate-500">{t.passwordHint}</p>
+      <p className="!mt-1 text-xs text-grayMid">{t.passwordHint}</p>
 
       <div className="grid grid-cols-2 gap-3">
         <Field label={`${t.phone} ${he.common.optional}`} type="tel" inputMode="tel" value={f.phone} onChange={set('phone')} />
@@ -107,7 +107,7 @@ export default function MemberForm({ onCreated, onCancel }) {
 
       {showManager && (
         <div>
-          <p className="mb-1 text-sm font-bold text-slate-700">
+          <p className="mb-1 text-sm font-bold text-inkSoft">
             {t.manager} {needsManager ? '' : he.common.optional}
           </p>
           <ManagerPicker
@@ -127,7 +127,7 @@ export default function MemberForm({ onCreated, onCancel }) {
       </div>
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">{error}</p>
+        <p className="rounded-lg bg-urgentSoft px-3 py-2 text-sm font-medium text-urgentInk">{error}</p>
       )}
 
       <div className="flex gap-3 pt-1">

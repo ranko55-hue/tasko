@@ -21,7 +21,7 @@ export default function OptionsEditor({ options, onChange }) {
 
   return (
     <div>
-      <span className="mb-1.5 block text-base font-medium text-slate-700">
+      <span className="mb-2 block text-base font-medium text-inkSoft">
         {cf.options.title}
       </span>
 
@@ -30,13 +30,13 @@ export default function OptionsEditor({ options, onChange }) {
           {options.map((opt, i) => (
             <li
               key={i}
-              className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2"
+              className="flex items-center justify-between rounded-lg bg-surface px-3 py-2"
             >
-              <span className="text-slate-900">{opt}</span>
+              <span className="text-navy">{opt}</span>
               <button
                 type="button"
                 onClick={() => remove(i)}
-                className="text-slate-400 hover:text-red-500"
+                className="text-grayLight hover:text-statusRed"
               >
                 <Icon name="close" size="sm" />
               </button>
@@ -53,7 +53,7 @@ export default function OptionsEditor({ options, onChange }) {
           onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), add())}
           placeholder={cf.options.placeholder}
           className="min-h-touch flex-1 rounded-xl border border-line bg-white px-4 text-lg
-                     text-slate-900 focus:border-brand focus:outline-none focus:ring-4
+                     text-navy focus:border-brand focus:outline-none focus:ring-4
                      focus:ring-brand/20"
         />
         <Button variant="secondary" size="sm" fullWidth={false} onClick={add}>

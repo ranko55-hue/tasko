@@ -39,7 +39,7 @@ export default function DrawerViewBody({ task, assigneeName, refreshKey, onEvent
       <AssigneeCard task={task} assigneeName={assigneeName} />
 
       {task?.description && (
-        <p className="mx-4 mb-4 whitespace-pre-wrap text-slate-700 sm:mx-5">
+        <p className="mx-4 mb-4 whitespace-pre-wrap text-inkSoft sm:mx-6">
           {task.description}
         </p>
       )}
@@ -47,11 +47,11 @@ export default function DrawerViewBody({ task, assigneeName, refreshKey, onEvent
       {fields.length > 0 && (
         <>
           <SectionHeader label={d.sectionCustomFields} count={fields.filter((f) => values[f.id]).length} />
-          <div className="mx-4 mb-4 space-y-2 sm:mx-5">
+          <div className="mx-4 mb-4 space-y-2 sm:mx-6">
             {fields.map((f) => (
               <div key={f.id} className="flex items-baseline justify-between gap-3">
-                <span className="shrink-0 text-sm text-slate-500">{f.label}</span>
-                <span className="min-w-0 truncate text-sm font-medium text-slate-900">
+                <span className="shrink-0 text-sm text-grayMid">{f.label}</span>
+                <span className="min-w-0 truncate text-sm font-medium text-navy">
                   {values[f.id] ?? cf.noValue}
                 </span>
               </div>

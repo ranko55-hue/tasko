@@ -19,19 +19,19 @@ export default function DashboardTaskCard({
   const overrun = isOverrun(task);
   const progress = task.est_minutes ? (task.net_seconds / 60) / task.est_minutes : 0;
   const progressPct = Math.round(progress * 100);
-  const statusTextColor = STATUS_TEXT[task.status] || 'text-slate-500';
+  const statusTextColor = STATUS_TEXT[task.status] || 'text-grayMid';
 
   // בחר צבע פס: ירוק ≤85%, כתום 85-100%, אדום >100%, אפור = paused
   let barColor = 'bg-statusGreen';
   let statusText = `תקין · ${progressPct}%`;
   if (task.status === 'paused') {
-    barColor = 'bg-slate-400';
+    barColor = 'bg-grayLight';
     statusText = `הזמן עצור · הפסקה`;
   } else if (overrun) {
     barColor = 'bg-statusRed';
     statusText = `חריגה · ${overrunMinutes(task)} ${he.time.minutes} מעל`;
   } else if (progressPct >= 85) {
-    barColor = 'bg-yellow-500';
+    barColor = 'bg-brandYellow';
     statusText = `מתקרב ליעד · ${progressPct}%`;
   }
 
@@ -43,26 +43,26 @@ export default function DashboardTaskCard({
   return (
     <div
       onClick={() => onOpenTask?.(task.id)}
-      className="cursor-pointer overflow-hidden rounded-[10px] border border-line bg-white shadow-sm transition-colors hover:border-slate-300"
+      className="cursor-pointer overflow-hidden rounded-[10px] border border-line bg-white shadow-sm transition-colors hover:border-lineDark"
     >
       {/* Top row: status dot + name + number */}
       <div className="flex items-baseline gap-2 border-b border-line px-3 py-2">
         <span
-          className={`shrink-0 h-1.5 w-1.5 rounded-full ${STATUS_DOT[task.status] || 'bg-slate-400'}`}
+          className={`shrink-0 h-2 w-2 rounded-full ${STATUS_DOT[task.status] || 'bg-grayLight'}`}
         />
-        <span className={`font-bold text-[12.5px] ${statusTextColor}`}>
+        <span className={`font-bold text-xs ${statusTextColor}`}>
           {he.tasks.status[task.status] || task.status}
         </span>
-        <span className="ml-auto text-xs text-slate-500" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        <span className="ml-auto text-xs text-grayMid" style={{ fontVariantNumeric: 'tabular-nums' }}>
           #{task.id}
         </span>
       </div>
 
       {/* Title */}
-      <div className="px-3 py-2 font-bold text-slate-900">{task.title}</div>
+      <div className="px-3 py-2 font-bold text-navy">{task.title}</div>
 
       {/* Client · Project */}
-      <div className="px-3 text-sm text-slate-500">
+      <div className="px-3 text-sm text-grayMid">
         {/* v8 §3.4: הלקוח הוא העוגן ותמיד מוצג; הפרויקט נוסף רק אם קיים */}
         {task.project?.name
           ? `${task.client?.name ?? he.common.none} · ${task.project.name}`
@@ -70,21 +70,21 @@ export default function DashboardTaskCard({
       </div>
 
       {/* Data row: due | allocated | priority */}
-      <div className="flex gap-4 border-t border-b border-line px-3 py-2 text-xs text-slate-600">
+      <div className="flex gap-4 border-t border-b border-line px-3 py-2 text-xs text-grayDark">
         <div className="min-w-0">
-          <div className="text-slate-400">יעד</div>
+          <div className="text-grayLight">יעד</div>
           <div style={{ fontVariantNumeric: 'tabular-nums' }}>
             {dateRangeLabel(task) ?? he.common.none}
           </div>
         </div>
         <div className="min-w-0 border-l border-line pl-4">
-          <div className="text-slate-400">מוקצב</div>
+          <div className="text-grayLight">מוקצב</div>
           <div style={{ fontVariantNumeric: 'tabular-nums' }}>
             {task.est_minutes ? `${task.est_minutes}:00` : he.common.none}
           </div>
         </div>
         <div className="min-w-0 border-l border-line pl-4">
-          <div className="text-slate-400">דחיפות</div>
+          <div className="text-grayLight">דחיפות</div>
           <div>
             {task.priority === 'urgent' ? (
               <span className="inline-flex items-center gap-1 font-bold text-statusRed">
@@ -101,16 +101,16 @@ export default function DashboardTaskCard({
       {/* Time utilization (if est_minutes) */}
       {task.est_minutes && (
         <div className="px-3 py-2">
-          <div className="mb-1 text-sm font-medium text-slate-700" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <div className="mb-1 text-sm font-medium text-inkSoft" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {timeDisplay}
           </div>
-          <div className="h-1 rounded-full bg-slate-200">
+          <div className="h-1 rounded-full bg-line">
             <div
               className={`h-full ${barColor} transition-all`}
               style={{ width: `${Math.min(progressPct, 100)}%` }}
             />
           </div>
-          <div className="mt-1 text-xs text-slate-600">
+          <div className="mt-1 text-xs text-grayDark">
             {statusText}
           </div>
         </div>
@@ -118,9 +118,9 @@ export default function DashboardTaskCard({
 
       {/* Blocked state */}
       {task.status === 'blocked' && (
-        <div className="mx-3 my-2 rounded-lg bg-red-50 px-2 py-2">
-          <div className="text-xs font-bold text-red-700">דיווח העובד</div>
-          <div className="mt-1 text-xs text-red-900" style={{ paddingRight: '8px', borderRight: '2px solid #fca5a5' }}>
+        <div className="mx-3 my-2 rounded-lg bg-urgentSoft px-2 py-2">
+          <div className="text-xs font-bold text-urgentInk">דיווח העובד</div>
+          <div className="mt-1 text-xs text-dangerDark" style={{ paddingRight: '8px', borderRight: '2px solid #fca5a5' }}>
             {blockedReason || he.common.none}
           </div>
         </div>
@@ -133,11 +133,11 @@ export default function DashboardTaskCard({
             {assigneeName[0].toUpperCase()}
           </div>
         )}
-        <div className="flex-1 min-w-0 text-sm font-bold text-slate-700 truncate">
+        <div className="flex-1 min-w-0 text-sm font-bold text-inkSoft truncate">
           {assigneeName || he.tasks.unassigned}
         </div>
         {task.work_started_at && ['in_progress', 'paused'].includes(task.status) && (
-          <div className="text-sm text-slate-500" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <div className="text-sm text-grayMid" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatDuration(task.net_seconds)}
           </div>
         )}

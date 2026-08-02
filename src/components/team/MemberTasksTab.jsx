@@ -33,7 +33,7 @@ export default function MemberTasksTab({ tasks, loading, orgId, isManager }) {
     return list;
   }, [tasks, filter, search]);
 
-  if (loading) return <p className="py-8 text-center text-slate-500">{he.common.loading}</p>;
+  if (loading) return <p className="py-8 text-center text-grayMid">{he.common.loading}</p>;
 
   return (
     <div>
@@ -45,7 +45,7 @@ export default function MemberTasksTab({ tasks, loading, orgId, isManager }) {
               type="button"
               onClick={() => setFilter(f.key)}
               className={`min-h-touch rounded-lg px-3 text-xs font-bold ${
-                filter === f.key ? 'bg-navy text-white' : 'text-slate-600 hover:bg-slate-100'
+                filter === f.key ? 'bg-navy text-white' : 'text-grayDark hover:bg-appBg'
               }`}
             >
               {f.label}
@@ -57,12 +57,12 @@ export default function MemberTasksTab({ tasks, loading, orgId, isManager }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={he.shell.searchPlaceholder}
-          className="min-h-touch w-full rounded-xl border border-line bg-white px-3 text-sm placeholder:text-slate-400 focus:border-brand focus:outline-none sm:w-56"
+          className="min-h-touch w-full rounded-xl border border-line bg-white px-3 text-sm placeholder:text-grayLight focus:border-brand focus:outline-none sm:w-56"
         />
       </div>
 
       {filtered.length === 0 ? (
-        <p className="py-8 text-center text-sm text-slate-400">{t.tasksEmpty}</p>
+        <p className="py-8 text-center text-sm text-grayLight">{t.tasksEmpty}</p>
       ) : (
         <div className="divide-y divide-line">
           {filtered.map((task) => (
@@ -70,19 +70,19 @@ export default function MemberTasksTab({ tasks, loading, orgId, isManager }) {
               key={task.id}
               type="button"
               onClick={() => setSelectedTaskId(task.id)}
-              className="flex min-h-touch w-full items-center gap-3 px-1 py-3 text-start hover:bg-slate-50"
+              className="flex min-h-touch w-full items-center gap-3 px-1 py-3 text-start hover:bg-surface"
             >
-              <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${STATUS_DOT[task.status] || 'bg-slate-400'}`} />
+              <span className={`h-3 w-3 shrink-0 rounded-full ${STATUS_DOT[task.status] || 'bg-grayLight'}`} />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold text-slate-900">{task.title}</p>
-                <p className="truncate text-xs text-slate-500">
+                <p className="truncate text-sm font-bold text-navy">{task.title}</p>
+                <p className="truncate text-xs text-grayMid">
                   {[task.client?.name, task.project?.name].filter(Boolean).join(' · ')}
                 </p>
               </div>
-              <span className="shrink-0 text-xs text-slate-400">
+              <span className="shrink-0 text-xs text-grayLight">
                 {he.tasks.status[task.status] ?? task.status}
               </span>
-              <span className="w-14 shrink-0 text-end text-xs text-slate-400" style={NUM}>
+              <span className="w-14 shrink-0 text-end text-xs text-grayLight" style={NUM}>
                 #{task.id}
               </span>
             </button>

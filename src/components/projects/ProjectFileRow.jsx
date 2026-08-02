@@ -27,7 +27,7 @@ export default function ProjectFileRow({ row, onRemove }) {
 
   return (
     <div className="flex items-center gap-3 rounded-xl border border-line bg-white p-3">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-appBg">
         {image && url ? (
           <img src={url} alt={row.file_name} className="h-full w-full object-cover" />
         ) : (
@@ -36,8 +36,8 @@ export default function ProjectFileRow({ row, onRemove }) {
       </div>
 
       <div className="min-w-0 flex-1">
-        <div className="truncate font-bold text-slate-900">{row.file_name}</div>
-        <div className="mt-0.5 truncate text-sm text-slate-500">
+        <div className="truncate font-bold text-navy">{row.file_name}</div>
+        <div className="mt-1 truncate text-sm text-grayMid">
           {formatDate(row.created_at)} · {f.uploadedBy.replace('{name}', uploader)}
         </div>
       </div>
@@ -47,7 +47,7 @@ export default function ProjectFileRow({ row, onRemove }) {
           <a
             href={url}
             download={row.file_name}
-            className="flex min-h-touch items-center rounded-lg bg-slate-100 px-3 text-sm font-bold text-slate-700 hover:bg-slate-200"
+            className="flex min-h-touch items-center rounded-lg bg-appBg px-3 text-sm font-bold text-inkSoft hover:bg-line"
           >
             {f.download}
           </a>

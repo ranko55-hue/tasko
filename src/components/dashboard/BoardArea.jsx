@@ -27,17 +27,17 @@ export default function BoardArea({
   const order = ['waiting', 'working', 'alert', 'approval', 'done'];
 
   return (
-    <section className="rounded-2xl border border-line bg-slate-50/60 p-3 sm:p-4">
+    <section className="rounded-2xl border border-line bg-surface/60 p-3 sm:p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3 px-1">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-black text-slate-500">{d.areaTitle}</h2>
+          <h2 className="text-sm font-black text-grayMid">{d.areaTitle}</h2>
           <button
             type="button"
             onClick={() => setMyOnly((v) => !v)}
             className={`rounded-full px-3 py-1 text-xs font-bold transition-colors ${
               myOnly
                 ? 'bg-brand text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                : 'bg-appBg text-grayDark hover:bg-line'
             }`}
           >
             {myOnly ? d.myTasksFilter : d.allTasks}
@@ -58,13 +58,13 @@ export default function BoardArea({
                 <div className="mb-3 flex items-center gap-2">
                   <h3
                     className={`font-bold ${
-                      key === 'alert' ? 'text-statusRed' : key === 'approval' ? 'text-purple-700' : 'text-slate-900'
+                      key === 'alert' ? 'text-statusRed' : key === 'approval' ? 'text-purple-700' : 'text-navy'
                     }`}
                   >
                     {d.columns[key]}
                   </h3>
                   <span
-                    className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600"
+                    className="rounded-full bg-appBg px-2 py-1 text-xs font-bold text-grayDark"
                     style={NUM}
                   >
                     {list.length}
