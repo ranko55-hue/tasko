@@ -38,9 +38,9 @@ const PATHS = {
   bell: 'M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10.3 21a2 2 0 0 0 3.4 0',
 };
 
-const SIZES = { sm: 'h-4 w-4', md: 'h-5 w-5', lg: 'h-8 w-8', xl: 'h-12 w-12' };
+const SIZES = { sm: 'h-4 w-4', md: 'h-5 w-5', lg: 'h-8 w-8', xl: 'h-12 w-12', nav: 'h-[19px] w-[19px]' };
 
-export default function Icon({ name, size = 'md', className = '' }) {
+export default function Icon({ name, size = 'md', className = '', strokeWidth = 1.75 }) {
   const d = PATHS[name];
   if (!d) return null;
 
@@ -49,7 +49,7 @@ export default function Icon({ name, size = 'md', className = '' }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"

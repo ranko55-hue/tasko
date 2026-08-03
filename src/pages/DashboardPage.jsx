@@ -1,5 +1,4 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
 import { isManager } from '../lib/roles';
 import { useDashboard } from '../hooks/useDashboard';
@@ -12,7 +11,6 @@ import EmptyState from '../components/ui/EmptyState';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
 import BoardArea from '../components/dashboard/BoardArea';
 import TaskDrawer from '../components/tasks/TaskDrawer';
-import NewTaskModal from '../components/shell/NewTaskModal';
 
 const t = he.dashboard;
 
@@ -20,7 +18,6 @@ export default function DashboardPage() {
   const { member } = useOrg();
   const { members } = useOrgMembers(member.org_id);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
-  const [newTaskOpen, setNewTaskOpen] = useState(false);
 
   const {
     tasks,
@@ -117,19 +114,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Action bar */}
-      <div className="mb-6 flex flex-wrap gap-3">
-        <Button variant="yellow" fullWidth={false} onClick={() => setNewTaskOpen(true)}>
-          {t.newTask}
-        </Button>
-        <Link
-          to="/my"
-          className="flex min-h-touch items-center rounded-lg border-2 border-line px-4 font-bold text-inkSoft hover:bg-surface"
-        >
-          {he.nav.myTasks}
-        </Link>
-      </div>
-
       {/* Main content */}
       {loading ? (
         <p className="py-8 text-center text-lg text-grayMid">{t.loading}</p>
@@ -151,16 +135,6 @@ export default function DashboardPage() {
           onOpenTask={setSelectedTaskId}
           onReturnToWork={returnToWork}
           currentMemberId={member.id}
-        />
-      )}
-
-      {newTaskOpen && (
-        <NewTaskModal
-          onClose={() => setNewTaskOpen(false)}
-          onDone={() => {
-            setNewTaskOpen(false);
-            refetch();
-          }}
         />
       )}
 

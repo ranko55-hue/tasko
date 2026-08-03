@@ -16,6 +16,11 @@ export default {
         // טוקני DESIGN.md — אין להמציא צבעים
         navy: '#0F172A',
         navy2: '#1E293B',
+        // ניווט צדי — navy עמוק יותר מהפס העליון, ליצירת היררכיה
+        sidebar: '#0A1524',
+        sidebarText: '#C9D6E2',
+        sidebarLine: '#1D3D5C',
+        sidebarLabel: '#8FA3B6',
         brandYellow: '#FACC15',
         statusGreen: '#22C55E',
         statusRed: '#EF4444',

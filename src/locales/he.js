@@ -87,6 +87,7 @@ export const he = {
     expand: 'הרחב תפריט',
     menu: 'תפריט',
     close: 'סגירה',
+    platformGroup: 'ניהול פלטפורמה',
   },
 
   // פס עליון — ברכה ופעולות מהירות
