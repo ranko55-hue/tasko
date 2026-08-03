@@ -41,52 +41,51 @@ function IconLink({ icon, label, onClick, to }) {
   );
 }
 
-// פס עליון בהשראת CRM (מנהלים). ה-px-3 מיישר את הקצה הימני של הברכה
-// לעמודת ה-sidebar. מובייל: המבורגר + חיפוש + לוגו; השאר מוסתר.
+// פס עליון בהשראת CRM (מנהלים). הכל מקובץ בצד ימין כרצף אחד:
+// ברכה (צמודה לקו אפס, קצה ה-sidebar) + בית/יציאה + חיפוש + פעולות מהירות.
+// הלוגו לבדו בקצה שמאל. מובייל: המבורגר + חיפוש + לוגו; השאר מוסתר.
 export default function Topbar({ onMenu, onRefresh }) {
   const { member } = useOrg();
-  const [searchOpen, setSearchOpen] = useState(false);
   const clock = useClock();
   const firstName = member?.full_name?.split(' ')[0] ?? '';
 
   return (
     <header className="sticky top-0 z-40 h-[68px] shrink-0 bg-navy text-white">
-      <div className={`grid h-full items-center gap-3 px-3 ${searchOpen ? 'grid-cols-[auto_1fr_auto]' : 'grid-cols-[1fr_auto_1fr]'}`}>
-        {/* צד ימין (RTL) — ברכה + בית + יציאה. מובייל: המבורגר */}
-        <div className="flex min-w-0 items-center gap-2 justify-self-start">
-          <button
-            type="button"
-            onClick={onMenu}
-            aria-label={he.sidebar.menu}
-            className="flex min-h-touch min-w-touch items-center justify-center rounded-lg text-line hover:bg-white/10 md:hidden"
-          >
-            <Icon name="menu" size="md" />
-          </button>
+      {/* px-3 במובייל; בדסקטופ ps-0 — הברכה צמודה לקו אפס (קצה ה-sidebar) */}
+      <div className="flex h-full items-center gap-3 px-3 md:ps-0">
+        {/* מובייל — המבורגר */}
+        <button
+          type="button"
+          onClick={onMenu}
+          aria-label={he.sidebar.menu}
+          className="flex min-h-touch min-w-touch shrink-0 items-center justify-center rounded-lg text-line hover:bg-white/10 md:hidden"
+        >
+          <Icon name="menu" size="md" />
+        </button>
 
-          <div className="hidden min-w-0 items-center gap-2 md:flex">
-            <div className="min-w-0 leading-tight">
-              <div className="truncate text-sm font-bold text-white">{t.hello}, {firstName}</div>
-              <div className="truncate text-xs text-lineDark">{clock}</div>
-            </div>
-            <IconLink icon="home" label={t.home} to={homePathFor(member)} />
-            <IconLink icon="logout" label={t.logout} onClick={() => supabase.auth.signOut()} />
+        {/* דסקטופ — קבוצה ימנית רציפה */}
+        <div className="hidden min-w-0 items-center gap-2 md:flex">
+          <div className="min-w-0 leading-tight">
+            <div className="truncate text-sm font-bold text-white">{t.hello}, {firstName}</div>
+            <div className="truncate text-xs text-lineDark">{clock}</div>
           </div>
+          <IconLink icon="home" label={t.home} to={homePathFor(member)} />
+          <IconLink icon="logout" label={t.logout} onClick={() => supabase.auth.signOut()} />
+          <div className="md:w-72 lg:w-96">
+            <SearchBar />
+          </div>
+          <TopbarActions onDone={onRefresh} />
         </div>
 
-        {/* מרכז — חיפוש + פעולות מהירות צמודות משמאלו */}
-        <div className={`flex items-center gap-2 justify-self-center ${searchOpen ? 'w-full' : ''}`}>
-          <div className={searchOpen ? 'w-full' : 'md:w-96'}>
-            <SearchBar onExpandedChange={setSearchOpen} />
-          </div>
-          <div className="hidden md:block">
-            <TopbarActions onDone={onRefresh} />
-          </div>
+        {/* מובייל — חיפוש */}
+        <div className="min-w-0 flex-1 md:hidden">
+          <SearchBar />
         </div>
 
-        {/* צד שמאל (RTL) — לוגו בקצה */}
+        {/* לוגו — קצה שמאל */}
         <Link
           to={homePathFor(member)}
-          className="flex items-center justify-self-end"
+          className="ms-auto flex shrink-0 items-center"
           aria-label={he.app.name}
         >
           <img src="/brand/tasko-header-dark.png" alt={he.app.name} className="h-7 w-auto" />
