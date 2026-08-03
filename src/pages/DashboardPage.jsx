@@ -91,6 +91,32 @@ export default function DashboardPage() {
         />
       )}
 
+      {/* Counters — real KPIs. יושבים ישר מתחת לתדריך → בלוק "מגדל הפיקוח" מגובש */}
+      {!loading && !error && !isEmpty && (
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <CounterCard
+            label={t.counters.doneToday}
+            value={kpis.doneToday}
+            color="text-statusGreen"
+          />
+          <CounterCard
+            label={t.counters.alerts}
+            value={kpis.alerts}
+            color="text-statusRed"
+          />
+          <CounterCard
+            label={t.counters.inField}
+            value={kpis.inField}
+            color="text-statusBlue"
+          />
+          <CounterCard
+            label={t.counters.open}
+            value={kpis.open}
+            color="text-navy"
+          />
+        </div>
+      )}
+
       {/* Action bar */}
       <div className="mb-6 flex flex-wrap gap-3">
         <Button variant="yellow" fullWidth={false} onClick={() => setNewTaskOpen(true)}>
@@ -117,41 +143,15 @@ export default function DashboardPage() {
       ) : isEmpty ? (
         <EmptyState icon="project" message={t.empty} />
       ) : (
-        <>
-          <BoardArea
-            cols={cols}
-            tasks={tasks}
-            membersMap={membersMap}
-            blockedReasons={blockedReasons}
-            onOpenTask={setSelectedTaskId}
-            onReturnToWork={returnToWork}
-            currentMemberId={member.id}
-          />
-
-          {/* Bottom counters — real KPIs */}
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <CounterCard
-              label={t.counters.doneToday}
-              value={kpis.doneToday}
-              color="text-statusGreen"
-            />
-            <CounterCard
-              label={t.counters.alerts}
-              value={kpis.alerts}
-              color="text-statusRed"
-            />
-            <CounterCard
-              label={t.counters.inField}
-              value={kpis.inField}
-              color="text-statusBlue"
-            />
-            <CounterCard
-              label={t.counters.open}
-              value={kpis.open}
-              color="text-navy"
-            />
-          </div>
-        </>
+        <BoardArea
+          cols={cols}
+          tasks={tasks}
+          membersMap={membersMap}
+          blockedReasons={blockedReasons}
+          onOpenTask={setSelectedTaskId}
+          onReturnToWork={returnToWork}
+          currentMemberId={member.id}
+        />
       )}
 
       {newTaskOpen && (
