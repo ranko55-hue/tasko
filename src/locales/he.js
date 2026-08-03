@@ -89,6 +89,18 @@ export const he = {
     close: 'סגירה',
   },
 
+  // פס עליון — ברכה ופעולות מהירות
+  topbar: {
+    hello: 'שלום',
+    home: 'דף הבית',
+    logout: 'יציאה',
+    newTask: 'משימה חדשה',
+    myTasks: 'המשימות שלי',
+    newClient: 'לקוח חדש',
+    newProject: 'פרויקט חדש',
+    notifications: 'התראות ותזכורות',
+  },
+
   shell: {
     menu: 'תפריט',
     close: 'סגירה',

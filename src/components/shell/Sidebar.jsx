@@ -5,7 +5,7 @@ import { isAdmin } from '../../lib/roles';
 import { he } from '../../locales/he';
 import Icon from '../ui/Icon';
 import Button from '../shared/Button';
-import QuickActions from './QuickActions';
+import TopbarActions from './TopbarActions';
 
 const s = he.sidebar;
 
@@ -64,13 +64,13 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, onCloseMobile
 
   return (
     <>
-      {/* דסקטופ */}
+      {/* דסקטופ — גובה מלא: כפתור קיפול, ניווט, ובתחתית פנייה לתמיכה */}
       <aside
         className={`hidden shrink-0 bg-navy text-white transition-all duration-200 md:block ${
           collapsed ? 'w-16' : 'w-56'
         }`}
       >
-        <div className="sticky top-14 flex flex-col gap-2 p-3">
+        <div className="sticky top-[68px] flex h-[calc(100vh-68px)] flex-col gap-2 p-3">
           <button
             type="button"
             onClick={onToggle}
@@ -83,7 +83,21 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, onCloseMobile
             <Icon name="menu" size="md" className="shrink-0" />
             {!collapsed && <span className="text-sm font-bold">{s.collapse}</span>}
           </button>
-          <SidebarNav collapsed={collapsed} />
+          <div className="flex-1 overflow-y-auto">
+            <SidebarNav collapsed={collapsed} />
+          </div>
+          <button
+            type="button"
+            onClick={onSupport}
+            aria-label={he.support.trigger}
+            title={collapsed ? he.support.trigger : undefined}
+            className={`flex min-h-touch items-center gap-3 rounded-xl border-t border-white/10 px-3 pt-3 text-sm font-bold text-lineDark transition-colors hover:bg-white/10 hover:text-white ${
+              collapsed ? 'justify-center' : 'justify-start'
+            }`}
+          >
+            <Icon name="support" size="md" className="shrink-0" />
+            {!collapsed && <span className="truncate">{he.support.trigger}</span>}
+          </button>
         </div>
       </aside>
 
@@ -110,7 +124,7 @@ export default function Sidebar({ collapsed, onToggle, mobileOpen, onCloseMobile
 
             {/* פוטר — פעולות מהירות + משתמש + תמיכה + יציאה */}
             <div className="border-t border-white/10 p-3">
-              <QuickActions vertical onDone={onCloseMobile} />
+              <TopbarActions onDone={onCloseMobile} />
               <div className="my-3 border-t border-white/10" />
               <div className="mb-2 truncate text-sm text-lineDark">{member?.full_name}</div>
               <div className="flex flex-col gap-1">
