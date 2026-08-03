@@ -59,16 +59,16 @@ function SidebarNav({ collapsed, onNavigate }) {
 
 // ניווט צדי בצד ימין (RTL). דסקטופ: נמתח לגובה מלא, רוחב לפי collapsed.
 // מובייל: מוסתר, נפתח כשכבה מעל התוכן ונסגר בבחירת פריט או בלחיצה מחוץ.
-export default function Sidebar({ collapsed, onToggle, mobileOpen, onCloseMobile, onSupport }) {
+export default function Sidebar({ width, collapsed, onToggle, mobileOpen, onCloseMobile, onSupport }) {
   const { member } = useOrg();
 
   return (
     <>
-      {/* דסקטופ — גובה מלא: כפתור קיפול, ניווט, ובתחתית פנייה לתמיכה */}
+      {/* דסקטופ — גובה מלא: כפתור קיפול, ניווט, ובתחתית פנייה לתמיכה.
+          רוחב מהמשתנה היחיד (מזין גם את יישור הפס). */}
       <aside
-        className={`hidden shrink-0 bg-navy text-white transition-all duration-200 md:block ${
-          collapsed ? 'w-16' : 'w-56'
-        }`}
+        style={{ width }}
+        className="hidden shrink-0 bg-navy text-white transition-all duration-200 md:block"
       >
         <div className="sticky top-[68px] flex h-[calc(100vh-68px)] flex-col gap-2 p-3">
           <button

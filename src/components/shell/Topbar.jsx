@@ -44,15 +44,19 @@ function IconLink({ icon, label, onClick, to }) {
 // פס עליון בהשראת CRM (מנהלים). הכל מקובץ בצד ימין כרצף אחד:
 // ברכה (צמודה לקו אפס, קצה ה-sidebar) + בית/יציאה + חיפוש + פעולות מהירות.
 // הלוגו לבדו בקצה שמאל. מובייל: המבורגר + חיפוש + לוגו; השאר מוסתר.
-export default function Topbar({ onMenu, onRefresh }) {
+export default function Topbar({ onMenu, onRefresh, alignWidth }) {
   const { member } = useOrg();
   const clock = useClock();
   const firstName = member?.full_name?.split(' ')[0] ?? '';
 
   return (
     <header className="sticky top-0 z-40 h-[68px] shrink-0 bg-navy text-white">
-      {/* px-3 במובייל; בדסקטופ ps-0 — הברכה צמודה לקו אפס (קצה ה-sidebar) */}
-      <div className="flex h-full items-center gap-3 px-3 md:ps-0">
+      {/* px-3 במובייל; בדסקטופ הבלוק הימני מיושר לקו הפנימי של ה-sidebar
+          (רוחב מקופל) — מאותו משתנה, קבוע. */}
+      <div
+        style={{ '--align': `${alignWidth}px` }}
+        className="flex h-full items-center gap-3 px-3 md:ps-[var(--align)]"
+      >
         {/* מובייל — המבורגר */}
         <button
           type="button"
