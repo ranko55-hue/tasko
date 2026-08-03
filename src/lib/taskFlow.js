@@ -4,7 +4,8 @@ import { supabase } from './supabase';
 const COLS =
   'id, org_id, title, description, address, status, priority, due_at, ' +
   'scheduled_start_at, est_minutes, requirements, required_workers, ' +
-  'team_lead_id, assignee_id, net_seconds, work_started_at, overrun_alerted';
+  'team_lead_id, assignee_id, net_seconds, work_started_at, overrun_alerted, ' +
+  'overrun_acknowledged, acknowledged_by, acknowledged_at';
 
 // שניות שרצו במקטע העבודה הנוכחי (מאז work_started_at)
 function runningSeg(task) {
@@ -171,6 +172,17 @@ export async function markOverrun(task, actorId) {
     net_seconds: elapsedSeconds(task),
   });
   return patch(task.id, { overrun_alerted: true });
+}
+
+// אישור חריגה פעילה — מעביר מאדום לאפור בתור הפעולה
+export async function acknowledgeOverrun(task, actorId) {
+  const updated = await patch(task.id, {
+    overrun_acknowledged: true,
+    acknowledged_by: actorId,
+    acknowledged_at: new Date().toISOString(),
+  });
+  await logEvent(task, actorId, 'overrun_acknowledged');
+  return updated;
 }
 
 // עדכון מהמנהל לעובד — מופיע בציר הזמן של שני הצדדים

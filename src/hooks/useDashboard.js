@@ -9,7 +9,8 @@ import {
 
 const TASK_COLS =
   'id, org_id, title, status, priority, due_at, scheduled_start_at, ' +
-  'est_minutes, net_seconds, work_started_at, overrun_alerted, assignee_id, ' +
+  'est_minutes, net_seconds, work_started_at, overrun_alerted, ' +
+  'overrun_acknowledged, assignee_id, ' +
   'starts_on, ends_on, due_time, ' +
   'client:clients(name), project:projects(name, sku, address)';
 

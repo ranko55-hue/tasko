@@ -14,7 +14,7 @@ export function useOrgMembers(orgId) {
     setLoading(true);
     supabase
       .from('org_members')
-      .select('id, full_name, role')
+      .select('id, full_name, role, phone')
       .eq('org_id', orgId)
       .eq('is_active', true)
       .order('full_name')

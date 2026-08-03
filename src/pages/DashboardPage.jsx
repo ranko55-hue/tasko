@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
 import { isManager } from '../lib/roles';
 import { useDashboard } from '../hooks/useDashboard';
 import { useOrgMembers } from '../hooks/useOrgMembers';
-import { useAlerts } from '../hooks/useAlerts';
-import { buildDashboard } from '../lib/dashboardModel';
+import { buildDashboard, statusCounts, buildActionQueue } from '../lib/dashboardModel';
+import { approveTask, acknowledgeOverrun } from '../lib/taskFlow';
 import { he } from '../locales/he';
-import { readStringArray, writeJSON } from '../lib/storage';
 import Button from '../components/shared/Button';
 import EmptyState from '../components/ui/EmptyState';
 import AIGuidanceModule from '../components/dashboard/AIGuidanceModule';
@@ -15,15 +14,12 @@ import BoardArea from '../components/dashboard/BoardArea';
 import TaskDrawer from '../components/tasks/TaskDrawer';
 import NewTaskModal from '../components/shell/NewTaskModal';
 
-const PINNED_CHIPS_KEY = 'dashboard.pinnedChips';
+const t = he.dashboard;
 
-// לוח הבקרה של המנהל — "מגדל הפיקוח" — עיצוב 2026.
-// TaskDrawer נפתח כשלוחצים על כרטיס משימה.
 export default function DashboardPage() {
   const { member } = useOrg();
   const { members } = useOrgMembers(member.org_id);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
-  const [pinnedChips, setPinnedChips] = useState([]);
   const [newTaskOpen, setNewTaskOpen] = useState(false);
 
   const {
@@ -37,61 +33,68 @@ export default function DashboardPage() {
     refetch,
   } = useDashboard(member.org_id, member.id);
 
-  const {
-    alerts,
-    serviceRequests,
-    blockedTasks,
-    overrunTasks,
-  } = useAlerts(member.org_id);
+  const membersMap = useMemo(() => {
+    const map = Object.fromEntries(members.map((m) => [m.id, m.full_name]));
+    map._phones = Object.fromEntries(
+      members.filter((m) => m.phone).map((m) => [m.id, m.phone]),
+    );
+    return map;
+  }, [members]);
 
-  const membersMap = Object.fromEntries(members.map((m) => [m.id, m.full_name]));
-  const { cols } = buildDashboard(tasks, doneTodayIds);
+  const { cols, kpis } = useMemo(
+    () => buildDashboard(tasks, doneTodayIds),
+    [tasks, doneTodayIds],
+  );
+
+  const counts = useMemo(
+    () => statusCounts(tasks, doneTodayIds),
+    [tasks, doneTodayIds],
+  );
+
+  const actionQueue = useMemo(
+    () => buildActionQueue(tasks, blockedReasons),
+    [tasks, blockedReasons],
+  );
+
+  const handledTasks = useMemo(
+    () => tasks.filter((t) => t.status === 'done' && doneTodayIds.has(t.id)),
+    [tasks, doneTodayIds],
+  );
+
+  const handleAction = useCallback(async (action, task) => {
+    if (action === 'approve') {
+      await approveTask(task, member.id);
+      refetch();
+    } else if (action === 'clarify') {
+      setSelectedTaskId(task.id);
+    } else if (action === 'acknowledge') {
+      await acknowledgeOverrun(task, member.id);
+      refetch();
+    }
+  }, [member.id, refetch]);
+
   const isEmpty = !loading && !error && tasks.length === 0;
   const manager = isManager(member);
 
-  // צ'יפים מוצמדים — נשמרים כמערך מחרוזות ונקראים תמיד עם ‎.includes()
-  useEffect(() => {
-    setPinnedChips(readStringArray(PINNED_CHIPS_KEY));
-  }, []);
-
-  function handleTogglePinned(chips) {
-    const safe = Array.isArray(chips) ? chips : [];
-    setPinnedChips(safe);
-    writeJSON(PINNED_CHIPS_KEY, safe);
-  }
-
-
-  // Calculate pinned chip counts from tasks
-  const pinnedTaskCounts = {
-    in_field: cols.working.length,
-    in_delay: cols.alert.length,
-    not_started: cols.waiting.filter((t) => !t.work_started_at).length,
-    scheduled: tasks.filter((t) => t.status === 'scheduled').length,
-    completed_today: cols.done.length,
-  };
-
   return (
     <>
-      {/* AI Guidance Module — החלף KPI row */}
+      {/* Briefing module — real data */}
       {!error && (
         <AIGuidanceModule
-          alerts={alerts}
-          serviceRequests={serviceRequests}
-          blockedTasks={blockedTasks}
-          overrunTasks={overrunTasks}
-          unclosedTasks={tasks.filter((t) => !['done', 'cancelled'].includes(t.status) && t.due_at && new Date(t.due_at) < new Date())}
-          pinnedChips={pinnedChips}
-          onTogglePinned={handleTogglePinned}
-          pinnedTaskCounts={pinnedTaskCounts}
+          statusCounts={counts}
+          actionQueue={actionQueue}
+          handledTasks={handledTasks}
+          membersMap={membersMap}
           live={connection === 'live'}
           onOpenTask={setSelectedTaskId}
+          onAction={handleAction}
         />
       )}
 
-      {/* פס פעולות — הכפתורים היו ללא onClick ולכן לא הגיבו כלל */}
+      {/* Action bar */}
       <div className="mb-6 flex flex-wrap gap-3">
         <Button variant="yellow" fullWidth={false} onClick={() => setNewTaskOpen(true)}>
-          {he.dashboard.newTask}
+          {t.newTask}
         </Button>
         <Link
           to="/my"
@@ -103,26 +106,52 @@ export default function DashboardPage() {
 
       {/* Main content */}
       {loading ? (
-        <p className="py-8 text-center text-lg text-grayMid">{he.dashboard.loading}</p>
+        <p className="py-8 text-center text-lg text-grayMid">{t.loading}</p>
       ) : error ? (
         <div className="py-8 text-center">
-          <p className="mb-4 text-lg text-grayDark">{he.dashboard.error}</p>
+          <p className="mb-4 text-lg text-grayDark">{t.error}</p>
           <Button fullWidth={false} onClick={refetch}>
             {he.common.retry}
           </Button>
         </div>
       ) : isEmpty ? (
-        <EmptyState icon="project" message={he.dashboard.empty} />
+        <EmptyState icon="project" message={t.empty} />
       ) : (
-        <BoardArea
-          cols={cols}
-          tasks={tasks}
-          membersMap={membersMap}
-          blockedReasons={blockedReasons}
-          onOpenTask={setSelectedTaskId}
-          onReturnToWork={returnToWork}
-          currentMemberId={member.id}
-        />
+        <>
+          <BoardArea
+            cols={cols}
+            tasks={tasks}
+            membersMap={membersMap}
+            blockedReasons={blockedReasons}
+            onOpenTask={setSelectedTaskId}
+            onReturnToWork={returnToWork}
+            currentMemberId={member.id}
+          />
+
+          {/* Bottom counters — real KPIs */}
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <CounterCard
+              label={t.counters.doneToday}
+              value={kpis.doneToday}
+              color="text-statusGreen"
+            />
+            <CounterCard
+              label={t.counters.alerts}
+              value={kpis.alerts}
+              color="text-statusRed"
+            />
+            <CounterCard
+              label={t.counters.inField}
+              value={kpis.inField}
+              color="text-statusBlue"
+            />
+            <CounterCard
+              label={t.counters.open}
+              value={kpis.open}
+              color="text-navy"
+            />
+          </div>
+        </>
       )}
 
       {newTaskOpen && (
@@ -135,7 +164,6 @@ export default function DashboardPage() {
         />
       )}
 
-      {/* TaskDrawer */}
       <TaskDrawer
         taskId={selectedTaskId}
         isOpen={!!selectedTaskId}
@@ -145,5 +173,16 @@ export default function DashboardPage() {
         onActionDone={refetch}
       />
     </>
+  );
+}
+
+function CounterCard({ label, value, color }) {
+  return (
+    <div className="rounded-xl border border-line bg-white px-4 py-3 text-center">
+      <div className={`text-2xl font-black ${color}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {value}
+      </div>
+      <div className="mt-1 text-xs font-bold text-grayMid">{label}</div>
+    </div>
   );
 }
