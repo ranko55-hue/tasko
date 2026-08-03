@@ -22,3 +22,22 @@ export function writeJSON(key, value) {
     // מכסה מלאה או אחסון חסום — לא מפילים את המסך בגלל העדפת תצוגה
   }
 }
+
+// בוליאני שמור — להעדפות תצוגה (למשל מצב הקיפול של ה-sidebar)
+export function readBool(key, fallback = false) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return fallback;
+    return raw === 'true';
+  } catch {
+    return fallback;
+  }
+}
+
+export function writeBool(key, value) {
+  try {
+    localStorage.setItem(key, value ? 'true' : 'false');
+  } catch {
+    // אחסון חסום — מתעלמים
+  }
+}
