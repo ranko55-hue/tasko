@@ -13,6 +13,11 @@ import SupportModal from './support/SupportModal';
 
 const SIDEBAR_COLLAPSED_KEY = 'shell.sidebarCollapsed';
 
+// רוחב ה-sidebar — מקור אמת יחיד (px). מזין גם את רוחב ה-sidebar עצמו
+// וגם את קו היישור של הבלוק הימני בפס. הפס מיושר לרוחב המקופל (הקו
+// הפנימי) באופן קבוע — אינו זז עם פתיחה/סגירה.
+const SIDEBAR_W = { collapsed: 64, open: 224 };
+
 // מעטפת אחידה עם ניווט צדי (sidebar) בצד ימין + פס עליון בהשראת CRM.
 // מנהל: sidebar + פס מלא. עובד: פס פשוט בלבד (אין לו ניווט).
 export default function AppShell() {
@@ -21,6 +26,7 @@ export default function AppShell() {
   const [collapsed, setCollapsed] = useState(() => readBool(SIDEBAR_COLLAPSED_KEY));
   const [mobileNav, setMobileNav] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
+  const sidebarWidth = collapsed ? SIDEBAR_W.collapsed : SIDEBAR_W.open;
 
   function toggleCollapsed() {
     setCollapsed((v) => {
@@ -32,7 +38,7 @@ export default function AppShell() {
   return (
     <div className="flex min-h-screen flex-col bg-appBg">
       {manager ? (
-        <Topbar onMenu={() => setMobileNav(true)} />
+        <Topbar onMenu={() => setMobileNav(true)} alignWidth={SIDEBAR_W.collapsed} />
       ) : (
         <header className="sticky top-0 z-40 h-[68px] shrink-0 bg-navy text-white">
           <div className="flex h-full items-center gap-2 px-4">
@@ -57,6 +63,7 @@ export default function AppShell() {
       <div className="flex flex-1">
         {manager && (
           <Sidebar
+            width={sidebarWidth}
             collapsed={collapsed}
             onToggle={toggleCollapsed}
             mobileOpen={mobileNav}
