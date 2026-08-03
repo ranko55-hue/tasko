@@ -81,6 +81,14 @@ export const he = {
     goToBoard: 'מעבר ללוח',
   },
 
+  // ניווט צדי (sidebar) — מסגרת הפריסה
+  sidebar: {
+    collapse: 'כווץ תפריט',
+    expand: 'הרחב תפריט',
+    menu: 'תפריט',
+    close: 'סגירה',
+  },
+
   shell: {
     menu: 'תפריט',
     close: 'סגירה',
