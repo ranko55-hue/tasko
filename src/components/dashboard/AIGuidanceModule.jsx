@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
 import Icon from '../ui/Icon';
+import { STATUS_TONE, TONES } from '../ui/StatusPill';
 
 const t = he.dashboard;
 
@@ -8,25 +9,9 @@ const STATUS_ORDER = [
   'scheduled', 'pending', 'in_progress', 'paused',
   'blocked', 'pending_approval', 'done',
 ];
-const STATUS_COLORS = {
-  scheduled: 'bg-grayLight',
-  pending: 'bg-statusBlue',
-  in_progress: 'bg-statusGreen',
-  paused: 'bg-brandYellow',
-  blocked: 'bg-statusRed',
-  pending_approval: 'bg-purple-500',
-  done: 'bg-statusGreen',
-};
-const STATUS_DOT = {
-  scheduled: 'bg-grayLight',
-  pending: 'bg-statusBlue',
-  in_progress: 'bg-statusGreen',
-  paused: 'bg-brandYellow',
-  blocked: 'bg-statusRed',
-  pending_approval: 'bg-purple-500',
-  done: 'bg-statusGreen/60',
-};
 
+// שורת המונים = מקרא הצבעים. כל צ׳יפ בגוון הסטטוס שלו (רך + טקסט כהה),
+// מאותה מפה קנונית של StatusPill והעמודות — צבע אחד לכל סטטוס בכל המערכת.
 function CounterRow({ statusCounts }) {
   return (
     <div className="overflow-x-auto pb-1 -mx-4 px-4">
@@ -34,11 +19,12 @@ function CounterRow({ statusCounts }) {
         {STATUS_ORDER.map((s) => (
           <span
             key={s}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-navy2 px-3 py-1 text-xs font-bold text-white"
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs ${
+              TONES[STATUS_TONE[s]] ?? TONES.gray
+            }`}
           >
-            <span className={`h-2 w-2 rounded-full ${STATUS_DOT[s]}`} />
-            {t.statusLabels[s]}
-            <span className="opacity-70">{statusCounts[s] ?? 0}</span>
+            <span className="font-bold">{t.statusLabels[s]}</span>
+            <span className="font-black tabular-nums">{statusCounts[s] ?? 0}</span>
           </span>
         ))}
       </div>

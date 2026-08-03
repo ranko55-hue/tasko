@@ -1,5 +1,5 @@
 import { he } from '../../locales/he';
-const TONES = {
+export const TONES = {
   gray: 'bg-appBg text-inkSoft',
   blue: 'bg-blue-100 text-blue-700',
   green: 'bg-green-100 text-green-700',
