@@ -1,99 +1,169 @@
 import { useState } from 'react';
 import { he } from '../../locales/he';
-import { formatDateTime } from '../../lib/time';
 import Icon from '../ui/Icon';
 
-// מודול "תדריך AI — חי" עם צ'יפים ותיוג ספציפי
+const t = he.dashboard;
+
+const STATUS_ORDER = [
+  'scheduled', 'pending', 'in_progress', 'paused',
+  'blocked', 'pending_approval', 'done',
+];
+const STATUS_COLORS = {
+  scheduled: 'bg-grayLight',
+  pending: 'bg-statusBlue',
+  in_progress: 'bg-statusGreen',
+  paused: 'bg-brandYellow',
+  blocked: 'bg-statusRed',
+  pending_approval: 'bg-purple-500',
+  done: 'bg-statusGreen',
+};
+const STATUS_DOT = {
+  scheduled: 'bg-grayLight',
+  pending: 'bg-statusBlue',
+  in_progress: 'bg-statusGreen',
+  paused: 'bg-brandYellow',
+  blocked: 'bg-statusRed',
+  pending_approval: 'bg-purple-500',
+  done: 'bg-statusGreen/60',
+};
+
+function CounterRow({ statusCounts }) {
+  return (
+    <div className="overflow-x-auto pb-1 -mx-4 px-4">
+      <div className="flex gap-2 min-w-min">
+        {STATUS_ORDER.map((s) => (
+          <span
+            key={s}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-navy2 px-3 py-1 text-xs font-bold text-white"
+          >
+            <span className={`h-2 w-2 rounded-full ${STATUS_DOT[s]}`} />
+            {t.statusLabels[s]}
+            <span className="opacity-70">{statusCounts[s] ?? 0}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const BTN_CLASS = {
+  approval: 'bg-statusGreen hover:bg-statusGreen/80 text-white',
+  blocked: 'bg-statusRed hover:bg-statusRed/80 text-white',
+  overrun: 'bg-statusRed hover:bg-statusRed/80 text-white',
+  call: 'bg-statusBlue hover:bg-statusBlue/80 text-white',
+};
+
+function ActionItem({ item, membersMap, onAction, onOpenTask }) {
+  const { task, kind, reason } = item;
+  const assigneeName = membersMap?.[task.assignee_id] ?? he.tasks.unassigned;
+
+  return (
+    <div className="flex items-center gap-2 rounded-lg bg-navy2 px-3 py-2 text-xs">
+      <button
+        type="button"
+        onClick={() => onOpenTask?.(task.id)}
+        className="min-w-0 flex-1 text-start"
+      >
+        <div className="font-bold text-white truncate">
+          #{task.id} {task.title}
+        </div>
+        <div className="text-grayLight truncate">
+          {assigneeName}
+          {kind === 'blocked' && reason ? ` · ${reason}` : ''}
+          {kind === 'overrun' ? ` · ${t.queue.overrunActive}` : ''}
+          {kind === 'approval' ? ` · ${t.queue.pendingApproval}` : ''}
+        </div>
+      </button>
+      <div className="flex shrink-0 gap-1.5">
+        {kind === 'approval' && (
+          <button
+            type="button"
+            onClick={() => onAction('approve', task)}
+            className={`rounded-lg px-3 py-1.5 text-xs font-bold ${BTN_CLASS.approval}`}
+          >
+            {t.queue.approve}
+          </button>
+        )}
+        {kind === 'blocked' && (
+          <button
+            type="button"
+            onClick={() => onAction('clarify', task)}
+            className={`rounded-lg px-3 py-1.5 text-xs font-bold ${BTN_CLASS.blocked}`}
+          >
+            {t.queue.clarify}
+          </button>
+        )}
+        {kind === 'overrun' && (
+          <>
+            {task.assignee_id && membersMap?._phones?.[task.assignee_id] && (
+              <a
+                href={`tel:${membersMap._phones[task.assignee_id]}`}
+                className={`rounded-lg px-3 py-1.5 text-xs font-bold ${BTN_CLASS.call}`}
+              >
+                {t.queue.call}
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={() => onAction('acknowledge', task)}
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold ${BTN_CLASS.overrun}`}
+            >
+              {t.queue.acknowledge}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function HandledSection({ handledTasks, membersMap, onOpenTask }) {
+  const [open, setOpen] = useState(false);
+  if (!handledTasks?.length) return null;
+
+  return (
+    <div className="mt-2">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center gap-2 text-xs font-bold text-lineDark hover:text-white transition-colors"
+      >
+        <Icon name={open ? 'chevronUp' : 'chevronDown'} size="sm" />
+        {t.queue.handledToday} ({handledTasks.length})
+      </button>
+      {open && (
+        <div className="mt-2 space-y-1.5">
+          {handledTasks.map((task) => (
+            <button
+              key={task.id}
+              type="button"
+              onClick={() => onOpenTask?.(task.id)}
+              className="flex w-full items-center gap-2 rounded-lg bg-navy2/50 px-3 py-2 text-xs text-start opacity-60 hover:opacity-80 transition-opacity"
+            >
+              <Icon name="check" size="sm" className="text-statusGreen" />
+              <span className="font-bold text-white truncate">#{task.id} {task.title}</span>
+              <span className="text-grayLight truncate mr-auto">
+                {membersMap?.[task.assignee_id] ?? ''}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AIGuidanceModule({
-  alerts,
-  serviceRequests = [],
-  blockedTasks = [],
-  overrunTasks = [],
-  unclosedTasks = [],
-  pinnedChips,
-  onTogglePinned,
-  pinnedTaskCounts,
+  statusCounts = {},
+  actionQueue = [],
+  handledTasks = [],
+  membersMap = {},
   live = false,
   onOpenTask,
+  onAction,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  // תמיד מערך — הצ'יפים המוצמדים נקראים עם ‎.includes()‎ בלבד
-  const pinned = Array.isArray(pinnedChips) ? pinnedChips : [];
-
-  const alertCounter =
-    (alerts?.new_calls || 0) +
-    (alerts?.delayed || 0) +
-    (alerts?.overrun || 0) +
-    (alerts?.unclosed || 0);
-
-  const alertChips = [
-    { key: 'new_calls', label: 'קריאות חדשות', count: alerts?.new_calls || 0, color: 'bg-statusRed' },
-    { key: 'delayed', label: 'בעיכוב', count: alerts?.delayed || 0, color: 'bg-statusRed' },
-    { key: 'overrun', label: 'בחריגה', count: alerts?.overrun || 0, color: 'bg-statusRed' },
-    { key: 'unclosed', label: 'לא נסגרה בזמן', count: alerts?.unclosed || 0, color: 'bg-statusRed' },
-  ];
-
-  const pinnedOptions = [
-    { key: 'in_field', label: 'בשטח כרגע', count: pinnedTaskCounts?.in_field || 0 },
-    { key: 'in_delay', label: 'בהשהיה', count: pinnedTaskCounts?.in_delay || 0 },
-    { key: 'not_started', label: 'טרם החלו', count: pinnedTaskCounts?.not_started || 0 },
-    { key: 'scheduled', label: 'מתוזמנות', count: pinnedTaskCounts?.scheduled || 0 },
-    { key: 'completed_today', label: 'הושלמו היום', count: pinnedTaskCounts?.completed_today || 0 },
-  ];
-
-  // הצג צ'יפים אדומים או "הכל תקין"
-  const hasAlerts = alertChips.some((c) => c.count > 0);
-  const displayChips = hasAlerts
-    ? alertChips.filter((c) => c.count > 0)
-    : [{ key: 'ok', label: 'הכל תקין', count: null, color: 'bg-statusGreen' }];
-
-  // הוסף צ'יפים מוצמדים
-  const pinnedDisplay = pinnedOptions.filter((p) => pinned.includes(p.key));
-
-  // בדוק אם הכול נכנס
-  const allChips = [...displayChips, ...pinnedDisplay];
-  const fitsInRow = allChips.length <= 6;
-  const overflowCount = fitsInRow ? 0 : allChips.length - 5;
-
-  // רשימת כל הפריטים לפאנל — סדר כניסה, הוותיק למעלה
-  const allAlertItems = [
-    ...serviceRequests.map((sr) => ({
-      type: 'service_request',
-      id: sr.id,
-      title: sr.requester_name,
-      subtitle: sr.clients?.name || 'לא ידוע',
-      reason: sr.description,
-      createdAt: sr.created_at,
-      actionLabel: 'המר למשימה',
-    })),
-    ...blockedTasks.map((t) => ({
-      type: 'task',
-      id: t.id,
-      title: t.title,
-      subtitle: t.assignee?.full_name || he.tasks.unassigned,
-      reason: 'משימה חסומה',
-      createdAt: t.created_at,
-      actionLabel: 'פתח',
-    })),
-    ...overrunTasks.map((t) => ({
-      type: 'task',
-      id: t.id,
-      title: t.title,
-      subtitle: t.assignee?.full_name || he.tasks.unassigned,
-      reason: 'חריגה בזמן',
-      createdAt: t.created_at,
-      actionLabel: 'פתח',
-    })),
-    ...(unclosedTasks || []).map((t) => ({
-      type: 'task',
-      id: t.id,
-      title: t.title,
-      subtitle: t.assignee?.full_name || he.tasks.unassigned,
-      reason: `חלף יעד: ${new Date(t.due_at).toLocaleDateString('he-IL')}`,
-      createdAt: t.created_at,
-      actionLabel: 'פתח',
-    })),
-  ].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  const hasItems = actionQueue.length > 0;
 
   return (
     <div className="mb-6 bg-navy px-4 py-3 rounded-lg shadow-md">
@@ -101,151 +171,58 @@ export default function AIGuidanceModule({
       <div className="mb-3 flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-sm font-black text-white">
           <Icon name="ai" />
-          {he.dashboard.aiTitle}
-          {/* מחוון חיבור — נקודה בלבד, ההסבר ב-tooltip */}
+          {t.aiTitle}
           <span
-            title={live ? he.dashboard.live : he.dashboard.polling}
-            aria-label={live ? he.dashboard.live : he.dashboard.polling}
+            title={live ? t.live : t.polling}
+            aria-label={live ? t.live : t.polling}
             className={`h-2 w-2 rounded-full ${
               live ? 'animate-pulse bg-statusGreen' : 'bg-grayMid'
             }`}
           />
         </h2>
-        <div className="flex items-center gap-3">
-          {alertCounter > 0 && (
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-statusRed text-xs font-bold text-white">
-              {Math.min(alertCounter, 9)}
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-expanded={isOpen}
-            aria-label={isOpen ? he.dashboard.collapse : he.dashboard.expand}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl
-                       bg-white/15 text-brandYellow transition-all
-                       hover:bg-white/25 active:scale-95"
-          >
-            <Icon name={isOpen ? 'chevronUp' : 'chevronDown'} size="md" />
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+          aria-label={isOpen ? t.collapse : t.expand}
+          className="flex items-center gap-1.5 rounded-xl bg-white/15 px-3 py-1.5
+                     text-xs font-bold text-white transition-all
+                     hover:bg-white/25 active:scale-95"
+        >
+          <span>{isOpen ? t.collapse : t.expand}</span>
+          <Icon name={isOpen ? 'chevronUp' : 'chevronDown'} size="sm" />
+        </button>
       </div>
 
-      {/* Chip row — horizontal scroll */}
-      <div className="overflow-x-auto pb-1 -mx-4 px-4">
-        <div className="flex gap-2 min-w-min">
-          {/* Alert chips or "הכל תקין" */}
-          {displayChips.map((chip) =>
-            chip.count !== null ? (
-              <span
-                key={chip.key}
-                className={`inline-flex shrink-0 items-center gap-1 rounded-full ${chip.color} px-3 py-1 text-xs font-bold text-white`}
-              >
-                {chip.label} ({chip.count})
-              </span>
-            ) : (
-              <span
-                key={chip.key}
-                className={`inline-flex shrink-0 items-center gap-1 rounded-full ${chip.color} px-3 py-1 text-xs font-bold text-white`}
-              >
-                {chip.label}
-              </span>
-            )
-          )}
+      {/* Counter row — 7 statuses as color legend */}
+      <CounterRow statusCounts={statusCounts} />
 
-          {/* Pinned chips */}
-          {pinnedDisplay.map((p) => (
-            <span
-              key={p.key}
-              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-grayLight px-3 py-1 text-xs font-bold text-navy"
-            >
-              {p.label}
-            </span>
-          ))}
-
-          {/* "+N" overflow or "+" button */}
-          {overflowCount > 0 && (
-            <span className="inline-flex shrink-0 items-center rounded-full bg-grayLight px-3 py-1 text-xs font-bold text-navy">
-              +{overflowCount}
-            </span>
-          )}
-          {allChips.length < pinnedOptions.length && (
-            <button
-              type="button"
-              onClick={() => setIsOpen(true)}
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-lineDark bg-transparent text-lg font-bold text-lineDark hover:bg-lineDark/20"
-            >
-              ＋
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Panel — open/close */}
+      {/* Panel — action queue */}
       {isOpen && (
         <div className="mt-3 border-t border-navy2 pt-3">
-          {/* Pinned selector — pill toggles */}
-          <div className="mb-3">
-            <div className="mb-2 text-xs font-bold text-lineDark">{he.dashboard.pinnedTitle}</div>
-            <div className="flex flex-wrap gap-2">
-              {pinnedOptions.map((p) => {
-                const active = pinned.includes(p.key);
-                const atMax = pinned.length >= 3 && !active;
-                return (
-                  <button
-                    key={p.key}
-                    type="button"
-                    disabled={atMax}
-                    onClick={() => {
-                      if (active) onTogglePinned(pinned.filter((c) => c !== p.key));
-                      else onTogglePinned([...pinned, p.key].slice(0, 3));
-                    }}
-                    className={`rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
-                      active
-                        ? 'bg-brandYellow text-navy'
-                        : atMax
-                          ? 'bg-white/5 text-grayMid cursor-not-allowed'
-                          : 'bg-white/10 text-white hover:bg-white/20'
-                    }`}
-                  >
-                    {p.label} {p.count > 0 && <span className="opacity-70">({p.count})</span>}
-                  </button>
-                );
-              })}
+          <div className="mb-2 text-xs font-bold text-lineDark">{t.queue.title}</div>
+          {hasItems ? (
+            <div className="max-h-[300px] space-y-2 overflow-y-auto">
+              {actionQueue.map((item) => (
+                <ActionItem
+                  key={`${item.kind}-${item.task.id}`}
+                  item={item}
+                  membersMap={membersMap}
+                  onAction={onAction}
+                  onOpenTask={onOpenTask}
+                />
+              ))}
             </div>
-            {pinned.length >= 3 && (
-              <p className="mt-2 text-xs text-grayLight">{he.dashboard.pinnedMax}</p>
-            )}
-          </div>
-
-          {/* Alert items */}
-          {hasAlerts && allAlertItems.length > 0 && (
-            <div>
-              <div className="mb-2 text-xs font-bold text-lineDark">פריטים דורשי תשומת לב</div>
-              <div className="max-h-[300px] space-y-2 overflow-y-auto">
-                {allAlertItems.map((item) => (
-                  <button
-                    key={`${item.type}-${item.id}`}
-                    type="button"
-                    onClick={() => item.type === 'task' && onOpenTask?.(item.id)}
-                    className="flex w-full items-center justify-between gap-2 rounded-lg bg-navy2 px-2 py-2 text-xs text-start hover:bg-navy2/80 transition-colors"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="font-bold text-white truncate">
-                        {item.title} — {item.subtitle}
-                      </div>
-                      <div className="text-grayLight text-xs">
-                        {item.reason} · {formatDateTime(item.createdAt)}
-                      </div>
-                    </div>
-                    <span className="shrink-0 rounded bg-brand px-2 py-1 text-xs font-bold text-white">
-                      {item.actionLabel}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
+          ) : (
+            <p className="text-xs text-grayLight">{t.queue.empty}</p>
           )}
+
+          {/* Handled today — collapsed section */}
+          <HandledSection
+            handledTasks={handledTasks}
+            membersMap={membersMap}
+            onOpenTask={onOpenTask}
+          />
         </div>
       )}
     </div>
