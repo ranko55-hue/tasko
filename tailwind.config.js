@@ -49,6 +49,17 @@ export default {
         overrunSoft: '#FFFBFA',
         overrunLine: '#F5DAD7',
         surfaceBar: '#FBFCFD',
+        // v8 — פלטת TaskDrawer (מוקאפ מאושר). קידוד קבוע: כחול=תיעוד/מידע,
+        // ירוק=קול/פעיל/אישור, שחור=כתיבה, צהוב=זהירות/זמן, אדום=עצירה/סיום.
+        drNavy: '#0f2a43',
+        drNavyDeep: '#0a1f33',
+        drYellow: '#f5c518',
+        drGreen: '#188a4e',
+        drRed: '#c53030',
+        drBlue: '#2b5fa8',
+        drInk: '#161d24',
+        drOrange: '#d97c0e',
+        drLine: '#c9cfd6',
       },
       minHeight: {
         // כפתורי שדה — מינימום 48px (עקרונות עיצוב, אנשי שטח)

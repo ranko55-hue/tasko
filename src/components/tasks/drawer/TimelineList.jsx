@@ -9,11 +9,13 @@ const NUM = { fontVariantNumeric: 'tabular-nums' };
 const QUOTED = ['manager_attachment'];
 const WITH_TEXT = ['text_note', 'manager_attachment', 'blocked', 'cancelled'];
 
-// אירועי מנהל בצהוב, אירועי עובד בירוק
-function dotTone(type) {
-  return type === 'manager_attachment'
-    ? 'bg-brandYellow ring-brandYellow/25'
-    : 'bg-statusGreen ring-statusGreen/25';
+// ריבועי צבע לפי משמעות: ירוק=התחלה/סטטוס, כחול=תיעוד, אפור=מערכת.
+const DOC = ['photo', 'voice_note', 'text_note', 'manager_attachment'];
+const STATUS = ['started', 'resumed', 'finished', 'unblocked', 'approved', 'status_change', 'pending_approval'];
+function squareTone(type) {
+  if (DOC.includes(type)) return 'bg-drBlue';
+  if (STATUS.includes(type)) return 'bg-drGreen';
+  return 'bg-grayLight';
 }
 
 function stamp(iso) {
@@ -49,7 +51,7 @@ export default function TimelineList({ events, onPhoto }) {
         return (
           <li key={ev.id} className="relative flex gap-3 py-3">
             <span
-              className={`relative z-10 mt-2 h-3 w-3 shrink-0 rounded-full ring-4 ${dotTone(ev.type)}`}
+              className={`relative z-10 mt-2 h-3 w-3 shrink-0 rounded-[2px] ${squareTone(ev.type)}`}
             />
 
             <div className="min-w-0 flex-1">

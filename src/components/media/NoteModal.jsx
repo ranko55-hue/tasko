@@ -8,9 +8,10 @@ import Textarea from '../shared/Textarea';
 import VoiceRecorder from './VoiceRecorder';
 
 // מודאל הערה — הקלדה (text_note) או הקלטה (voice_note).
-export default function NoteModal({ task, onDone, onClose }) {
+// initialMode מאפשר לפתוח ישירות במצב הקלטה (אריח "הקלטה קולית" במגירה).
+export default function NoteModal({ task, onDone, onClose, initialMode = 'text' }) {
   const { member } = useOrg();
-  const [mode, setMode] = useState('text'); // 'text' | 'record'
+  const [mode, setMode] = useState(initialMode); // 'text' | 'record'
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
 

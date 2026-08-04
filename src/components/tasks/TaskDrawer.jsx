@@ -8,7 +8,6 @@ import { approveTask, returnTask, transferTask } from '../../lib/taskFlow';
 import Button from '../shared/Button';
 import DrawerHeader from './drawer/DrawerHeader';
 import DrawerViewBody from './drawer/DrawerViewBody';
-import DrawerExecutionBar from './drawer/DrawerExecutionBar';
 import TaskEditForm from './TaskEditForm';
 import TaskCancelForm from './TaskCancelForm';
 import ManagerUpdateModal from './drawer/ManagerUpdateModal';
@@ -17,6 +16,40 @@ import TransferModal from './drawer/TransferModal';
 import { printTaskSummary } from '../../lib/taskSummary';
 
 const t = he.tasks;
+
+// תפריט "⋯" בפוטר — מקבץ פעולות מנהל נוספות בלי שאף אחת תיעלם.
+function FooterOverflow({ items }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={t.drawer.moreActions}
+        className="flex h-14 w-14 items-center justify-center rounded-lg border border-white/25 text-2xl leading-none text-white hover:bg-white/[0.08]"
+      >
+        ⋯
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} aria-hidden="true" />
+          <div className="absolute bottom-full end-0 z-20 mb-2 w-52 overflow-hidden rounded-lg border border-line bg-white shadow-xl">
+            {items.map((it, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => { setOpen(false); it.onClick(); }}
+                className={`block w-full px-4 py-3 text-start text-sm font-bold hover:bg-appBg ${it.danger ? 'text-danger' : 'text-navy'}`}
+              >
+                {it.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 // משימה בודדת: bottom sheet (מובייל) / side panel (דסקטופ). נפתחת מכל מקום.
 // המסך הוא מתאם בלבד — הכותרת, הגוף, העריכה והביטול הם רכיבים נפרדים.
@@ -82,6 +115,7 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
       >
         <DrawerHeader
           task={task}
+          assigneeName={assigneeName}
           onClose={onClose}
           onFullScreen={() => setFull((v) => !v)}
         />
@@ -97,25 +131,19 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
           {task && !loading && (
             <>
               {mode === 'view' && (
-                <>
-                  <DrawerViewBody
-                    task={task}
-                    assigneeName={assigneeName}
-                    refreshKey={refreshKey}
-                    onEvents={setEvents}
-                  />
-                  {isAssignee && (
-                    <DrawerExecutionBar
-                      task={task}
-                      memberId={member.id}
-                      orgId={orgId}
-                      onRefresh={() => {
-                        refetch();
-                        setRefreshKey((k) => k + 1);
-                      }}
-                    />
-                  )}
-                </>
+                <DrawerViewBody
+                  task={task}
+                  assigneeName={assigneeName}
+                  refreshKey={refreshKey}
+                  onEvents={setEvents}
+                  isAssignee={isAssignee}
+                  memberId={member.id}
+                  orgId={orgId}
+                  onRefresh={() => {
+                    refetch();
+                    setRefreshKey((k) => k + 1);
+                  }}
+                />
               )}
 
               {mode === 'edit' && (
@@ -143,50 +171,50 @@ export default function TaskDrawer({ taskId, onClose, isOpen, orgId, isManager =
           )}
         </div>
 
-        {/* שורת פעולות תחתונה — נשארת מוצמדת מתחת לתוכן הנגלל */}
-        {task && !loading && mode === 'view' && (
-          <div className="shrink-0 border-t border-line bg-surfaceBar px-4 py-3 sm:px-6">
+        {/* פוטר מנהל קבוע — navy-deep + פס עליון צהוב. פעולות תלויות-מצב (1:1). */}
+        {task && !loading && mode === 'view' && (isClosed || isManager) && (
+          <div className="shrink-0 border-t-4 border-drYellow bg-drNavyDeep px-4 py-3 sm:px-6">
             {isClosed ? (
               <div className="space-y-2">
-                <p className="text-center text-sm text-grayMid">{t.drawer.closedTitle}</p>
+                <p className="text-center text-sm text-white/70">{t.drawer.closedTitle}</p>
                 <Button variant="secondary" onClick={() => printTaskSummary(task, events, assigneeName)}>
                   {t.drawer.downloadPdf}
                 </Button>
               </div>
-            ) : isManager && task.status === 'pending_approval' ? (
-              <div className="space-y-2">
+            ) : task.status === 'pending_approval' ? (
+              <div className="flex items-stretch gap-2">
                 <Button
                   variant="success"
+                  fullWidth={false}
+                  className="h-14 flex-1"
                   onClick={async () => {
                     await approveTask(task, member.id);
-                    onClose();
                     onActionDone?.();
+                    onClose();
                   }}
                 >
-                  {t.drawer.approveBtn}
+                  {t.drawer.approveClose}
                 </Button>
-                <div className="flex gap-3">
-                  <Button variant="warningOutline" fullWidth={false} className="flex-1" onClick={() => setReturnOpen(true)}>
-                    {t.drawer.returnBtn}
-                  </Button>
-                  <Button variant="secondary" fullWidth={false} className="flex-1" onClick={() => setTransferOpen(true)}>
-                    {t.drawer.transferBtn}
-                  </Button>
-                </div>
+                <FooterOverflow
+                  items={[
+                    { label: t.drawer.returnBtn, onClick: () => setReturnOpen(true) },
+                    { label: t.drawer.transferBtn, onClick: () => setTransferOpen(true) },
+                  ]}
+                />
               </div>
-            ) : isManager ? (
-              <div className="flex gap-3">
-                <Button fullWidth={false} className="flex-1" onClick={() => setUpdateOpen(true)}>
+            ) : (
+              <div className="flex items-stretch gap-2">
+                <Button fullWidth={false} className="h-14 flex-1" onClick={() => setUpdateOpen(true)}>
                   {t.drawer.managerUpdateTitle}
                 </Button>
-                <Button variant="secondary" fullWidth={false} onClick={() => setMode('edit')}>
-                  {he.common.edit}
-                </Button>
-                <Button variant="danger" fullWidth={false} onClick={() => setMode('cancel')}>
-                  {t.cancelTask}
-                </Button>
+                <FooterOverflow
+                  items={[
+                    { label: he.common.edit, onClick: () => setMode('edit') },
+                    { label: t.cancelTask, onClick: () => setMode('cancel'), danger: true },
+                  ]}
+                />
               </div>
-            ) : null}
+            )}
           </div>
         )}
 
