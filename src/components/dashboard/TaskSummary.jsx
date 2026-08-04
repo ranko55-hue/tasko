@@ -11,7 +11,7 @@ const b = he.dashboard.board;
 
 // תבנית הגריד המשותפת לכותרת העמודות ולשורות — כדי שהטורים יישרו תמיד.
 // RTL: פס סטטוס | משימה | לקוח·פרויקט | מבצע | דחיפות | טיימר | פעולה
-export const ROW_GRID = 'grid-cols-[4px_minmax(0,1.5fr)_minmax(0,1.1fr)_96px_44px_128px_104px]';
+export const ROW_GRID = 'grid-cols-[4px_minmax(0,1.7fr)_minmax(0,1.2fr)_100px_56px_110px_104px] gap-[14px]';
 
 const NUM = { fontVariantNumeric: 'tabular-nums' };
 
@@ -26,7 +26,7 @@ function UrgencyIcon({ task }) {
     <span title={urgent ? b.priUrgent : b.priNormal} className="inline-flex">
       <Icon
         name={urgent ? 'alert' : 'priNormal'}
-        size="sm"
+        size="md"
         strokeWidth={2}
         className={urgent ? 'text-drRed' : 'text-grayLight'}
       />
@@ -46,21 +46,21 @@ function TimerCell({ task }) {
 
   const closed = ['done', 'cancelled'].includes(task.status);
   if (closed) {
-    return <span className="text-xs text-grayMid" style={NUM}>{b.net} {formatDuration(task.net_seconds)}</span>;
+    return <span className="text-[13px] text-grayMid" style={NUM}>{b.net} {formatDuration(task.net_seconds)}</span>;
   }
   if (running) {
     const over = activeOverrun(task);
     return (
-      <span className={`inline-flex items-center gap-1 text-xs font-bold ${over ? 'text-drRed' : 'text-drGreen'}`} style={NUM}>
+      <span className={`inline-flex items-center gap-1.5 text-[15px] font-extrabold ${over ? 'text-drRed' : 'text-drGreen'}`} style={NUM}>
         <span className={`h-2 w-2 rounded-full ${over ? 'bg-drRed' : 'bg-drGreen'} animate-softPulse`} />
         {formatDuration(elapsedSeconds(task))}
       </span>
     );
   }
   if (task.net_seconds > 0) {
-    return <span className="text-xs text-grayMid" style={NUM}>{formatDuration(task.net_seconds)}</span>;
+    return <span className="text-[13px] text-grayMid" style={NUM}>{formatDuration(task.net_seconds)}</span>;
   }
-  return <span className="text-xs text-grayLight">{b.notStarted}</span>;
+  return <span className="text-xs font-semibold text-grayMid">{b.notStarted}</span>;
 }
 
 // כפתור הקשר — רק כשנדרשת החלטה. אחרת null (לחיצת שורה/כרטיס פותחת מגירה).
@@ -144,8 +144,8 @@ export default function TaskSummary({ task, assigneeName, variant, currentMember
       className="cursor-pointer border-b border-line transition-colors last:border-0 hover:bg-surface"
     >
       {/* דסקטופ — גריד מיושר */}
-      <div className={`hidden ${ROW_GRID} min-h-[52px] items-center gap-3 pe-3 sm:grid`}>
-        <span className={`h-full w-1 ${statusBar}`} aria-hidden="true" />
+      <div className={`hidden ${ROW_GRID} min-h-[52px] items-center px-[14px] sm:grid`}>
+        <span className={`h-[26px] w-1 rounded-[2px] ${statusBar}`} aria-hidden="true" />
         {nameCell}
         {clientCell}
         {assigneeCell}

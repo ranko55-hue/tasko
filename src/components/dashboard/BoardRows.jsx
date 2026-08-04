@@ -33,9 +33,9 @@ export default function BoardRows({ tasks, membersMap, onOpenTask, currentMember
   (tasks ?? []).forEach((t) => groups[groupOf(t)].push(t));
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-white">
-      {/* כותרת עמודות — sticky, דסקטופ בלבד. באותו גריד של השורות. */}
-      <div className={`sticky top-[68px] z-10 hidden ${ROW_GRID} items-center gap-3 border-b border-line bg-surface py-2 pe-3 text-xs font-bold text-grayMid sm:grid`}>
+    <div>
+      {/* כותרת עמודות — אלמנט עצמאי, מחוץ לכל הקבוצות, sticky. דסקטופ בלבד. */}
+      <div className={`sticky top-[68px] z-10 mb-[10px] hidden ${ROW_GRID} min-h-[36px] items-center rounded-lg border border-drLine bg-[#f4f6f8] px-[14px] text-[11px] font-extrabold tracking-wide text-grayMid sm:grid`}>
         <span aria-hidden="true" />
         <span>{b.colTask}</span>
         <span>{b.colClient}</span>
@@ -45,27 +45,28 @@ export default function BoardRows({ tasks, membersMap, onOpenTask, currentMember
         <span>{b.colAction}</span>
       </div>
 
+      {/* קבוצות — כל קבוצה קונטיינר עצמאי, קיפול עצמאי. */}
       {ORDER.map((key) => {
         const list = sortByUrgency(groups[key]);
         const isOpen = !!open[key];
         const hot = key === 'late' && list.length > 0;
 
         return (
-          <div key={key}>
+          <div key={key} className={`mb-3 overflow-hidden rounded-lg border bg-white ${hot ? 'border-drRed/40' : 'border-drLine'}`}>
             <button
               type="button"
               onClick={() => setOpen((o) => ({ ...o, [key]: !o[key] }))}
               aria-expanded={isOpen}
-              className={`flex min-h-touch w-full items-center gap-2 border-b border-line pe-3 text-start ${hot ? 'bg-urgentSoft' : 'bg-surface/60'}`}
+              className={`flex min-h-touch w-full items-center gap-2 border-b border-drLine px-4 text-start ${hot ? 'bg-urgentSoft' : 'bg-surface'}`}
             >
               <Icon name={isOpen ? 'chevronUp' : 'chevronDown'} size="sm" className="text-grayLight" />
               <span className={`text-sm font-bold ${hot ? 'text-urgentInk' : 'text-navy'}`}>{LABEL[key]}</span>
-              <span className="rounded-full bg-appBg px-2 py-0.5 text-xs font-bold text-grayDark" style={NUM}>{list.length}</span>
+              <span className="rounded-md bg-drNavy px-2 py-0.5 text-[11px] font-bold text-white" style={NUM}>{list.length}</span>
             </button>
 
             {isOpen && (
               list.length === 0 ? (
-                <p className="border-b border-line px-3 py-3 text-xs text-grayLight">{d.groupEmpty}</p>
+                <p className="px-4 py-3 text-xs text-grayLight">{d.groupEmpty}</p>
               ) : (
                 list.map((task) => (
                   <TaskSummary

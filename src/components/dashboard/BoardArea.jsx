@@ -29,19 +29,29 @@ export default function BoardArea({
   return (
     <section className="rounded-2xl border border-line bg-surface/60 p-3 sm:p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3 px-1">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <h2 className="text-sm font-black text-grayMid">{d.areaTitle}</h2>
-          <button
-            type="button"
-            onClick={() => setMyOnly((v) => !v)}
-            className={`rounded-full px-3 py-1 text-xs font-bold transition-colors ${
-              myOnly
-                ? 'bg-brand text-white'
-                : 'bg-appBg text-grayDark hover:bg-line'
-            }`}
-          >
-            {myOnly ? d.myTasksFilter : d.allTasks}
-          </button>
+          {/* מסנן — שני כפתורים מפורשים, הפעיל מסומן; חל על שתי התצוגות */}
+          <div className="flex items-center gap-1 rounded-lg bg-appBg p-0.5">
+            <button
+              type="button"
+              onClick={() => setMyOnly(false)}
+              className={`rounded-md px-3 py-1 text-xs font-bold transition-colors ${
+                !myOnly ? 'bg-white text-navy shadow-sm' : 'text-grayDark hover:text-navy'
+              }`}
+            >
+              {d.allTasks}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMyOnly(true)}
+              className={`rounded-md px-3 py-1 text-xs font-bold transition-colors ${
+                myOnly ? 'bg-white text-navy shadow-sm' : 'text-grayDark hover:text-navy'
+              }`}
+            >
+              {d.myTasksFilter}
+            </button>
+          </div>
         </div>
 
         <ViewToggle options={BOARD_VIEW_OPTIONS} view={view} onChange={choose} />
@@ -56,28 +66,22 @@ export default function BoardArea({
           onRefresh={onRefresh}
         />
       ) : (
-        <div className="grid gap-4 md:grid-cols-5">
+        <div className="grid items-start gap-3 md:grid-cols-5">
           {order.map((key) => {
             const list = sortByUrgency(filtered.cols[key]);
             return (
-              <div key={key} className="min-w-0">
-                <div className="mb-3 flex items-center gap-2">
-                  <h3
-                    className={`font-bold ${
-                      key === 'alert' ? 'text-statusRed' : key === 'approval' ? 'text-purple-700' : 'text-navy'
-                    }`}
-                  >
-                    {d.columns[key]}
-                  </h3>
+              <div key={key} className="min-w-0 rounded-lg border border-drLine bg-[#f4f6f8] p-2.5">
+                <h3 className="mb-2 flex items-center gap-2">
+                  <span className="text-[12.5px] font-extrabold text-navy">{d.columns[key]}</span>
                   <span
-                    className="rounded-full bg-appBg px-2 py-1 text-xs font-bold text-grayDark"
+                    className="rounded-md bg-drNavy px-2 py-0.5 text-[11px] font-bold text-white"
                     style={NUM}
                   >
                     {list.length}
                   </span>
-                </div>
+                </h3>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {list.map((t) => (
                     <TaskSummary
                       key={t.id}
