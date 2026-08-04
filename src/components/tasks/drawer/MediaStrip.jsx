@@ -16,20 +16,20 @@ export default function MediaStrip({ photos, voices, onPhoto }) {
   return (
     <div className="px-4 pb-4 sm:px-6">
       {photos.length > 0 && (
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+        <div className="grid grid-cols-4 gap-2 pb-1">
           {photos.map((ev) => (
             <button
               key={ev.id}
               type="button"
               onClick={() => onPhoto?.(ev.url)}
-              className="relative shrink-0"
+              className="relative"
               aria-label={he.media.photoAlt}
             >
               <img
                 src={ev.url}
                 alt={he.media.photoAlt}
                 loading="lazy"
-                className="h-[58px] w-[58px] rounded-xl object-cover"
+                className="aspect-square w-full rounded-lg object-cover"
               />
               <span
                 className="absolute bottom-1 start-1 rounded bg-black/60 px-1 text-xs font-medium text-white"
