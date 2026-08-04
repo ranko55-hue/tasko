@@ -4,7 +4,7 @@ import { useBoardView, BOARD_VIEW_OPTIONS } from '../../hooks/useBoardView';
 import { buildDashboard } from '../../lib/dashboardModel';
 import ViewToggle from '../shared/ViewToggle';
 import { sortByUrgency } from '../../lib/lateness';
-import DashboardTaskCard from './DashboardTaskCard';
+import TaskSummary from './TaskSummary';
 import BoardRows from './BoardRows';
 
 const d = he.dashboard;
@@ -12,7 +12,7 @@ const NUM = { fontVariantNumeric: 'tabular-nums' };
 
 export default function BoardArea({
   cols, tasks, membersMap, blockedReasons,
-  onOpenTask, onReturnToWork, currentMemberId,
+  onOpenTask, onReturnToWork, currentMemberId, onRefresh,
 }) {
   const [view, choose] = useBoardView();
   const [myOnly, setMyOnly] = useState(false);
@@ -48,7 +48,13 @@ export default function BoardArea({
       </div>
 
       {view === 'rows' ? (
-        <BoardRows tasks={filtered.tasks} membersMap={membersMap} onOpenTask={onOpenTask} />
+        <BoardRows
+          tasks={filtered.tasks}
+          membersMap={membersMap}
+          onOpenTask={onOpenTask}
+          currentMemberId={currentMemberId}
+          onRefresh={onRefresh}
+        />
       ) : (
         <div className="grid gap-4 md:grid-cols-5">
           {order.map((key) => {
@@ -73,13 +79,14 @@ export default function BoardArea({
 
                 <div className="space-y-3">
                   {list.map((t) => (
-                    <DashboardTaskCard
+                    <TaskSummary
                       key={t.id}
                       task={t}
                       assigneeName={membersMap[t.assignee_id]}
-                      blockedReason={blockedReasons[t.id]}
+                      variant="card"
+                      currentMemberId={currentMemberId}
                       onOpenTask={onOpenTask}
-                      onReturnToWork={onReturnToWork}
+                      onRefresh={onRefresh}
                     />
                   ))}
                 </div>

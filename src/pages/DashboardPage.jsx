@@ -135,6 +135,7 @@ export default function DashboardPage() {
           onOpenTask={setSelectedTaskId}
           onReturnToWork={returnToWork}
           currentMemberId={member.id}
+          onRefresh={refetch}
         />
       )}
 

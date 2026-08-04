@@ -202,6 +202,21 @@ export const he = {
       alerts: 'חריגות',
       doneToday: 'הושלמו',
     },
+    // v7 — תצוגות אזור המשימות (שורות/עמודות), רכיב TaskSummary משותף
+    board: {
+      colTask: 'משימה',
+      colClient: 'לקוח · פרויקט',
+      colAssignee: 'מבצע',
+      colUrgency: 'דחיפות',
+      colTimer: 'טיימר',
+      colAction: 'פעולה',
+      notStarted: 'טרם התחיל',
+      net: 'נטו',
+      clarify: 'בירור',
+      approveClose: 'אשר וסגור',
+      priNormal: 'רגילה',
+      priUrgent: 'דחוף',
+    },
   },
 
   auth: {
