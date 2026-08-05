@@ -8,7 +8,8 @@ import Field from '../ui/Field';
 import CustomFieldInput from '../tasks/CustomFieldInput';
 
 const g = he.clientDetail.general;
-const cf = he.customFields;
+// כותרת מקטע טקסטואלית קטנה — בלי קונטיינר. משמשת גם בצפייה וגם בעריכה.
+const SECTION_LABEL = 'text-[11px] font-bold tracking-wide text-grayMid';
 
 function Tile({ label, value }) {
   return (
@@ -80,8 +81,8 @@ export default function GeneralTab({ client, orgId, canEdit, onSave }) {
         ))}
 
         {fields.length > 0 && (
-          <div className="space-y-4 border-t border-line pt-4">
-            <div className="text-sm font-black text-grayMid">{g.moreDetails}</div>
+          <>
+            <div className={SECTION_LABEL}>{g.moreDetails}</div>
             {fields.map((def) => (
               <CustomFieldInput
                 key={def.id}
@@ -90,7 +91,7 @@ export default function GeneralTab({ client, orgId, canEdit, onSave }) {
                 onChange={(v) => setCustom((c) => ({ ...c, [def.id]: v }))}
               />
             ))}
-          </div>
+          </>
         )}
 
         {error && (
@@ -121,21 +122,15 @@ export default function GeneralTab({ client, orgId, canEdit, onSave }) {
         <Tile label={g.businessId} value={client?.business_id} />
         <Tile label={g.address} value={client?.address} />
         <Tile label={g.paymentTerms} value={client?.payment_terms} />
-      </div>
 
-      {fields.length > 0 && (
-        <div className="rounded-lg border border-line bg-white p-3">
-          <div className="mb-2 text-xs font-bold text-grayMid">{g.moreDetails}</div>
-          <div className="space-y-2">
-            {fields.map((f) => (
-              <div key={f.id} className="flex items-baseline justify-between gap-3">
-                <span className="shrink-0 text-sm text-grayMid">{f.label}</span>
-                <span className="min-w-0 truncate text-sm font-medium text-navy">{values[f.id] ?? cf.noValue}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+        {/* שדות מותאמים — ממשיכים את אותו גריד, אריח זהה לשדה מובנה */}
+        {fields.length > 0 && (
+          <div className={`col-span-2 mt-1 ${SECTION_LABEL}`}>{g.moreDetails}</div>
+        )}
+        {fields.map((f) => (
+          <Tile key={f.id} label={f.label} value={values[f.id]} />
+        ))}
+      </div>
 
       {client?.created_at && (
         <p className="px-1 text-sm text-grayLight">
