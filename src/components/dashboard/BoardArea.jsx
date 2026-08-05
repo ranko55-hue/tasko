@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { he } from '../../locales/he';
 import { useBoardView, BOARD_VIEW_OPTIONS } from '../../hooks/useBoardView';
+import { useBoardFilter, BOARD_FILTER_OPTIONS } from '../../hooks/useBoardFilter';
 import { buildDashboard } from '../../lib/dashboardModel';
 import ViewToggle from '../shared/ViewToggle';
 import { sortByUrgency } from '../../lib/lateness';
@@ -15,11 +16,15 @@ export default function BoardArea({
   onOpenTask, onReturnToWork, currentMemberId, onRefresh,
 }) {
   const [view, choose] = useBoardView();
-  const [myOnly, setMyOnly] = useState(false);
+  const [filter, chooseFilter] = useBoardFilter();
+  const myOnly = filter === 'mine';
 
   const filtered = useMemo(() => {
     if (!myOnly || !currentMemberId) return { cols, tasks };
-    const mine = tasks.filter((t) => t.assignee_id === currentMemberId);
+    // "המשימות שלי" = משימות שהמשתמש נוגע בהן — מבצע או ראש צוות (כמו ב-RLS).
+    const mine = tasks.filter(
+      (t) => t.assignee_id === currentMemberId || t.team_lead_id === currentMemberId,
+    );
     const doneTodayIds = cols.done.map((t) => t.id);
     return { cols: buildDashboard(mine, doneTodayIds).cols, tasks: mine };
   }, [myOnly, currentMemberId, cols, tasks]);
@@ -29,29 +34,11 @@ export default function BoardArea({
   return (
     <section className="rounded-2xl border border-line bg-surface/60 p-3 sm:p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3 px-1">
-        <div className="flex items-center gap-3">
-          <h2 className="text-sm font-black text-grayMid">{d.areaTitle}</h2>
-          {/* מסנן — שני כפתורים מפורשים, הפעיל מסומן; חל על שתי התצוגות */}
-          <div className="flex items-center gap-1 rounded-lg bg-appBg p-0.5">
-            <button
-              type="button"
-              onClick={() => setMyOnly(false)}
-              className={`rounded-md px-3 py-1 text-xs font-bold transition-colors ${
-                !myOnly ? 'bg-white text-navy shadow-sm' : 'text-grayDark hover:text-navy'
-              }`}
-            >
-              {d.allTasks}
-            </button>
-            <button
-              type="button"
-              onClick={() => setMyOnly(true)}
-              className={`rounded-md px-3 py-1 text-xs font-bold transition-colors ${
-                myOnly ? 'bg-white text-navy shadow-sm' : 'text-grayDark hover:text-navy'
-              }`}
-            >
-              {d.myTasksFilter}
-            </button>
-          </div>
+        <div className="flex items-center gap-4">
+          {/* כותרת מקטע בלבד — לא לחיץ, בלי רקע/מסגרת/hover */}
+          <h2 className="text-[15px] font-extrabold text-navy">{d.areaTitle}</h2>
+          {/* מסנן — segmented control זהה למתג שורות/עמודות; חל על שתי התצוגות */}
+          <ViewToggle options={BOARD_FILTER_OPTIONS} view={filter} onChange={chooseFilter} />
         </div>
 
         <ViewToggle options={BOARD_VIEW_OPTIONS} view={view} onChange={choose} />
