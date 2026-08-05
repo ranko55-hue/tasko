@@ -59,19 +59,32 @@ export function useClient(clientId) {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const load = useCallback(async () => {
     if (!clientId) return;
     setLoading(true);
-    supabase
+    const { data } = await supabase
       .from('clients')
       .select('*')
       .eq('id', clientId)
-      .maybeSingle()
-      .then(({ data }) => {
-        setClient(data ?? null);
-        setLoading(false);
-      });
+      .maybeSingle();
+    setClient(data ?? null);
+    setLoading(false);
   }, [clientId]);
 
-  return { client, loading };
+  useEffect(() => { load(); }, [load]);
+
+  // עדכון פרטי הלקוח — RLS מאכפת שרק מנהל של הלקוח רשאי. מחזיר את השורה המעודכנת.
+  async function updateClient(patch) {
+    const { data, error } = await supabase
+      .from('clients')
+      .update(patch)
+      .eq('id', clientId)
+      .select()
+      .single();
+    if (error) throw error;
+    setClient(data);
+    return data;
+  }
+
+  return { client, loading, refetch: load, updateClient };
 }

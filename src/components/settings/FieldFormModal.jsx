@@ -9,14 +9,14 @@ import OptionsEditor from './OptionsEditor';
 const cf = he.customFields;
 
 const TYPES = ['text', 'number', 'date', 'select'];
-const ENTITIES = ['task', 'project'];
+const ENTITIES = ['task', 'project', 'client'];
 const PERMISSIONS = ['everyone', 'manager', 'admin'];
 
-export default function FieldFormModal({ initial, onSave, onClose }) {
+export default function FieldFormModal({ initial, onSave, onClose, lockedEntity }) {
   const editing = !!initial;
   const [label, setLabel] = useState(initial?.label ?? '');
   const [fieldType, setFieldType] = useState(initial?.field_type ?? 'text');
-  const [entity, setEntity] = useState(initial?.entity ?? 'task');
+  const [entity, setEntity] = useState(initial?.entity ?? lockedEntity ?? 'task');
   const [isRequired, setIsRequired] = useState(initial?.is_required ?? false);
   const [minRole, setMinRole] = useState(initial?.min_role ?? 'everyone');
   const [options, setOptions] = useState(initial?.options ?? []);
@@ -69,7 +69,7 @@ export default function FieldFormModal({ initial, onSave, onClose }) {
           ))}
         </Select>
 
-        <Select label={cf.fieldEntity} value={entity} onChange={setEntity} disabled={editing}>
+        <Select label={cf.fieldEntity} value={entity} onChange={setEntity} disabled={editing || !!lockedEntity}>
           {ENTITIES.map((e) => (
             <option key={e} value={e}>{cf.entities[e]}</option>
           ))}

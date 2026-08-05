@@ -428,6 +428,7 @@ export const he = {
       finance: 'כספים',
     },
     general: {
+      name: 'שם הלקוח',
       contactName: 'איש קשר',
       phone: 'טלפון',
       email: 'אימייל',
@@ -438,6 +439,10 @@ export const he = {
       serviceLink: 'קישור טופס קריאות של הלקוח',
       copy: 'העתקה',
       copied: 'הועתק!',
+      edit: 'עריכה',
+      moreDetails: 'פרטים נוספים',
+      nameRequired: 'יש להזין שם לקוח',
+      saveError: 'שמירת הלקוח נכשלה. נסו שוב.',
     },
     tasksTab: {
       open: 'משימות פתוחות ({n})',
@@ -908,7 +913,7 @@ export const he = {
 
   customFields: {
     sectionTitle: 'שדות מותאמים',
-    sectionHint: 'הגדרת שדות נוספים למשימות ולפרויקטים. מנהל מערכת בלבד.',
+    sectionHint: 'הגדרת שדות נוספים לפי ישות. מנהל מערכת בלבד.',
     addField: 'הוספת שדה',
     editField: 'עריכת שדה',
     fieldLabel: 'שם השדה',
@@ -930,6 +935,13 @@ export const he = {
     entities: {
       task: 'משימה',
       project: 'פרויקט',
+      client: 'לקוח',
+    },
+    // כותרות לשוניות אזור השדות בהגדרות (פר-ישות)
+    entityTabs: {
+      task: 'שדות למשימה',
+      project: 'שדות לפרויקט',
+      client: 'שדות לכרטיס לקוח',
     },
     permissions: {
       everyone: 'כולם',
