@@ -28,7 +28,7 @@ const TABS = ['general', 'tasks', 'projects', 'finance'];
 export default function ClientDetailPage() {
   const { clientId } = useParams();
   const { member } = useOrg();
-  const { client } = useClient(clientId);
+  const { client, updateClient } = useClient(clientId);
   const { members } = useOrgMembers(member.org_id);
   const d = useClientDetail(clientId, member.org_id);
   const target = useTaskTargets(member.org_id);
@@ -59,7 +59,9 @@ export default function ClientDetailPage() {
   }));
 
   function renderTab() {
-    if (tab === 'general') return <GeneralTab client={client} />;
+    if (tab === 'general') return (
+      <GeneralTab client={client} orgId={member.org_id} canEdit={manager} onSave={updateClient} />
+    );
     if (d.error)
       return (
         <p className="py-8 text-center text-danger">
