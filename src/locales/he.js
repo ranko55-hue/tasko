@@ -582,6 +582,29 @@ export const he = {
     title: 'דוחות',
     subtitle: 'סיכומים וניתוחים',
     placeholder: 'מודול הדוחות בפיתוח — בקרוב.',
+    from: 'מתאריך',
+    to: 'עד תאריך',
+    attendance: {
+      title: 'דוח נוכחות',
+      hint: 'ימי עבודה, חופשה ומחלה לכל העובדים בטווח תאריכים',
+    },
+  },
+
+  // דיווח נוכחות
+  attendance: {
+    title: 'נוכחות',
+    types: { work: 'יום עבודה', vacation: 'חופשה', sick: 'מחלה' },
+    reported: 'דווח: {type}',
+    notReported: 'טרם דווח היום. בחר סוג יום.',
+    addNoteHint: 'אפשר לצרף אישור',
+    noteAttached: 'אישור צורף',
+    saveError: 'הדיווח נכשל. נסו שוב.',
+    uploadError: 'העלאת האישור נכשלה. נסו שוב.',
+    viewNote: 'אישור מחלה',
+    noEntries: 'אין דיווחי נוכחות בטווח.',
+    colName: 'עובד',
+    unreported: 'לא דווח',
+    thisMonth: 'החודש הנוכחי',
   },
 
   projects: {
@@ -886,6 +909,7 @@ export const he = {
       tabs: {
         details: 'פרטים',
         tasks: 'משימות',
+        attendance: 'נוכחות',
         performance: 'ביצועים',
         documents: 'מסמכים',
         activity: 'פעילות',
