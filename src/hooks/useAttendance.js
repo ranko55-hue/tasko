@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { ymd, eachDate, isWorkday } from '../lib/attendance';
 
-const COLS = 'id, member_id, date, type, note, attachment_path';
+const COLS = 'id, member_id, date, type, note, attachment_path, start_time, end_time, hours, reported_by';
 
 // דיווח עצמי של העובד — הרשומות של 8 הימים האחרונים + upsert.
 export function useMyAttendance(orgId, memberId) {
@@ -31,6 +31,10 @@ export function useMyAttendance(orgId, memberId) {
       org_id: orgId, member_id: memberId, date, type,
       note: extra.note ?? null,
       attachment_path: extra.attachment_path ?? null,
+      start_time: extra.start_time ?? null,
+      end_time: extra.end_time ?? null,
+      hours: extra.hours ?? null,
+      reported_by: extra.reported_by ?? null,
       updated_at: new Date().toISOString(),
     };
     const { data, error } = await supabase
@@ -51,22 +55,19 @@ export function useAttendanceReport(orgId, from, to) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const load = useCallback(async () => {
     if (!orgId) return;
-    let alive = true;
     setLoading(true);
-    (async () => {
-      const [{ data: mem }, { data: ent }] = await Promise.all([
-        supabase.from('org_members').select('id, full_name').eq('org_id', orgId).eq('is_active', true).order('full_name'),
-        supabase.from('attendance_entries').select(COLS).eq('org_id', orgId).gte('date', from).lte('date', to),
-      ]);
-      if (!alive) return;
-      setMembers(mem ?? []);
-      setEntries(ent ?? []);
-      setLoading(false);
-    })();
-    return () => { alive = false; };
+    const [{ data: mem }, { data: ent }] = await Promise.all([
+      supabase.from('org_members').select('id, full_name').eq('org_id', orgId).eq('is_active', true).order('full_name'),
+      supabase.from('attendance_entries').select(COLS).eq('org_id', orgId).gte('date', from).lte('date', to),
+    ]);
+    setMembers(mem ?? []);
+    setEntries(ent ?? []);
+    setLoading(false);
   }, [orgId, from, to]);
+
+  useEffect(() => { load(); }, [load]);
 
   const today = ymd();
   const workdays = eachDate(from, to < today ? to : today).filter(isWorkday);
@@ -75,32 +76,38 @@ export function useAttendanceReport(orgId, from, to) {
     const es = entries.filter((e) => e.member_id === m.id);
     const counts = { work: 0, vacation: 0, sick: 0 };
     const reported = new Set();
-    es.forEach((e) => { counts[e.type] += 1; reported.add(e.date); });
+    let workHours = 0;
+    es.forEach((e) => {
+      counts[e.type] += 1;
+      reported.add(e.date);
+      if (e.type === 'work') workHours += Number(e.hours || 0);
+    });
     const unreported = workdays.filter((d) => !reported.has(d)).length;
-    return { member: m, ...counts, unreported };
+    return { member: m, ...counts, workHours: Math.round(workHours * 100) / 100, unreported };
   });
 
   const entriesByMember = {};
   entries.forEach((e) => { (entriesByMember[e.member_id] ||= {})[e.date] = e; });
 
-  return { rows, entriesByMember, members, entries, loading };
+  return { rows, entriesByMember, members, entries, loading, refetch: load };
 }
 
-// פירוט יומי של עובד בודד לטווח (לשונית נוכחות בכרטיס העובד).
+// פירוט יומי של עובד בודד לטווח (מסך /attendance, לשונית נוכחות, תיקון מנהל).
 export function useMemberAttendance(orgId, memberId, from, to) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const load = useCallback(async () => {
     if (!orgId || !memberId) return;
-    let alive = true;
     setLoading(true);
-    supabase.from('attendance_entries').select(COLS)
+    const { data } = await supabase.from('attendance_entries').select(COLS)
       .eq('member_id', memberId).gte('date', from).lte('date', to)
-      .order('date', { ascending: false })
-      .then(({ data }) => { if (alive) { setEntries(data ?? []); setLoading(false); } });
-    return () => { alive = false; };
+      .order('date', { ascending: false });
+    setEntries(data ?? []);
+    setLoading(false);
   }, [orgId, memberId, from, to]);
 
-  return { entries, loading };
+  useEffect(() => { load(); }, [load]);
+
+  return { entries, loading, refetch: load };
 }

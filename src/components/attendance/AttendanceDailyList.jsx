@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signedSickNoteUrl } from '../../lib/attendance';
+import { signedSickNoteUrl, fmtHours } from '../../lib/attendance';
 import { he } from '../../locales/he';
 
 const a = he.attendance;
@@ -33,9 +33,15 @@ export default function AttendanceDailyList({ entries, canViewNotes = false, emp
   return (
     <div className="space-y-2">
       {entries.map((e) => (
-        <div key={e.id} className="flex items-center gap-3 rounded-lg border border-line bg-white p-3">
-          <span className="w-24 shrink-0 text-sm font-bold text-navy">{fmt(e.date)}</span>
+        <div key={e.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-line bg-white p-3">
+          <span className="w-20 shrink-0 text-sm font-bold text-navy">{fmt(e.date)}</span>
           <span className={`rounded-full px-3 py-1 text-xs font-bold ${TONE[e.type]}`}>{a.types[e.type]}</span>
+          {e.type === 'work' && e.hours != null && (
+            <span className="text-sm font-bold text-navy" style={{ fontVariantNumeric: 'tabular-nums' }}>{hoursText(e)}</span>
+          )}
+          {e.reported_by && e.reported_by !== e.member_id && (
+            <span className="rounded-md bg-appBg px-2 py-0.5 text-[11px] font-bold text-grayMid">{a.byManager}</span>
+          )}
           {e.note && <span className="min-w-0 flex-1 truncate text-sm text-grayMid">{e.note}</span>}
           {canViewNotes && e.attachment_path && (
             <button
@@ -51,4 +57,11 @@ export default function AttendanceDailyList({ entries, canViewNotes = false, emp
       ))}
     </div>
   );
+}
+
+function hoursText(e) {
+  if (e.start_time && e.end_time) {
+    return `${e.start_time.slice(0, 5)}–${e.end_time.slice(0, 5)} · ${fmtHours(e.hours)} ${a.hoursUnit}`;
+  }
+  return `${a.fullDay} · ${fmtHours(e.hours)} ${a.hoursUnit}`;
 }

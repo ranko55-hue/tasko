@@ -26,6 +26,7 @@ function useNavSections() {
     { to: '/projects', label: he.nav.projects, icon: 'project' },
     { to: '/tasks', label: he.nav.tasks, icon: 'task' },
     { to: '/calendar', label: he.nav.calendar, icon: 'calendar' },
+    { to: '/attendance', label: he.nav.attendance, icon: 'clock' },
     admin && { to: '/team', label: he.nav.team, icon: 'users' },
     admin && { to: '/reports', label: he.nav.reports, icon: 'report' },
   ].filter(Boolean);
