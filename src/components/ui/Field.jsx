@@ -17,6 +17,8 @@ export default function Field({
   options,
   inputMode,
   autoComplete,
+  min,
+  max,
 }) {
   return (
     <label className="block">
@@ -57,6 +59,8 @@ export default function Field({
               placeholder={placeholder}
               inputMode={inputMode}
               autoComplete={autoComplete}
+              min={min}
+              max={max}
             />
           )}
         </>

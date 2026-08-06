@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMyAttendance } from '../../hooks/useAttendance';
-import { uploadSickNote, ymd } from '../../lib/attendance';
+import { useOrgSettings } from '../../hooks/useOrgSettings';
+import { uploadSickNote, fullDayHours, ymd } from '../../lib/attendance';
 import { he } from '../../locales/he';
 import Icon from '../ui/Icon';
 
@@ -16,6 +18,7 @@ const minDate = () => ymd(new Date(Date.now() - 7 * 86400000));
 
 export default function AttendanceCard({ orgId, memberId }) {
   const { byDate, report } = useMyAttendance(orgId, memberId);
+  const { settings } = useOrgSettings(orgId);
   const [date, setDate] = useState(ymd());
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -23,17 +26,18 @@ export default function AttendanceCard({ orgId, memberId }) {
 
   const entry = byDate[date];
   const today = ymd();
+  const meta = () => ({ hours: fullDayHours(settings), reported_by: memberId });
 
   async function pick(type) {
     if (busy) return;
     setErr('');
     if (type === 'sick') {
-      // מדווחים מיד; העלאת אישור אופציונלית אחר כך
-      try { setBusy(true); await report(date, 'sick'); } catch { setErr(a.saveError); } finally { setBusy(false); }
+      // מדווחים מיד (יום מלא); העלאת אישור אופציונלית אחר כך
+      try { setBusy(true); await report(date, 'sick', meta()); } catch { setErr(a.saveError); } finally { setBusy(false); }
       fileRef.current?.click();
       return;
     }
-    try { setBusy(true); await report(date, type); } catch { setErr(a.saveError); } finally { setBusy(false); }
+    try { setBusy(true); await report(date, type, meta()); } catch { setErr(a.saveError); } finally { setBusy(false); }
   }
 
   async function onFile(e) {
@@ -44,7 +48,7 @@ export default function AttendanceCard({ orgId, memberId }) {
     setErr('');
     try {
       const path = await uploadSickNote(orgId, memberId, file);
-      await report(date, 'sick', { attachment_path: path });
+      await report(date, 'sick', { ...meta(), attachment_path: path });
     } catch { setErr(a.uploadError); }
     setBusy(false);
   }
@@ -88,6 +92,10 @@ export default function AttendanceCard({ orgId, memberId }) {
         {entry ? a.reported.replace('{type}', a.types[entry.type]) + (entry.type === 'sick' && !entry.attachment_path ? ` · ${a.addNoteHint}` : entry.attachment_path ? ` · ${a.noteAttached}` : '') : a.notReported}
       </p>
       {err && <p className="mt-2 text-sm font-medium text-urgentInk">{err}</p>}
+
+      <Link to="/attendance" className="mt-3 inline-block text-sm font-bold text-brand hover:underline">
+        {a.allMyReports}
+      </Link>
     </div>
   );
 }

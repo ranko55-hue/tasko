@@ -19,6 +19,7 @@ import TeamPage from './pages/TeamPage';
 import MemberDetailPage from './pages/MemberDetailPage';
 import TasksPage from './pages/TasksPage';
 import CalendarPage from './pages/CalendarPage';
+import AttendancePage from './pages/AttendancePage';
 import ProjectsPage from './pages/ProjectsPage';
 import ReportsPage from './pages/ReportsPage';
 import PlatformTicketsPage from './pages/PlatformTicketsPage';
@@ -64,6 +65,8 @@ export default function App() {
             {/* נחיתה לפי תפקיד: מנהל ללוח, עובד/ראש צוות למשימות שלו */}
             <Route path="/" element={<Navigate to={homePathFor(member)} replace />} />
             <Route path="/my" element={<MyTasksPage />} />
+            {/* דיווח שעות — לכל התפקידים (עובד מדווח על עצמו) */}
+            <Route path="/attendance" element={<AttendancePage />} />
 
             {/* מסכי ניהול — עובד/ראש צוות מנותבים ל-/my */}
             <Route element={<ManagerOnly member={member} />}>
