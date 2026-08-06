@@ -1,14 +1,16 @@
 import { useState, useMemo } from 'react';
 import { he } from '../locales/he';
-import { usePlatformOrgs } from '../hooks/usePlatformOrgs';
+import { usePlatformOrgs, usePlatformBilling } from '../hooks/usePlatformOrgs';
 import PageHeader from '../components/ui/PageHeader';
 import Card from '../components/ui/Card';
 import OrgRow from '../components/platform/OrgRow';
+import PlatformBillingStrip from '../components/platform/PlatformBillingStrip';
 
 const t = he.platform.orgs;
 
 export default function PlatformOrgsPage() {
   const { orgs, loading, error, refetch } = usePlatformOrgs();
+  const { map: billingMap, extend } = usePlatformBilling();
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
@@ -67,7 +69,10 @@ export default function PlatformOrgsPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {filtered.map((org) => (
-            <OrgRow key={org.id} org={org} onMemberChanged={refetch} />
+            <div key={org.id}>
+              <OrgRow org={org} onMemberChanged={refetch} />
+              <PlatformBillingStrip billing={billingMap[org.id]} onExtend={(days) => extend(org.id, days)} />
+            </div>
           ))}
         </div>
       )}
