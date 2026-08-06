@@ -89,11 +89,13 @@ export default function BillingTab({ orgId }) {
               <div key={inv.id} className="flex items-center gap-3 rounded-lg border border-line bg-white p-3">
                 <span className="text-sm font-bold text-navy">{fmtDate(inv.charged_at)}</span>
                 <span className="text-sm text-grayMid" style={NUM}>{inv.amount} ₪</span>
-                {inv.invoice_url && (
+                {inv.invoice_url ? (
                   <a href={inv.invoice_url} target="_blank" rel="noopener noreferrer" className="mr-auto text-sm font-bold text-brand hover:underline">
                     {b.viewInvoice}
                   </a>
-                )}
+                ) : inv.invoice_number ? (
+                  <span className="mr-auto text-sm text-grayLight">{b.invoiceNo.replace('{n}', inv.invoice_number)}</span>
+                ) : null}
               </div>
             ))}
           </div>
