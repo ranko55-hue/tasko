@@ -18,10 +18,11 @@ import ClientHeaderCard from '../components/clients/ClientHeaderCard';
 import GeneralTab from '../components/clients/GeneralTab';
 import TasksTab from '../components/clients/TasksTab';
 import ProjectsTab from '../components/clients/ProjectsTab';
+import MeetingsTab from '../components/clients/MeetingsTab';
 import FinancesTab from '../components/clients/FinancesTab';
 import TaskDrawer from '../components/tasks/TaskDrawer';
 
-const TABS = ['general', 'tasks', 'projects', 'finance'];
+const TABS = ['general', 'tasks', 'projects', 'meetings', 'finance'];
 
 // מסך לקוח — כרטיס אחד עם 4 לשוניות פנימיות שמחליפות תוכן במקום.
 // TaskDrawer נפתח כשלוחצים על משימה (לא ניווט לעמוד אחר)
@@ -89,6 +90,8 @@ export default function ClientDetailPage() {
           onOpenProject={(p) => navigate(`/projects/${p.id}`)}
         />
       );
+    if (tab === 'meetings')
+      return <MeetingsTab clientId={clientId} orgId={member.org_id} memberId={member.id} />;
     return <FinancesTab documents={d.documents} onAddDocument={d.addDocument} />;
   }
 

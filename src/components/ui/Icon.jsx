@@ -37,6 +37,7 @@ const PATHS = {
   logout: 'M14 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M9 8l-4 4 4 4M5 12h11',
   bell: 'M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10.3 21a2 2 0 0 0 3.4 0',
   priNormal: 'M12 4a8 8 0 1 1 0 16 8 8 0 0 1 0-16ZM8.5 12h7',
+  calendar: 'M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1ZM4 9h16M8 3v4M16 3v4',
 };
 
 const SIZES = { sm: 'h-4 w-4', md: 'h-5 w-5', lg: 'h-8 w-8', xl: 'h-12 w-12', nav: 'h-[19px] w-[19px]' };
