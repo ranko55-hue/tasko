@@ -18,6 +18,7 @@ import SettingsPage from './pages/SettingsPage';
 import TeamPage from './pages/TeamPage';
 import MemberDetailPage from './pages/MemberDetailPage';
 import TasksPage from './pages/TasksPage';
+import CalendarPage from './pages/CalendarPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ReportsPage from './pages/ReportsPage';
 import PlatformTicketsPage from './pages/PlatformTicketsPage';
@@ -68,6 +69,7 @@ export default function App() {
             <Route element={<ManagerOnly member={member} />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
