@@ -3,7 +3,6 @@ import { chargeByToken } from "../_shared/cardcom.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const CRON_SECRET = Deno.env.get("BILLING_CRON_SECRET")!;
 const PURGE_ENABLED = Deno.env.get("BILLING_PURGE_ENABLED") === "true";
 const MAX_RETRIES = 3;
 
@@ -15,12 +14,14 @@ const ymd = (d: Date) => iso(d).slice(0, 10).replace(/-/g, "");
 // קרון יומי — חיוב מנויים שהגיע מועדם, פקיעת ניסיונות, ביטולים, ומחיקה.
 // מוגן בהדר x-cron-secret. אין JWT.
 Deno.serve(async (req) => {
-  if (req.headers.get("x-cron-secret") !== CRON_SECRET) {
-    return new Response("forbidden", { status: 403 });
-  }
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
+  // הסוד נוצר ונשמר ב-DB (billing_config) ע"י המיגרציה — לא ב-env ולא ב-git.
+  const { data: cfg } = await admin.from("billing_config").select("value").eq("key", "cron_secret").maybeSingle();
+  if (!cfg || req.headers.get("x-cron-secret") !== cfg.value) {
+    return new Response("forbidden", { status: 403 });
+  }
   const now = new Date();
   const report = { ver: "t1", renewed: 0, failed: 0, canceled: 0, expired: 0, purged: 0, purgeSkipped: 0 };
 

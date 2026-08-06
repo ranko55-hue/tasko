@@ -8,3 +8,4 @@ dist
 # Supabase CLI — קבצי עבודה מקומיים
 supabase/.temp/
 supabase/.branches/
+setup-billing.cmd

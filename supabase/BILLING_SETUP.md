@@ -3,34 +3,19 @@
 מנוע פר-ארגון, תמחור פר-מושב: **199 ₪ בסיס** (כולל 2 משתמשים) **+ 49 ₪ לכל עובד פעיל
 מעבר לשניים**, בתוספת מע״מ. **ניסיון 7 יום** מהקמת הארגון.
 
-## 1. Secrets (צד שרת בלבד — להריץ פעם אחת)
+## 1. Secrets — קובץ אחד להרצה
 
-```bash
-npx supabase secrets set \
-  CARDCOM_TERMINAL=1000 \
-  CARDCOM_API_NAME=<API_NAME_TEST> \
-  CARDCOM_API_PASSWORD=<API_PASSWORD_TEST> \
-  APP_URL=https://tasko-gamma.vercel.app \
-  BILLING_CRON_SECRET=<מחרוזת-אקראית-שתבחר>
-```
+פותחים את `setup-billing.cmd` (בשורש הפרויקט), מדביקים בשלוש השורות המסומנות את
+**מספר הטרמינל / שם המשתמש / הסיסמה** מ-Cardcom, שומרים, ומריצים. הקובץ מזין את כל
+ה-secrets לבד (כולל `APP_URL`) ומדפיס "הצליח" או שגיאה. אין צורך ב-`BILLING_CRON_SECRET`.
 
-`BILLING_PURGE_ENABLED` — לא מוגדר = מחיקת נתונים **כבויה** (ברירת מחדל). הפעלה עתידית בלבד.
+`BILLING_PURGE_ENABLED` — לא מוגדר = מחיקת נתונים **כבויה** (ברירת מחדל).
 
-## 2. Cron יומי לחיוב חוזר
+## 2. Cron — אוטומטי, אין מה להגדיר
 
-לתזמן קריאה יומית ל-`billing-charge-cycle` עם ההדר `x-cron-secret`. דרך pg_cron:
-
-```sql
-select cron.schedule('billing-daily', '0 3 * * *', $$
-  select net.http_post(
-    url    := 'https://<PROJECT-REF>.supabase.co/functions/v1/billing-charge-cycle',
-    headers:= jsonb_build_object('Content-Type','application/json','x-cron-secret','<BILLING_CRON_SECRET>'),
-    body   := '{}'::jsonb
-  );
-$$);
-```
-
-(או דרך Supabase Dashboard → Integrations → Cron.)
+מיגרציה `032_billing_cron.sql` מפעילה pg_cron, יוצרת סוד בתוך ה-DB (`billing_config`)
+ומתזמנת קריאה יומית ל-`billing-charge-cycle` (03:00). הפונקציה משווה את הסוד מול אותה
+טבלה. אין הגדרה ידנית בלוח Supabase.
 
 ## 3. Webhook (IndicatorUrl)
 
