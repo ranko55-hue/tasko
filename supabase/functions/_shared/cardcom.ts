@@ -10,7 +10,19 @@ function env() {
   if (!terminal || !apiName || !apiPassword) {
     throw { status: 500, message: "cardcom_env_missing" };
   }
-  return { terminal, apiName };
+  return { terminal, apiName, apiPassword };
+}
+
+// יצירת כתובת מסמך מתוך מספר מסמך — כש-GetLpResult/Transaction לא החזירו URL.
+// זו הפונקציה היחידה שמשתמשת ב-ApiPassword.
+export function createDocumentUrl(documentNumber: number | string) {
+  const { terminal, apiName, apiPassword } = env();
+  return post("/Documents/CreateDocumentUrl", {
+    TerminalNumber: terminal,
+    ApiName: apiName,
+    ApiPassword: apiPassword,
+    DocumentNumber: Number(documentNumber),
+  });
 }
 
 async function post(path: string, body: unknown) {

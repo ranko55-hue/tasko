@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { chargeByToken } from "../_shared/cardcom.ts";
+import { chargeByToken, createDocumentUrl } from "../_shared/cardcom.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -95,10 +95,14 @@ Deno.serve(async (req) => {
           last_charge_status: "success",
         }).eq("org_id", sub.org_id);
         if (tx.DocumentNumber) {
+          let docUrl = tx.DocumentUrl ?? null;
+          if (!docUrl) {
+            try { docUrl = (await createDocumentUrl(tx.DocumentNumber))?.DocumentUrl ?? null; } catch { /* פרודקשן יחזיר קישור */ }
+          }
           await admin.from("billing_invoices").upsert({
             org_id: sub.org_id,
             invoice_number: String(tx.DocumentNumber),
-            invoice_url: tx.DocumentUrl ?? null,
+            invoice_url: docUrl,
             amount, seats: seats ?? null, charged_at: iso(now),
           }, { onConflict: "invoice_number" });
         }

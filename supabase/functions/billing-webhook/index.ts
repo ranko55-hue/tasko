@@ -1,6 +1,17 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
-import { getLowProfileResult } from "../_shared/cardcom.ts";
+import { getLowProfileResult, createDocumentUrl } from "../_shared/cardcom.ts";
+
+// כתובת מסמך: מעדיפים את מה ש-Cardcom החזיר; אם ריק (קורה בטרמינל TEST) —
+// מנסים CreateDocumentUrl לפי מספר המסמך. בפרודקשן זה מחזיר קישור אמיתי.
+async function resolveDocUrl(direct: string | null | undefined, number: number | string | null | undefined) {
+  if (direct) return direct;
+  if (!number) return null;
+  try {
+    const d = await createDocumentUrl(number);
+    return d?.DocumentUrl ?? null;
+  } catch { return null; }
+}
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -87,10 +98,11 @@ Deno.serve(async (req) => {
 
     if (result.DocumentInfo?.DocumentNumber) {
       const { data: seats } = await admin.rpc("billing_seats", { p_org: orgId });
+      const docUrl = await resolveDocUrl(result.DocumentInfo.DocumentUrl, result.DocumentInfo.DocumentNumber);
       await admin.from("billing_invoices").upsert({
         org_id: orgId,
         invoice_number: String(result.DocumentInfo.DocumentNumber),
-        invoice_url: result.DocumentInfo.DocumentUrl ?? null,
+        invoice_url: docUrl,
         amount: tran.Amount ?? 0,
         seats: seats ?? null,
         charged_at: now.toISOString(),
