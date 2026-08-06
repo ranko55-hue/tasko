@@ -322,6 +322,10 @@ export const he = {
     next: 'הבא',
     viewWeek: 'שבוע',
     viewMonth: 'חודש',
+    viewTimeline: 'ציר זמן',
+    scaleDay: 'יום',
+    scaleWeek: 'שבוע',
+    unassigned: 'ללא שיוך',
     weekdaysShort: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'],
     moreN: 'עוד {n}',
     // מודאל
