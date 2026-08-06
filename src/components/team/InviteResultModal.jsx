@@ -5,7 +5,7 @@ import { useWaTemplates, findInviteTemplate } from '../../hooks/useWaTemplates';
 import { inviteUrl } from '../../hooks/useMemberAccess';
 import { he } from '../../locales/he';
 import Button from '../shared/Button';
-import Icon from '../ui/Icon';
+import WhatsAppIcon from '../shared/WhatsAppIcon';
 
 const t = he.team.invite;
 
@@ -61,7 +61,7 @@ export default function InviteResultModal({ token, fullName, phone, orgId, onClo
           rel="noopener noreferrer"
           className="flex min-h-touch w-full items-center justify-center gap-2 rounded-xl bg-[#25d366] px-4 font-bold text-white transition-opacity hover:opacity-90"
         >
-          <Icon name="whatsapp" size="md" strokeWidth={1.9} />
+          <WhatsAppIcon size={20} />
           {t.sendWhatsApp}
         </a>
       )}
