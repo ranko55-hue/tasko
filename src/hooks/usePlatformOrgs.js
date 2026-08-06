@@ -1,5 +1,21 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
+
+// סטטוס חיוב פר ארגון + הארכת ניסיון (super-admin).
+export function usePlatformBilling() {
+  const [rows, setRows] = useState([]);
+  const load = useCallback(async () => {
+    const { data } = await supabase.rpc('platform_list_billing');
+    setRows(data || []);
+  }, []);
+  useEffect(() => { load(); }, [load]);
+  const map = useMemo(() => Object.fromEntries(rows.map((r) => [r.org_id, r])), [rows]);
+  async function extend(orgId, days) {
+    await supabase.rpc('platform_extend_trial', { p_org_id: orgId, p_days: days });
+    await load();
+  }
+  return { map, extend, reload: load };
+}
 
 export function usePlatformOrgs() {
   const [orgs, setOrgs] = useState([]);

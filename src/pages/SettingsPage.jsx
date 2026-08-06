@@ -9,6 +9,7 @@ import SettingRow from '../components/settings/SettingRow';
 import ViewToggle from '../components/shared/ViewToggle';
 import CustomFieldsManager from '../components/settings/CustomFieldsManager';
 import WaTemplatesManager from '../components/settings/WaTemplatesManager';
+import BillingTab from '../components/settings/BillingTab';
 import { useBoardView, BOARD_VIEW_OPTIONS } from '../hooks/useBoardView';
 import { useMyTasksView, MY_TASKS_VIEW_OPTIONS } from '../hooks/useMyTasksView';
 
@@ -44,6 +45,7 @@ export default function SettingsPage() {
     { key: 'hours', label: t.tabs.workHours },
     { key: 'fields', label: t.tabs.customFields, adminOnly: true },
     { key: 'whatsapp', label: t.tabs.whatsapp, adminOnly: true },
+    { key: 'billing', label: t.tabs.billing, adminOnly: true },
   ].filter((tb) => !tb.adminOnly || admin);
 
   const requested = params.get('tab');
@@ -144,6 +146,8 @@ export default function SettingsPage() {
             <WaTemplatesManager orgId={member.org_id} />
           </div>
         )}
+
+        {active === 'billing' && admin && <BillingTab orgId={member.org_id} />}
       </section>
     </>
   );

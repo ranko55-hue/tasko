@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import WelcomePage from './pages/WelcomePage';
 import OrgSetupPage from './pages/OrgSetupPage';
 import AppShell from './components/AppShell';
+import BillingGate from './components/billing/BillingGate';
 import ClientsPage from './pages/ClientsPage';
 import ClientDetailPage from './pages/ClientDetailPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
@@ -61,6 +62,7 @@ export default function App() {
         />
         {/* אזור מחובר — דורש session + חברות בארגון. AppShell אחיד לכל המסכים. */}
         <Route element={<Protected session={session} member={member} />}>
+          <Route element={<BillingGate />}>
           <Route element={<AppShell />}>
             {/* נחיתה לפי תפקיד: מנהל ללוח, עובד/ראש צוות למשימות שלו */}
             <Route path="/" element={<Navigate to={homePathFor(member)} replace />} />
@@ -92,6 +94,7 @@ export default function App() {
               <Route path="/platform/tickets" element={<PlatformTicketsPage />} />
               <Route path="/platform/orgs" element={<PlatformOrgsPage />} />
             </Route>
+          </Route>
           </Route>
         </Route>
 
