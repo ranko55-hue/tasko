@@ -4,6 +4,7 @@ import { he } from '../locales/he';
 import PageHeader from '../components/ui/PageHeader';
 import MyTaskList from '../components/worker/MyTaskList';
 import MyTasksDesktop from '../components/worker/desktop/MyTasksDesktop';
+import AttendanceCard from '../components/worker/AttendanceCard';
 
 // מסך העובד — "המשימות שלי" (עובד / ראש צוות; מנהל יכול לצפות גם)
 //
@@ -27,6 +28,9 @@ export default function MyTasksPage() {
 
   return (
     <>
+      {/* דיווח נוכחות — ציר נפרד מזמן המשימות; מוצג בראש מסך העובד */}
+      <AttendanceCard orgId={member.org_id} memberId={member.id} />
+
       {/* מובייל — ללא שינוי מהמצב הקיים */}
       <div className="md:hidden">
         <PageHeader title={he.worker.title} />

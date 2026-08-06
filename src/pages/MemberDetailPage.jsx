@@ -18,9 +18,10 @@ import MemberTasksTab from '../components/team/MemberTasksTab';
 import MemberPerformanceTab from '../components/team/MemberPerformanceTab';
 import MemberDocumentsTab from '../components/team/MemberDocumentsTab';
 import MemberActivityTab from '../components/team/MemberActivityTab';
+import MemberAttendanceTab from '../components/team/MemberAttendanceTab';
 
 const t = he.team.detail;
-const TABS = ['details', 'tasks', 'performance', 'documents', 'activity'];
+const TABS = ['details', 'tasks', 'attendance', 'performance', 'documents', 'activity'];
 
 export default function MemberDetailPage() {
   const { memberId } = useParams();
@@ -84,6 +85,9 @@ export default function MemberDetailPage() {
           onRemove={docs.removeDocument}
         />
       );
+    }
+    if (tab === 'attendance') {
+      return <MemberAttendanceTab memberId={memberId} orgId={me.org_id} />;
     }
     if (tab === 'activity') {
       return <MemberActivityTab memberId={memberId} orgId={me.org_id} />;
