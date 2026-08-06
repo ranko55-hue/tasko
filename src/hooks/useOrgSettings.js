@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 // הגדרות הארגון (אפיון v8 §3.9). כתיבה מוגנת ב-policy org_update — מנהלים בלבד.
 export function useOrgSettings(orgId) {
   const [settings, setSettings] = useState({
+    name: '',
     require_project: false,
     require_approval: true,
     work_start_time: '08:00',
@@ -20,7 +21,7 @@ export function useOrgSettings(orgId) {
     }
     const { data, error: err } = await supabase
       .from('organizations')
-      .select('require_project, require_approval, work_start_time, work_end_time')
+      .select('name, require_project, require_approval, work_start_time, work_end_time')
       .eq('id', orgId)
       .single();
 
@@ -29,6 +30,7 @@ export function useOrgSettings(orgId) {
       setError(true);
     } else {
       setSettings({
+        name: data?.name ?? '',
         require_project: Boolean(data?.require_project),
         require_approval: data?.require_approval !== false,
         work_start_time: (data?.work_start_time ?? '08:00:00').slice(0, 5),

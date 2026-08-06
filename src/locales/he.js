@@ -50,6 +50,14 @@ export const he = {
   settings: {
     title: 'הגדרות',
     subtitle: 'התאמת המערכת לאופן העבודה של הארגון',
+    tabs: {
+      general: 'כללי',
+      display: 'תצוגה',
+      workHours: 'שעות עבודה',
+      customFields: 'שדות מותאמים',
+      whatsapp: 'וואטסאפ',
+    },
+    orgName: 'שם הארגון',
     sectionTasks: 'משימות',
     sectionBoardView: 'תצוגת משימות',
     boardViewHint: 'כיצד יוצגו המשימות בלוח הניהול',
