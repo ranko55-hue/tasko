@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useOrg } from '../../lib/orgContext';
 import { isAdmin } from '../../lib/roles';
@@ -8,6 +8,12 @@ import Button from '../shared/Button';
 import TopbarActions from './TopbarActions';
 
 const s = he.sidebar;
+
+// סימון פעיל תלוי-view עבור פריטי היומן: שניהם מצביעים ל-/calendar, ומובחנים
+// לפי calendar?view=timeline. "יומן" פעיל בשבוע/חודש, "ציר זמן" בתצוגת הציר.
+const isTimeline = (loc) => loc.pathname === '/calendar' && new URLSearchParams(loc.search).get('view') === 'timeline';
+const calMatch = (loc) => loc.pathname === '/calendar' && !isTimeline(loc);
+const tlMatch = (loc) => isTimeline(loc);
 
 // סגנון פריט משותף — פריט ניווט, תמיכה, קיפול. מנוחה: טקסט תכלת-אפרפר;
 // hover: רקע לבן שקוף עדין + טקסט לבן.
@@ -25,7 +31,8 @@ function useNavSections() {
     { to: '/clients', label: he.nav.clients, icon: 'client' },
     { to: '/projects', label: he.nav.projects, icon: 'project' },
     { to: '/tasks', label: he.nav.tasks, icon: 'task' },
-    { to: '/calendar', label: he.nav.calendar, icon: 'calendar' },
+    { to: '/calendar', label: he.nav.calendar, icon: 'calendar', match: calMatch },
+    { to: '/calendar?view=timeline', label: he.nav.timeline, icon: 'gantt', match: tlMatch },
     { to: '/attendance', label: he.nav.attendance, icon: 'clock' },
     admin && { to: '/team', label: he.nav.team, icon: 'users' },
     admin && { to: '/reports', label: he.nav.reports, icon: 'report' },
@@ -51,6 +58,9 @@ function useNavSections() {
 // פריט ניווט — NavLink. פעיל: רקע צהוב שקוף עדין + פס צהוב דק בקצה הימני
 // + טקסט לבן (הצהוב מסמן, לא צובע). collapsed → אייקון + tooltip.
 function NavItem({ item, collapsed, onNavigate }) {
+  const location = useLocation();
+  // item.match — סימון פעיל תלוי-view (יומן/ציר זמן); אחרת ברירת המחדל של NavLink.
+  const resolve = (routerActive) => (item.match ? item.match(location) : routerActive);
   return (
     <NavLink
       to={item.to}
@@ -58,13 +68,13 @@ function NavItem({ item, collapsed, onNavigate }) {
       title={collapsed ? item.label : undefined}
       className={({ isActive }) =>
         `relative ${ITEM} ${collapsed ? 'justify-center' : 'justify-start'} ${
-          isActive ? 'bg-brandYellow/[0.14] text-white hover:bg-brandYellow/[0.14] hover:text-white' : ''
+          resolve(isActive) ? 'bg-brandYellow/[0.14] text-white hover:bg-brandYellow/[0.14] hover:text-white' : ''
         }`
       }
     >
       {({ isActive }) => (
         <>
-          {isActive && (
+          {resolve(isActive) && (
             <span className="absolute inset-y-1.5 right-0 w-[3px] rounded-sm bg-brandYellow" aria-hidden="true" />
           )}
           <Icon name={item.icon} size="nav" strokeWidth={2} className="shrink-0" />

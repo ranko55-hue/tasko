@@ -44,6 +44,7 @@ export const he = {
     settings: 'הגדרות',
     tasks: 'משימות',
     calendar: 'יומן',
+    timeline: 'ציר זמן',
     attendance: 'דיווח שעות',
     projects: 'פרויקטים',
     reports: 'דוחות',
