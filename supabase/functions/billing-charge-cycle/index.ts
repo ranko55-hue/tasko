@@ -31,6 +31,8 @@ Deno.serve(async (req) => {
 
   for (const sub of subs ?? []) {
     try {
+      if (sub.status === "vip") continue; // פטור — לא מחייבים, לא פוגים, לא מוחקים.
+
       // מחיקת נתונים (ריטיינר) — רק אם הדגל דלוק.
       if (sub.data_purge_at && new Date(sub.data_purge_at) <= now && !sub.purged_at) {
         if (PURGE_ENABLED) {

@@ -10,17 +10,23 @@ const TONE = {
   past_due: 'bg-yellow-100 text-yellow-800',
   canceled: 'bg-appBg text-grayMid',
   expired: 'bg-urgentSoft text-urgentInk',
+  vip: 'bg-purple-100 text-purple-700',
 };
 
-// רצועת חיוב פר ארגון בלוח הפלטפורמה + כפתורי הארכת ניסיון.
-export default function PlatformBillingStrip({ billing, onExtend }) {
+// רצועת חיוב פר ארגון בלוח הפלטפורמה + הארכת ניסיון + סימון VIP.
+export default function PlatformBillingStrip({ billing, onExtend, onSetVip }) {
   const [busy, setBusy] = useState(false);
   if (!billing) return null;
   const st = billing.status || 'trialing';
+  const isVip = st === 'vip';
 
   async function extend(days) {
     setBusy(true);
     try { await onExtend(days); } finally { setBusy(false); }
+  }
+  async function toggleVip() {
+    setBusy(true);
+    try { await onSetVip(!isVip); } finally { setBusy(false); }
   }
 
   return (
@@ -36,8 +42,15 @@ export default function PlatformBillingStrip({ billing, onExtend }) {
         <span className="text-grayLight">{fmtDate(billing.current_period_end)}</span>
       )}
       <div className="mr-auto flex gap-2">
-        <Button variant="secondary" size="sm" fullWidth={false} disabled={busy} onClick={() => extend(7)}>+7</Button>
-        <Button variant="secondary" size="sm" fullWidth={false} disabled={busy} onClick={() => extend(14)}>+14</Button>
+        {!isVip && (
+          <>
+            <Button variant="secondary" size="sm" fullWidth={false} disabled={busy} onClick={() => extend(7)}>+7</Button>
+            <Button variant="secondary" size="sm" fullWidth={false} disabled={busy} onClick={() => extend(14)}>+14</Button>
+          </>
+        )}
+        <Button variant={isVip ? 'danger' : 'dark'} size="sm" fullWidth={false} disabled={busy} onClick={toggleVip}>
+          {isVip ? b.unsetVip : b.setVip}
+        </Button>
       </div>
     </div>
   );

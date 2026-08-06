@@ -36,6 +36,17 @@ export default function BillingTab({ orgId }) {
   const st = sub?.status ?? status?.status;
   const canceled = sub?.cancel_at_period_end;
 
+  // ארגון פטור — תצוגה נקייה בלי כפתורי תשלום.
+  if (st === 'vip') {
+    return (
+      <div className="rounded-2xl border border-line bg-white p-6 text-center">
+        <span className="inline-block rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700">{b.status.vip}</span>
+        <h2 className="mt-3 text-lg font-black text-navy">{b.vipTitle}</h2>
+        <p className="mt-1 text-sm text-grayMid">{b.vipNote}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-line bg-white p-4">

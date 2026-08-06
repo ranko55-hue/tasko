@@ -14,7 +14,11 @@ export function usePlatformBilling() {
     await supabase.rpc('platform_extend_trial', { p_org_id: orgId, p_days: days });
     await load();
   }
-  return { map, extend, reload: load };
+  async function setVip(orgId, vip) {
+    await supabase.rpc('platform_set_vip', { p_org_id: orgId, p_vip: vip });
+    await load();
+  }
+  return { map, extend, setVip, reload: load };
 }
 
 export function usePlatformOrgs() {

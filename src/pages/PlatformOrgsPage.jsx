@@ -10,7 +10,7 @@ const t = he.platform.orgs;
 
 export default function PlatformOrgsPage() {
   const { orgs, loading, error, refetch } = usePlatformOrgs();
-  const { map: billingMap, extend } = usePlatformBilling();
+  const { map: billingMap, extend, setVip } = usePlatformBilling();
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
@@ -71,7 +71,11 @@ export default function PlatformOrgsPage() {
           {filtered.map((org) => (
             <div key={org.id}>
               <OrgRow org={org} onMemberChanged={refetch} />
-              <PlatformBillingStrip billing={billingMap[org.id]} onExtend={(days) => extend(org.id, days)} />
+              <PlatformBillingStrip
+                billing={billingMap[org.id]}
+                onExtend={(days) => extend(org.id, days)}
+                onSetVip={(vip) => setVip(org.id, vip)}
+              />
             </div>
           ))}
         </div>
