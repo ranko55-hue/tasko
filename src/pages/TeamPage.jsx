@@ -8,7 +8,7 @@ import Modal from '../components/shared/Modal';
 import PageHeader from '../components/ui/PageHeader';
 import TeamTable from '../components/team/TeamTable';
 import MemberForm from '../components/team/MemberForm';
-import CredentialsModal from '../components/team/CredentialsModal';
+import InviteResultModal from '../components/team/InviteResultModal';
 
 const t = he.team;
 
@@ -18,7 +18,7 @@ export default function TeamPage() {
   const { members, loading, error, refetch } = useTeamList(member.org_id);
 
   const [addOpen, setAddOpen] = useState(false);
-  const [credentials, setCredentials] = useState(null);
+  const [invite, setInvite] = useState(null); // { token, full_name, phone }
   const [filter, setFilter] = useState('active');
   const [search, setSearch] = useState('');
 
@@ -41,9 +41,9 @@ export default function TeamPage() {
     return list;
   }, [members, filter, search]);
 
-  function handleCreated(creds) {
+  function handleCreated(result) {
     setAddOpen(false);
-    setCredentials(creds);
+    setInvite(result);
     refetch();
   }
 
@@ -115,12 +115,14 @@ export default function TeamPage() {
         </Modal>
       )}
 
-      {credentials && (
-        <Modal title={he.team.credentials.title} onClose={() => setCredentials(null)}>
-          <CredentialsModal
-            email={credentials.email}
-            password={credentials.password}
-            onClose={() => setCredentials(null)}
+      {invite && (
+        <Modal title={he.team.invite.title} onClose={() => setInvite(null)}>
+          <InviteResultModal
+            token={invite.token}
+            fullName={invite.full_name}
+            phone={invite.phone}
+            orgId={member.org_id}
+            onClose={() => setInvite(null)}
           />
         </Modal>
       )}
