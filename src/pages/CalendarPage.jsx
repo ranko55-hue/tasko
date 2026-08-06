@@ -1,5 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useOrg } from '../lib/orgContext';
+import { readStringArray, writeJSON } from '../lib/storage';
 import { useMeetings } from '../hooks/useMeetings';
 import { useClients } from '../hooks/useClients';
 import { useOrgMembers } from '../hooks/useOrgMembers';
@@ -32,11 +34,38 @@ const TL_SCALE_OPTIONS = [
 ];
 
 const fmt = (d) => d.toLocaleDateString('he-IL', { day: 'numeric', month: 'short' });
+const VIEW_KEY = 'calendar.view';
+const VALID_VIEWS = ['week', 'month', 'timeline'];
 
 export default function CalendarPage() {
   const { member } = useOrg();
-  const [view, setView] = useState('week');
+  const [params, setParams] = useSearchParams();
+  const urlView = params.get('view');
+
+  // התצוגה נשמרת ב-URL (calendar?view=...) וגם פר-משתמש (localStorage).
+  // כניסה רגילה נוחתת בתצוגה האחרונה; קיצור "ציר זמן" בתפריט קובע view=timeline.
+  const [view, setView] = useState(() => {
+    if (VALID_VIEWS.includes(urlView)) return urlView;
+    const saved = readStringArray(VIEW_KEY)[0];
+    return VALID_VIEWS.includes(saved) ? saved : 'week';
+  });
   const [scale, setScale] = useState('week'); // ציר-זמן: יום/שבוע
+
+  // סנכרון עם ה-URL: פרמטר תקף → מאמצים אותו; חסר → משקפים את התצוגה האפקטיבית.
+  useEffect(() => {
+    if (VALID_VIEWS.includes(urlView)) {
+      if (urlView !== view) setView(urlView);
+    } else {
+      setParams({ view }, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlView]);
+
+  function chooseView(next) {
+    setView(next);
+    writeJSON(VIEW_KEY, [next]);
+    setParams({ view: next }, { replace: true });
+  }
   const [cursor, setCursor] = useState(() => new Date());
   const [modal, setModal] = useState(null);
   const [taskId, setTaskId] = useState(null);
@@ -103,7 +132,7 @@ export default function CalendarPage() {
           {view === 'timeline' && (
             <ViewToggle options={TL_SCALE_OPTIONS} view={scale} onChange={setScale} />
           )}
-          <ViewToggle options={CAL_VIEW_OPTIONS} view={view} onChange={setView} />
+          <ViewToggle options={CAL_VIEW_OPTIONS} view={view} onChange={chooseView} />
         </div>
       </div>
 
