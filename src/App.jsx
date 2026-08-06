@@ -6,6 +6,7 @@ import { OrgContext } from './lib/orgContext';
 import { isManager, isAdmin, homePathFor } from './lib/roles';
 import { he } from './locales/he';
 import LoginPage from './pages/LoginPage';
+import WelcomePage from './pages/WelcomePage';
 import OrgSetupPage from './pages/OrgSetupPage';
 import AppShell from './components/AppShell';
 import ClientsPage from './pages/ClientsPage';
@@ -41,6 +42,9 @@ export default function App() {
           path="/login"
           element={session ? <Navigate to="/" replace /> : <LoginPage />}
         />
+        {/* קבלת הזמנת עובד — ציבורי, מחוץ לשומר הסשן */}
+        <Route path="/welcome/:token" element={<WelcomePage />} />
+
         <Route
           path="/setup"
           element={

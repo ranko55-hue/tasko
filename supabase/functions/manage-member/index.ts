@@ -4,6 +4,8 @@ import { corsHeaders } from "../_shared/cors.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
+const INVITE_DAYS = 7;
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -27,6 +29,7 @@ Deno.serve(async (req) => {
     });
 
     if (action === "create") return await handleCreate(admin, anonClient, caller, body);
+    if (action === "resend") return await handleResend(admin, anonClient, caller, body);
     if (action === "reset_password") return await handleResetPassword(admin, anonClient, caller, body);
     if (action === "toggle_active") return await handleToggleActive(admin, anonClient, caller, body);
 
@@ -55,40 +58,44 @@ async function requireAdmin(anonClient: any, callerId: string, orgId: string) {
   return member;
 }
 
-async function handleCreate(
-  admin: any,
-  anonClient: any,
-  caller: any,
-  body: any,
-) {
-  const { org_id, full_name, email, password, phone, phone2, role, manager_id, gender } = body;
-  if (!org_id || !full_name?.trim() || !email?.trim() || !password) {
+function newToken(): string {
+  return (crypto.randomUUID() + crypto.randomUUID()).replace(/-/g, "");
+}
+
+// יצירת טוקן הזמנה חדש לעובד. מבטל למעשה הזמנות קודמות: מצב הגישה נגזר
+// תמיד מההזמנה האחרונה.
+async function createInvite(admin: any, orgId: string, memberId: string, byId: string) {
+  const token = newToken();
+  const expires = new Date(Date.now() + INVITE_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  const { error } = await admin.from("invites").insert({
+    org_id: orgId,
+    org_member_id: memberId,
+    token,
+    expires_at: expires,
+    created_by: byId,
+  });
+  if (error) throw { status: 500, message: error.message };
+  return { token, expires_at: expires };
+}
+
+// הקמת עובד — שם + טלפון חובה, אימייל רשות. אין סיסמה: נוצר טוקן הזמנה
+// שהעובד ממש דרכו (קובע סיסמה) בדף /welcome. חשבון ה-auth נוצר רק בקבלה.
+async function handleCreate(admin: any, anonClient: any, caller: any, body: any) {
+  const { org_id, full_name, email, phone, phone2, role, manager_id, gender } = body;
+  if (!org_id || !full_name?.trim() || !phone?.trim()) {
     throw { status: 400, message: "missing_fields" };
   }
-  if (password.length < 6) throw { status: 400, message: "password_too_short" };
 
   const adminMember = await requireAdmin(anonClient, caller.id, org_id);
-
-  const { data: authUser, error: authErr } = await admin.auth.admin.createUser({
-    email: email.trim().toLowerCase(),
-    password,
-    email_confirm: true,
-  });
-  if (authErr) {
-    if (authErr.message?.includes("already been registered")) {
-      throw { status: 409, message: "email_exists" };
-    }
-    throw { status: 500, message: authErr.message };
-  }
 
   const { data: member, error: memErr } = await admin
     .from("org_members")
     .insert({
       org_id,
-      auth_user_id: authUser.user.id,
+      auth_user_id: null,
       full_name: full_name.trim(),
-      email: email.trim().toLowerCase(),
-      phone: phone?.trim() || null,
+      email: email?.trim()?.toLowerCase() || null,
+      phone: phone.trim(),
       phone2: phone2?.trim() || null,
       role: role || "worker",
       manager_id: manager_id || null,
@@ -96,24 +103,41 @@ async function handleCreate(
     })
     .select("id")
     .single();
+  if (memErr) throw { status: 500, message: memErr.message };
 
-  if (memErr) {
-    await admin.auth.admin.deleteUser(authUser.user.id);
-    throw { status: 500, message: memErr.message };
-  }
+  const invite = await createInvite(admin, org_id, member.id, adminMember.id);
 
   return new Response(
-    JSON.stringify({ member_id: member.id, email: email.trim().toLowerCase() }),
+    JSON.stringify({ member_id: member.id, token: invite.token, expires_at: invite.expires_at }),
     { status: 201, headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
 }
 
-async function handleResetPassword(
-  admin: any,
-  anonClient: any,
-  caller: any,
-  body: any,
-) {
+// שליחת הזמנה מחדש — טוקן חדש לעובד שטרם נכנס.
+async function handleResend(admin: any, anonClient: any, caller: any, body: any) {
+  const { org_id, member_id } = body;
+  if (!org_id || !member_id) throw { status: 400, message: "missing_fields" };
+
+  const adminMember = await requireAdmin(anonClient, caller.id, org_id);
+
+  const { data: target } = await admin
+    .from("org_members")
+    .select("id, auth_user_id")
+    .eq("id", member_id)
+    .eq("org_id", org_id)
+    .single();
+  if (!target) throw { status: 404, message: "member_not_found" };
+  if (target.auth_user_id) throw { status: 400, message: "already_active" };
+
+  const invite = await createInvite(admin, org_id, member_id, adminMember.id);
+
+  return new Response(
+    JSON.stringify({ token: invite.token, expires_at: invite.expires_at }),
+    { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  );
+}
+
+async function handleResetPassword(admin: any, anonClient: any, caller: any, body: any) {
   const { org_id, member_id, new_password } = body;
   if (!org_id || !member_id || !new_password) {
     throw { status: 400, message: "missing_fields" };
@@ -140,12 +164,7 @@ async function handleResetPassword(
   });
 }
 
-async function handleToggleActive(
-  admin: any,
-  anonClient: any,
-  caller: any,
-  body: any,
-) {
+async function handleToggleActive(admin: any, anonClient: any, caller: any, body: any) {
   const { org_id, member_id, is_active } = body;
   if (!org_id || !member_id || typeof is_active !== "boolean") {
     throw { status: 400, message: "missing_fields" };

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { loginEmailFor } from '../lib/waPhone';
 import { he } from '../locales/he';
 import Button from '../components/shared/Button';
 import Card from '../components/ui/Card';
@@ -47,8 +48,13 @@ export default function LoginPage() {
         if (err) throw err;
         setNotice(t.signupSuccess);
       } else {
+        // מזהה יכול להיות אימייל או טלפון — עובד בלי אימייל מתחבר עם הטלפון,
+        // שממופה לאימייל הסינתטי הפנימי שלו.
+        const id = email.trim().includes('@')
+          ? email.trim().toLowerCase()
+          : loginEmailFor({ phone: email });
         const { error: err } = await supabase.auth.signInWithPassword({
-          email,
+          email: id,
           password,
         });
         if (err) throw err;
@@ -85,12 +91,11 @@ export default function LoginPage() {
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Field
-              label={t.email}
-              type="email"
+              label={isSignup ? t.email : t.emailOrPhone}
+              type={isSignup ? 'email' : 'text'}
               value={email}
               onChange={setEmail}
-              autoComplete="email"
-              inputMode="email"
+              autoComplete="username"
             />
             <Field
               label={t.password}

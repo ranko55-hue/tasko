@@ -13,7 +13,7 @@ export function useTeamMember(memberId, orgId) {
 
     const { data, error: err } = await supabase
       .from('org_members')
-      .select('id, full_name, email, phone, phone2, role, gender, manager_id, is_active, created_at')
+      .select('id, full_name, email, phone, phone2, role, gender, manager_id, is_active, auth_user_id, created_at')
       .eq('id', memberId)
       .eq('org_id', orgId)
       .single();

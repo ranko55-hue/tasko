@@ -8,6 +8,8 @@ import Field from '../ui/Field';
 import Button from '../shared/Button';
 import Modal from '../shared/Modal';
 import ManagerPicker from '../shared/ManagerPicker';
+import WhatsAppButton from '../shared/WhatsAppButton';
+import MemberAccessCard from './MemberAccessCard';
 
 const t = he.team.detail;
 const ROLES = [
@@ -139,7 +141,12 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
       <Field label={t.fullName} value={f.full_name} onChange={set('full_name')} />
 
       <div className="grid grid-cols-2 gap-3">
-        <Field label={`${t.phone} ${he.common.optional}`} type="tel" inputMode="tel" value={f.phone} onChange={set('phone')} />
+        <div className="flex items-end gap-1">
+          <div className="flex-1">
+            <Field label={t.phone} type="tel" inputMode="tel" value={f.phone} onChange={set('phone')} />
+          </div>
+          <WhatsAppButton phone={f.phone} className="mb-1" />
+        </div>
         <Field label={`${t.phone2} ${he.common.optional}`} type="tel" inputMode="tel" value={f.phone2} onChange={set('phone2')} />
       </div>
 
@@ -177,11 +184,16 @@ export default function MemberDetailsTab({ member, canEdit, onRefresh }) {
         </div>
       )}
 
-      {/* כניסה למערכת */}
+      {/* מצב גישה + שליחת הזמנה מחדש */}
       {admin && (
+        <MemberAccessCard memberId={member.id} orgId={me.org_id} phone={member.phone} />
+      )}
+
+      {/* כניסה למערכת — רק לעובד שכבר הצטרף (יש חשבון) */}
+      {admin && member.auth_user_id && (
         <div className="border-t border-line pt-4">
           <p className="mb-1 text-sm font-bold text-inkSoft">{t.login}</p>
-          <p className="mb-3 text-sm text-grayMid" dir="ltr">{member.email || '—'}</p>
+          <p className="mb-3 text-sm text-grayMid" dir="ltr">{member.email || t.loginByPhone}</p>
           <div className="w-48">
             <Button variant="secondary" onClick={() => setResetModal(true)}>{t.resetPassword}</Button>
           </div>

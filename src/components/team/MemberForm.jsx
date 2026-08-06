@@ -24,7 +24,6 @@ export default function MemberForm({ onCreated, onCancel }) {
   const [f, setF] = useState({
     full_name: '',
     email: '',
-    password: '',
     phone: '',
     phone2: '',
     role: 'worker',
@@ -42,23 +41,19 @@ export default function MemberForm({ onCreated, onCancel }) {
     e.preventDefault();
     setError('');
     if (!f.full_name.trim()) return setError(t.nameRequired);
-    if (!f.email.trim()) return setError(t.emailRequired);
-    if (!isValidEmail(f.email.trim())) return setError(t.emailInvalid);
-    if (!f.password) return setError(t.passwordRequired);
-    if (f.password.length < 6) return setError(t.passwordShort);
+    if (!f.phone.trim()) return setError(t.phoneRequired);
+    if (f.email.trim() && !isValidEmail(f.email.trim())) return setError(t.emailInvalid);
     if (needsManager && !f.manager_id) return setError(t.managerRequired);
 
     setBusy(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
       const resp = await supabase.functions.invoke('manage-member', {
         body: {
           action: 'create',
           org_id: member.org_id,
           full_name: f.full_name.trim(),
-          email: f.email.trim(),
-          password: f.password,
-          phone: f.phone.trim() || null,
+          email: f.email.trim() || null,
+          phone: f.phone.trim(),
           phone2: f.phone2.trim() || null,
           role: f.role,
           manager_id: showManager ? f.manager_id : null,
@@ -69,16 +64,12 @@ export default function MemberForm({ onCreated, onCancel }) {
       if (resp.error) throw resp.error;
       const body = resp.data;
       if (body?.error) {
-        if (body.error === 'email_exists') {
-          setError(he.team.emailExists);
-        } else {
-          setError(he.team.createError);
-        }
+        setError(he.team.createError);
         setBusy(false);
         return;
       }
 
-      onCreated({ email: f.email.trim(), password: f.password });
+      onCreated({ token: body.token, full_name: f.full_name.trim(), phone: f.phone.trim() });
     } catch {
       setError(he.team.createError);
       setBusy(false);
@@ -88,14 +79,14 @@ export default function MemberForm({ onCreated, onCancel }) {
   return (
     <form onSubmit={submit} className="space-y-4">
       <Field label={t.fullName} value={f.full_name} onChange={set('full_name')} />
-      <Field label={t.email} type="email" inputMode="email" value={f.email} onChange={set('email')} />
-      <Field label={t.password} type="text" value={f.password} onChange={set('password')} autoComplete="off" />
-      <p className="!mt-1 text-xs text-grayMid">{t.passwordHint}</p>
 
       <div className="grid grid-cols-2 gap-3">
-        <Field label={`${t.phone} ${he.common.optional}`} type="tel" inputMode="tel" value={f.phone} onChange={set('phone')} />
+        <Field label={t.phone} type="tel" inputMode="tel" value={f.phone} onChange={set('phone')} />
         <Field label={`${t.phone2} ${he.common.optional}`} type="tel" inputMode="tel" value={f.phone2} onChange={set('phone2')} />
       </div>
+
+      <Field label={`${t.email} ${he.common.optional}`} type="email" inputMode="email" value={f.email} onChange={set('email')} />
+      <p className="!mt-1 text-xs text-grayMid">{t.inviteHint}</p>
 
       <Field
         label={t.role}

@@ -6,6 +6,7 @@ import { useCustomFieldValues } from '../../hooks/useCustomFieldValues';
 import Button from '../shared/Button';
 import Field from '../ui/Field';
 import CustomFieldInput from '../tasks/CustomFieldInput';
+import WhatsAppButton from '../shared/WhatsAppButton';
 
 const g = he.clientDetail.general;
 // כותרת מקטע טקסטואלית קטנה — בלי קונטיינר. משמשת גם בצפייה וגם בעריכה.
@@ -117,7 +118,14 @@ export default function GeneralTab({ client, orgId, canEdit, onSave }) {
 
       <div className="grid grid-cols-2 gap-3">
         <Tile label={g.contactName} value={client?.contact_name} />
-        <Tile label={g.phone} value={client?.contact_phone} />
+        {/* טלפון + אייקון וואטסאפ ליד המספר */}
+        <div className="flex items-center justify-between gap-2 rounded-lg bg-surface p-3">
+          <div className="min-w-0">
+            <div className="text-xs text-grayLight">{g.phone}</div>
+            <div className="mt-1 truncate font-bold text-navy" dir="ltr">{client?.contact_phone || he.common.none}</div>
+          </div>
+          <WhatsAppButton phone={client?.contact_phone} />
+        </div>
         <Tile label={g.email} value={client?.contact_email} />
         <Tile label={g.businessId} value={client?.business_id} />
         <Tile label={g.address} value={client?.address} />

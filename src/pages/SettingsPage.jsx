@@ -6,6 +6,7 @@ import PageHeader from '../components/ui/PageHeader';
 import SettingRow from '../components/settings/SettingRow';
 import ViewToggle from '../components/shared/ViewToggle';
 import CustomFieldsManager from '../components/settings/CustomFieldsManager';
+import WaTemplatesManager from '../components/settings/WaTemplatesManager';
 import { useBoardView, BOARD_VIEW_OPTIONS } from '../hooks/useBoardView';
 import { useMyTasksView, MY_TASKS_VIEW_OPTIONS } from '../hooks/useMyTasksView';
 
@@ -109,6 +110,14 @@ export default function SettingsPage() {
           {admin && (
             <div className="mt-8">
               <CustomFieldsManager orgId={member.org_id} />
+            </div>
+          )}
+
+          {admin && (
+            <div className="mt-8">
+              <h2 className="mb-3 text-sm font-black text-grayMid">{he.wa.title}</h2>
+              <p className="mb-3 text-sm text-grayMid">{he.wa.sectionHint}</p>
+              <WaTemplatesManager orgId={member.org_id} />
             </div>
           )}
 
